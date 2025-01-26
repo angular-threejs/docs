@@ -82,9 +82,11 @@ export class Box {
       castShadow
     />
 
-    <ngtr-physics [options]="{ debug: start(), paused: !start() }">
+    @let startPhysics = start();
+
+    <ngtr-physics [options]="{ debug: startPhysics, paused: !startPhysics }">
       <ng-template>
-        <app-floor [(intersect)]="intersect" />
+        <app-floor />
         @for (position of positions; track $index) {
           <app-box [position]="position" />
         }

@@ -77,3 +77,31 @@ import RapierDemo from "../../components/scenes/rapier-demo/rapier-demo";
     </div>
   </div>
 </section>
+
+<section class="min-h-screen w-full flex justify-center items-center">
+  <div class="h-full w-full grid grid-cols-8 gap-4">
+    <div class="col-span-3">
+      <h1>
+        Powerful{" "}
+        <span class="text-accent-600 dark:text-accent-200">utilities</span>
+      </h1>
+      <p>
+        Angular Three comes with integrations for physics engines like{" "}
+        <strong>Rapier</strong> and <strong>Cannon</strong>; as well as
+        postprocessing library like <strong>Postprocessing</strong>. On top of
+        that, <code>angular-three-soba</code> provides a collection of utilities
+        to help you focus on building your ideas.
+      </p>
+      <div class="h-[300px] w-full">
+        <RapierDemo client:only />
+      </div>
+    </div>
+    <FloatingCodeBlock
+      class="col-span-5 max-h-[800px]"
+      snippets={[
+        { title: "scene-graph.ts", name: "rapier-demo-scene-graph" },
+        { title: "canvas.ts", name: "rapier-demo" },
+      ]}
+    />
+  </div>
+</section>
