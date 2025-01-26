@@ -2,7 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  effect,
+  ElementRef,
   input,
+  viewChild,
+  viewChildren,
 } from "@angular/core";
 import { extend, NgtArgs, type NgtVector3 } from "angular-three";
 import {
@@ -11,6 +15,7 @@ import {
   NgtrRigidBody,
 } from "angular-three-rapier";
 import * as THREE from "three";
+import { start } from "./start";
 
 @Component({
   selector: "app-floor",
@@ -39,10 +44,16 @@ export class Floor {
 @Component({
   selector: "app-box",
   template: `
-    <ngt-object3D rigidBody [position]="position()">
-      <ngt-mesh castShadow receiveShadow [rotation]="[0.4, 0.2, 0.5]">
+    <ngt-object3D rigidBody>
+      <ngt-mesh
+        #mesh
+        castShadow
+        receiveShadow
+        [position]="position()"
+        [rotation]="[0.4, 0.2, 0.5]"
+      >
         <ngt-box-geometry />
-        <ngt-mesh-standard-material color="hotpink" />
+        <ngt-mesh-standard-material [roughness]="0.5" color="#E3B6ED" />
       </ngt-mesh>
     </ngt-object3D>
   `,
@@ -57,17 +68,23 @@ export class Box {
 @Component({
   selector: "app-scene-graph",
   template: `
-    <ngt-color attach="background" *args="['lightblue']" />
-    <ngt-ambient-light />
-    <ngt-directional-light [position]="10" castShadow>
-      <ngt-vector2 *args="[2048, 2048]" attach="shadow.mapSize" />
-    </ngt-directional-light>
+    <ngt-point-light
+      [position]="[-10, -10, 30]"
+      [intensity]="0.25 * Math.PI"
+      [decay]="0"
+    />
+    <ngt-spot-light
+      [intensity]="0.3 * Math.PI"
+      [position]="[30, 30, 50]"
+      [angle]="0.2"
+      [penumbra]="1"
+      [decay]="0"
+      castShadow
+    />
 
-    <ngtr-physics [options]="{ debug: true }">
+    <ngtr-physics [options]="{ debug: start(), paused: !start() }">
       <ng-template>
-        <ngtr-debug />
-
-        <app-floor />
+        <app-floor [(intersect)]="intersect" />
         @for (position of positions; track $index) {
           <app-box [position]="position" />
         }
@@ -79,11 +96,14 @@ export class Box {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SceneGraph {
-  positions: NgtVector3[] = [
+  protected readonly Math = Math;
+  protected readonly positions: NgtVector3[] = [
     [0.1, 5, 0],
     [0, 10, -1],
     [0, 20, -2],
   ];
+
+  protected readonly start = start;
 
   constructor() {
     extend(THREE);
