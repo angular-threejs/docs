@@ -13,8 +13,14 @@
     "@astrojs/starlight": "^0.31.1",
     "@astrojs/starlight-tailwind": "^3.0.0",
     "@astrojs/tailwind": "^5.1.5",
+    "angular-three": "next",
+    "angular-three-cannon": "next",
+    "angular-three-postprocessing": "next",
+    "angular-three-rapier": "next",
+    "angular-three-soba": "next",
     "astro": "^5.1.9",
     "sharp": "^0.32.5",
     "tailwindcss": "^3.4.4"
   }
 }
+
