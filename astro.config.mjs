@@ -1,30 +1,106 @@
-// @ts-check
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
-import tailwind from '@astrojs/tailwind';
+import analogjsangular from "@analogjs/astro-angular";
+import starlight from "@astrojs/starlight";
+import tailwind from "@astrojs/tailwind";
+import { defineConfig } from "astro/config";
+import { readFileSync } from "node:fs";
+import starlightBlog from "starlight-blog";
 
-import analogjsangular from '@analogjs/astro-angular';
+function includeContentPlugin() {
+  const map = new Map();
+
+  return [
+    {
+      name: "pre-include-content",
+      enforce: "pre",
+      transform(_, id) {
+        if (!id.includes("?includeContent") || id.includes("astro-entry"))
+          return;
+
+        const [filePath] = id.split("?");
+        const fileContent = readFileSync(filePath, "utf-8");
+
+        if (map.has(filePath)) return;
+        map.set(filePath, fileContent.replace(/\t/g, "  "));
+      },
+    },
+    {
+      name: "post-include-content",
+      enforce: "post",
+      transform(code, id) {
+        if (!id.includes("?includeContent") || id.includes("astro-entry"))
+          return;
+        const [filePath] = id.split("?");
+        const fileContent = map.get(filePath);
+
+        return {
+          code: `
+            ${code}
+            export const content = ${JSON.stringify(fileContent)};
+          `,
+        };
+      },
+    },
+  ];
+}
 
 // https://astro.build/config
 export default defineConfig({
-    integrations: [starlight({
-        title: 'Docs with Tailwind',
-        social: {
-            github: 'https://github.com/withastro/starlight',
+  vite: {
+    esbuild: {
+      jsxDev: true,
+    },
+    plugins: [includeContentPlugin()],
+  },
+  integrations: [
+    analogjsangular({
+      vite: {
+        transformFilter: (_, id) => {
+          // we only transform files in components/scenes
+          return id.includes("components/scenes");
         },
-        sidebar: [
-            {
-                label: 'Guides',
-                items: [
-                    // Each item here is one entry in the navigation menu.
-                    { label: 'Example Guide', slug: 'guides/example' },
-                ],
+      },
+    }),
+    starlight({
+      title: "Angular Three",
+      plugins: [
+        starlightBlog({
+          authors: {
+            chau: {
+              name: "Chau Tran",
+              url: "https://nartc.me",
+              picture: "https://avatars.githubusercontent.com/u/25516557?v=4",
             },
-            {
-                label: 'Reference',
-                autogenerate: { directory: 'reference' },
-            },
-        ],
-        customCss: ['./src/tailwind.css'],
-		}), tailwind({ applyBaseStyles: false }), analogjsangular()],
+          },
+        }),
+      ],
+      favicon: "./src/assets/angular-three-dark.svg",
+      tableOfContents: {
+        minHeadingLevel: 2,
+        maxHeadingLevel: 4,
+      },
+      logo: {
+        light: "./src/assets/angular-three.svg",
+        dark: "./src/assets/angular-three-dark.svg",
+      },
+      social: {
+        github: "https://github.com/angular-threejs/angular-three",
+      },
+      customCss: ["./src/tailwind.css"],
+      sidebar: [
+        {
+          label: "Guides",
+          items: [
+            // Each item here is one entry in the navigation menu.
+            { label: "Example Guide", slug: "guides/example" },
+          ],
+        },
+        {
+          label: "Reference",
+          autogenerate: { directory: "reference" },
+        },
+      ],
+    }),
+    tailwind({ applyBaseStyles: false }),
+  ],
 });
+
