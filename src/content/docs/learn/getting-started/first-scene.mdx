@@ -1,0 +1,973 @@
+---
+title: Your First Scene
+description: Create our first 3D scene with Angular Three.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import FirstScene from "../../../../components/scenes/first-scene/first-scene";
+
+:::note
+
+This guide assumes that you have knowledge of [Angular](https://angular.dev/) and [THREE.js](https://threejs.org/). If you are unsure of either, consult their respective documentation.
+
+:::
+
+## Initial application structure
+
+First step is to open up the `app.component.ts` file and import [`NgtCanvas`](/reference/core/dom/canvas-tbd) component then render it on the template.
+
+```angular-ts
+// app.component.ts
+
+import { Component } from "@angular/core";
+import { NgtCanvas } from "angular-three/dom";
+
+@Component({
+    selector: "app-root",
+    template: `
+        <ngt-canvas></ngt-canvas>
+    `,
+    imports: [NgtCanvas]
+})
+export class AppComponent {}
+```
+
+`NgtCanvas` is the entry-point to Angular Three. It creates a [`WebGLRenderer`](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), a default [`Scene`](https://threejs.org/docs/#api/en/scenes/Scene), and a default [`PerspectiveCamera`](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera); the 3 main building blocks
+for a **THREE.js** application.
+
+:::tip[Did you know?]
+
+Notice that `NgtCanvas` is imported from [`angular-three/dom`](/reference/core/dom-tbd). This allows `angular-three` to target the appropriate platform that your application is running on.
+
+:::
+
+We'll also need to adjust the `NgtCanvas` dimensions by adjusting the parent's dimensions.
+
+<Tabs>
+
+    <TabItem label="styles.css">
+    ```css
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+    }
+    ```
+    </TabItem>
+    <TabItem label="app.component.ts">
+    ```diff lang="angular-ts"
+    import { Component } from "@angular/core";
+    import { NgtCanvas } from "angular-three/dom";
+
+    @Component({
+        selector: "app-root",
+        template: `
+            <ngt-canvas></ngt-canvas>
+        `,
+        imports: [NgtCanvas],
+    +    styles: `
+    +       :host {
+    +           display: block;
+    +           height: 100dvh;
+    +       }
+    +    `
+    })
+    export class AppComponent {}
+    ```
+    </TabItem>
+
+</Tabs>
+
+:::tip[Did you know?]
+
+`NgtCanvas` is designed to fill the parent container so you can control the dimensions of the canvas using the parent container’s dimensions.
+
+```angular-html
+<div class="canvas-container">
+    <ngt-canvas></ngt-canvas>
+</div>
+```
+
+:::
+
+`NgtCanvas` also provides a [**store**](/reference/core/store-tbd) that the Angular Three application will act upon. To improve accessing this store via [Dependency Injection](https://angular.dev/guide/dependency-injection), it is [recommended](/learn/basics/app-structure) to create a separate component `scene-graph.ts` and render it as the `NgtCanvas` content.
+
+<Tabs>
+
+    <TabItem label="scene-graph.ts">
+    ```angular-ts
+    import { Component } from "@angular/core";
+
+    @Component({
+        selector: "app-scene-graph",
+        template: ``
+    })
+    export class SceneGraph {}
+    ```
+    </TabItem>
+
+    <TabItem label="app.component.ts">
+    ```diff lang="angular-ts"
+    import { Component } from "@angular/core";
+    -import { NgtCanvas } from "angular-three/dom";
+    +import { NgtCanvas, NgtCanvasContent } from "angular-three/dom";
+    +import { SceneGraph } from "./scene-graph";
+
+    @Component({
+        selector: "app-root",
+        template: `
+            <ngt-canvas>
+    +           <app-scene-graph *canvasContent />
+            </ngt-canvas>
+        `,
+    -   imports: [NgtCanvas, SceneGraph]
+    +   imports: [NgtCanvas, NgtCanvasContent, SceneGraph]
+    })
+    export class AppComponent {}
+    ```
+    </TabItem>
+
+</Tabs>
+
+:::tip[Did you know?]
+
+In order to render your scene graph properly, Angular Three needs to _wait_ until it finishes setting up the context (i.e: store) before rendering. This is where [`NgtCanvasContent`](/reference/core/dom/canvas-content) directive comes in. It acts _purely_ as an anchor so `NgtCanvas` can render the content when it is ready.
+
+<details>
+<summary>Angular Structural Directive Syntax</summary>
+
+Angular structural directive has a long syntax and a micro-syntax.
+
+<Tabs>
+
+    <TabItem label="long syntax">
+    ```angular-html
+    <ngt-canvas>
+        <ng-template canvasContent>
+            <app-scene-graph />
+        </ng-template>
+    </ngt-canvas>
+    ```
+    </TabItem>
+    <TabItem label="micro syntax">
+    ```angular-html
+    <ngt-canvas>
+        <app-scene-graph *canvasContent />
+    </ngt-canvas>
+    ```
+    </TabItem>
+
+</Tabs>
+
+Read more at [Angular Structure Directives](https://angular.dev/guide/directives/structural-directives)
+
+</details>
+
+:::
+
+## Provide the Renderer
+
+In order to actually render our THREE.js scene graph to the canvas, we need to provide the custom renderer from `angular-three`
+
+```diff lang="angular-ts"
+// app.config.ts
+
+import { ApplicationConfig } from "@angular/core";
++import { provideNgtRenderer } from "angular-three/dom";
+
+export const appConfig: ApplicationConfig = {
+    providers: [
+        // other providers
++        provideNgtRenderer(),
+    ]
+}
+```
+
+## Create objects
+
+In `scene-graph.ts`, we'll create a simple THREE.js cube which is comprised of a [`THREE.Mesh`](https://threejs.org/docs/#api/en/objects/Mesh) with a [`THREE.BoxGeometry`](https://threejs.org/docs/#api/en/geometries/BoxGeometry) and a [`THREE.MeshBasicMaterial`](https://threejs.org/docs/#api/en/materials/MeshBasicMaterial).
+
+But before we can do so, we need to tell Angular Three about these objects by [extending the catalogue](/reference/core/extend-tbd). By default, this catalogue is empty. Angular Three maps the catalogue to Custom Elements tags with the following naming convention:
+
+```angular-html
+<ngt-{entityName-in-kebab-case} />
+```
+
+Call `extend` and pass in a `Record` of entities.
+
+```diff lang="angular-ts"
+// scene-graph.ts
+
+import { Component } from "@angular/core";
++import { extend } from "angular-three";
++import { Mesh, MeshBasicMaterial, BoxGeometry } from "three";
+
++extend({
++    Mesh, // makes ngt-mesh available
++    MeshBasicMaterial, // makes ngt-mesh-basic-material available
++    BoxGeometry, // makes ngt-box-geometry available
++});
+```
+
+:::note
+
+`extend` accepts any `Record`. This means that you can extend the entire THREE.js library by passing `THREE` object as the argument.
+
+```ts
+import { extend } from "angular-three";
+import * as THREE from "three";
+
+extend(THREE);
+```
+
+For the purpose of this tutorial, we'll use this approach.
+
+:::
+
+```diff lang="angular-ts"
+// scene-graph.ts
+
+-import { Component } from "@angular/core";
++import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { extend } from "angular-three";
+import * as THREE from "three";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
++       <ngt-mesh>
++           <ngt-box-geometry />
++           <ngt-mesh-basic-material />
++       </ngt-mesh>
+    `,
++   schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {}
+```
+
+:::note
+
+[`CUSTOM_ELEMENTS_SCHEMA`](https://angular.dev/api/core/CUSTOM_ELEMENTS_SCHEMA) is **required** to use the custom elements in Angular since Angular Three is a custom renderer.
+
+:::
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={1} />
+</div>
+
+:::note[Did you know?]
+
+**attach**
+
+Internally, Angular Three uses an attribute [`attach`](/reference/core/attach-tbd) to **attach an object to a property of its parent**
+
+<details>
+<summary>Learn more</summary>
+
+In our case, we're attaching the `THREE.BoxGeometry` to the property `geometry` on the `THREE.Mesh`, and the `THREE.MeshBasicMaterial` to the property `material` on the `THREE.Mesh`. Since attaching geometries to `geometry` property and materials to `material` property is a common practice, Angular Three takes care of this implicitly.
+
+```angular-html
+<ngt-mesh>
+    <ngt-box-geometry attach="geometry" />
+    <ngt-mesh-basic-material attach="material" />
+</ngt-mesh>
+```
+
+</details>
+:::
+
+<details>
+<summary>THREE.js equivalent</summary>
+
+```ts
+import * as THREE from "three";
+
+// create a mesh, geometry, and material
+const mesh = new THREE.Mesh();
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshBasicMaterial();
+
+// "attach" geometry and material to the mesh
+mesh.geometry = geometry;
+mesh.material = material;
+```
+
+</details>
+
+## Modify objects
+
+We can modify any THREE.js entities by leveraging [Angular Property Binding](https://angular.dev/guide/templates/binding#binding-dynamic-properties-and-attributes) on any properties that the THREE.js exposes for the [class](https://threejs.org) that we're using.
+
+For example, we can modify the `Mesh`'s `position`, and the `MeshBasicMaterial`'s `color`
+
+```diff lang="angular-ts"
+// scene-graph.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { extend } from "angular-three";
+import * as THREE from "three";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngt-mesh
++           [position]="[0, 1, 0]"
+        >
+            <ngt-box-geometry />
+            <ngt-mesh-basic-material
++               color="mediumpurple"
+            />
+        </ngt-mesh>
+    `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={2} />
+</div>
+
+<details>
+<summary>THREE.js equivalent</summary>
+
+```ts
+import * as THREE from "three";
+
+const mesh = new THREE.Mesh();
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshBasicMaterial();
+
+mesh.geometry = geometry;
+mesh.material = material;
+
+// set the position of the mesh
+mesh.position.fromArray([0, 1, 0]);
+
+// set the color of the material
+material.color.set("mediumpurple");
+```
+
+</details>
+
+As for entities like `THREE.BoxGeometry` whose **Constructor Arguments** changes will require the entity to be **reconstructed**, Angular Three provides a structural directive called [`NgtArgs`](/reference/core/args-tbd). Let's see how we can use it to modify the `THREE.BoxGeometry`
+
+```diff lang="angular-ts"
+// scene-graph.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+-import { extend } from "angular-three";
++import { extend, NgtArgs } from "angular-three";
+import * as THREE from "three";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngt-mesh [position]="[0, 1, 0]">
+            <ngt-box-geometry
++               *args="[1, 2, 1]"
+            />
+            <ngt-mesh-basic-material color="mediumpurple" />
+        </ngt-mesh>
+    `,
++   imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={3} />
+</div>
+
+<details>
+<summary>THREE.js equivalent</summary>
+
+```ts
+import * as THREE from "three";
+
+const mesh = new THREE.Mesh();
+// set the dimensions of the geometry
+const geometry = new THREE.BoxGeometry(1, 2, 1);
+const material = new THREE.MeshBasicMaterial();
+
+mesh.geometry = geometry;
+mesh.material = material;
+
+mesh.position.fromArray([0, 1, 0]);
+material.color.set("mediumpurple");
+```
+
+</details>
+
+:::tip[Did you know?]
+
+You can learn more about how Angular Three handles THREE.js properties via **Property Binding** [here](/reference/core/renderer-tbd)
+
+:::
+
+## Modify the Default Camera
+
+Up to this point, we've only been looking at the side of the cube. This is because the camera's default position set by Angular Three. To modify this default camera, we can use the `[camera]` and `[lookAt]` inputs on the `NgtCanvas` component.
+
+```diff lang="angular-ts"
+// app.component.ts
+
+import { Component } from "@angular/core";
+import { NgtCanvas, NgtCanvasContent } from "angular-three/dom";
+import { SceneGraph } from "./scene-graph";
+
+@Component({
+    selector: "app-root",
+    template: `
+        <ngt-canvas
++           [camera]="{ position: [5, 5, 5] }"
++           [lookAt]="[0, 1, 0]"
+        >
+            <app-scene-graph *canvasContent />
+        </ngt-canvas>
+    `,
+    imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+    styles: `
+        :host {
+            display: block;
+            height: 100dvh;
+        }
+    `
+})
+export class AppComponent {}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={4} />
+</div>
+
+## Animate the Cube
+
+Let's make our cube less boring by adding some motion to it. The best way to do this in Angular Three is to participate in Angular Three's **unified frame loop** via [`injectBeforeRender()`](/reference/core/before-render) function.
+
+First, we'll need to get a reference to the undering `THREE.Mesh` element from `<ngt-mesh>`. We can use [`viewChild`](https://angular.dev/api/core/ViewChild) to do this.
+
+```diff lang="angular-ts"
+// scene-graph.ts
+
+-import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
++import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild, ElementRef } from "@angular/core";
+import { extend, NgtArgs } from "angular-three";
+import * as THREE from "three";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngt-mesh
++            #mesh
+            [position]="[0, 1, 0]"
+        >
+            <ngt-box-geometry *args="[1, 2, 1]" />
+            <ngt-mesh-basic-material color="mediumpurple" />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {
++    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+}
+```
+
+Next, we'll use `meshRef` in `injectBeforeRender` and update its property **frame by frame** before the canvas is rendered.
+
+```diff lang="angular-ts"
+// scene-graph.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild, ElementRef } from "@angular/core";
+-import { extend, NgtArgs } from "angular-three";
++import { extend, NgtArgs, injectBeforeRender } from "angular-three";
+import * as THREE from "three";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngt-mesh #mesh [position]="[0, 1, 0]">
+            <ngt-box-geometry *args="[1, 2, 1]" />
+            <ngt-mesh-basic-material color="mediumpurple" />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {
+    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
++    constructor() {
++        injectBeforeRender(({ delta }) => {
++            this.meshRef().nativeElement.rotation.y += delta;
++        });
++    }
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={5} />
+</div>
+
+## Make a component
+
+Using Angular means we can componentize our cube so we can reuse it. This is what it means to _"scale at ease"_. Let's create a new component called `cube.ts`
+
+```angular-ts
+// cube.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from "@angular/core";
+import { NgtArgs, injectBeforeRender } from "angular-three";
+import * as THREE from "three";
+
+@Component({
+    selector: "app-cube",
+    template: `
+        <ngt-mesh #mesh [position]="[0, 1, 0]">
+            <ngt-box-geometry *args="[1, 2, 1]" />
+            <ngt-mesh-basic-material color="mediumpurple" />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class Cube {
+    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
+    constructor() {
+        injectBeforeRender(({ delta }) => {
+            this.meshRef().nativeElement.rotation.y += delta;
+        });
+    }
+}
+```
+
+Then, we'll use this `Cube` component in our `SceneGraph`
+
+```diff lang="angular-ts"
+// scene-graph.ts
+
+-import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild, ElementRef } from "@angular/core";
++import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+-import { extend, NgtArgs, injectBeforeRender } from "angular-three";
++import { extend } from "angular-three";
+import * as THREE from "three";
+
++import { Cube } from "./cube";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+-        <ngt-mesh #mesh [position]="[0, 1, 0]">
+-            <ngt-box-geometry *args="[1, 2, 1]" />
+-            <ngt-mesh-basic-material color="mediumpurple" />
+-        </ngt-mesh>
++        <app-cube />
+    `,
+-    imports: [NgtArgs],
++    imports: [Cube],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {
+-    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+-
+-    constructor() {
+-        injectBeforeRender(({ delta }) => {
+-            this.meshRef().nativeElement.rotation.y += delta;
+-        });
+-    }
+}
+```
+
+## Add state to the Cube
+
+Everything is the same as before, except we now have a `Cube` component that can have its own state and logic. We'll add 2 states `hovered` and `clicked` to the `Cube` component:
+
+- When the cube is hovered, it will change its color.
+- When the cube is clicked, it will change its scale.
+
+```diff lang="angular-ts"
+// cube.ts
+
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    ElementRef,
+    viewChild,
++    signal
+} from "@angular/core";
+import { NgtArgs, injectBeforeRender } from "angular-three";
+import * as THREE from "three";
+
+@Component({
+    selector: "app-cube",
+    template: `
+        <ngt-mesh #mesh
+            [position]="[0, 1, 0]"
++            [scale]="clicked() ? 1.5 : 1"
++            (pointerover)="hovered.set(true)"
++            (pointerout)="hovered.set(false)"
++            (click)="clicked.set(!clicked())"
+        >
+            <ngt-box-geometry *args="[1, 2, 1]" />
+            <ngt-mesh-basic-material
+-               color="mediumpurple"
++               [color]="hovered() ? 'hotpink' : 'mediumpurple'"
+            />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class Cube {
+    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
++    protected hovered = signal(false);
++    protected clicked = signal(false);
+
+    constructor() {
+        injectBeforeRender(({ delta }) => {
+            this.meshRef().nativeElement.rotation.y += delta;
+        });
+    }
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={6} />
+</div>
+
+### Render another cube
+
+Having our `Cube` component means that we can render as many cubes as we want. Let's render another cube on the canvas. However, we need to add a `position` input to the `Cube` component so that the `SceneGraph` can put the cubes in the correct positions for them to show up.
+
+```diff lang="angular-ts"
+// cube.ts
+
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    ElementRef,
+    viewChild,
+    signal,
++    input
+} from "@angular/core";
+import { NgtArgs, injectBeforeRender } from "angular-three";
+import * as THREE from "three";
+
+@Component({
+    selector: "app-cube",
+    template: `
+        <ngt-mesh #mesh
+-            [position]="[0, 1, 0]"
++            [position]="[positionX(), 1, 0]"
+            [scale]="clicked() ? 1.5 : 1"
+            (pointerover)="hovered.set(true)"
+            (pointerout)="hovered.set(false)"
+            (click)="clicked.set(!clicked())"
+        >
+            <ngt-box-geometry *args="[1, 2, 1]" />
+            <ngt-mesh-basic-material [color]="hovered() ? 'hotpink' : 'mediumpurple'" />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class Cube {
++    positionX = input(0);
+
+    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
+    protected hovered = signal(false);
+    protected clicked = signal(false);
+
+    constructor() {
+        injectBeforeRender(({ delta }) => {
+            this.meshRef().nativeElement.rotation.y += delta;
+        });
+    }
+}
+```
+
+Next, we'll update the `SceneGraph` component.
+
+```diff lang="angular-ts"
+// scene-graph.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { extend } from "angular-three";
+import * as THREE from "three";
+
+import { Cube } from "./cube";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+-        <app-cube />
++        <app-cube [positionX]="-2" />
++        <app-cube [positionX]="2" />
+    `,
+    imports: [Cube],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={7} />
+</div>
+
+Now, we have two cubes that have their own states, and react to events independently.
+
+## Adjust the Lighting
+
+Let’s add some lights to our scene to make the cubes look more dynamic as they look bland at the moment.
+
+```diff lang="angular-ts"
+
+// scene-graph.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { extend } from "angular-three";
+import * as THREE from "three";
+
+import { Cube } from "./cube";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
++        <ngt-ambient-light [intensity]="0.5" />
++        <ngt-spot-light
++            [position]="[5, 10, -10]"
++            [intensity]="0.5 * Math.PI"
++            [angle]="0.5"
++            [penumbra]="1"
++            [decay]="0"
++        />
++        <ngt-point-light [position]="-10" [intensity]="0.5 * Math.PI" [decay]="0" />
+        <app-cube [positionX]="-2" />
+        <app-cube [positionX]="2" />
+    `,
+    imports: [Cube],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {
++    protected readonly Math = Math;
+}
+```
+
+Next, we will want to change the material of the cube to `THREE.MeshStandardMaterial` so that it can be lit by the lights.
+
+```diff lang="angular-ts"
+// cube.ts
+
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    ElementRef,
+    viewChild,
+    signal,
+    input
+} from "@angular/core";
+import { NgtArgs, injectBeforeRender } from "angular-three";
+import * as THREE from "three";
+
+@Component({
+    selector: "app-cube",
+    template: `
+        <ngt-mesh #mesh
+            [position]="[positionX(), 1, 0]"
+            [scale]="clicked() ? 1.5 : 1"
+            (pointerover)="hovered.set(true)"
+            (pointerout)="hovered.set(false)"
+            (click)="clicked.set(!clicked())"
+        >
+            <ngt-box-geometry *args="[1, 2, 1]" />
+-            <ngt-mesh-basic-material [color]="hovered() ? 'hotpink' : 'mediumpurple'" />
++            <ngt-mesh-standard-material [color]="hovered() ? 'hotpink' : 'mediumpurple'" />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class Cube {
+    positionX = input(0);
+
+    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
+    protected hovered = signal(false);
+    protected clicked = signal(false);
+
+    constructor() {
+        injectBeforeRender(({ delta }) => {
+            this.meshRef().nativeElement.rotation.y += delta;
+        });
+    }
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={8} />
+</div>
+
+## Cast shadows
+
+We're almost there! Now that we have some lightings, let's add some shadows so our scene is even more interesting.
+
+First, we need to turn on **shadows** support explicitly since rendering shadows is an expensive operation.
+
+```diff lang="angular-ts"
+// app.component.ts
+
+import { Component } from "@angular/core";
+import { NgtCanvas, NgtCanvasContent } from "angular-three/dom";
+import { SceneGraph } from "./scene-graph";
+
+@Component({
+    selector: "app-root",
+    template: `
+        <ngt-canvas
++            shadows
+            [camera]="{ position: [5, 5, 5] }"
+            [lookAt]="[0, 1, 0]"
+        >
+            <app-scene-graph *canvasContent />
+        </ngt-canvas>
+    `,
+    imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+    styles: `
+        :host {
+            display: block;
+            height: 100dvh;
+        }
+    `
+})
+export class AppComponent {}
+```
+
+Next, we'll adjust our [`THREE.SpotLight`](https://threejs.org/docs/#api/en/lights/SpotLight) and our objects to cast and receive shadows.
+
+```diff lang="angular-ts"
+
+// scene-graph.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { extend } from "angular-three";
+import * as THREE from "three";
+
+import { Cube } from "./cube";
+
+extend(THREE);
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngt-ambient-light [intensity]="0.5" />
+        <ngt-spot-light
+            [position]="[5, 10, -10]"
+            [intensity]="0.5 * Math.PI"
+            [angle]="0.5"
+            [penumbra]="1"
+            [decay]="0"
++            castShadow
+        />
+        <ngt-point-light [position]="-10" [intensity]="0.5 * Math.PI" [decay]="0" />
+
++        <ngt-mesh [rotation]="[-Math.PI / 2, 0, 0]" receiveShadow>
++            <ngt-circle-geometry *args="[4, 40]" />
++            <ngt-mesh-standard-material />
++        </ngt-mesh>
+
+        <app-cube [positionX]="-2" />
+        <app-cube [positionX]="2" />
+    `,
+    imports: [Cube],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class SceneGraph {
+    protected readonly Math = Math;
+}
+```
+
+```diff lang="angular-ts"
+// cube.ts
+
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    ElementRef,
+    viewChild,
+    signal,
+    input
+} from "@angular/core";
+import { NgtArgs, injectBeforeRender } from "angular-three";
+import * as THREE from "three";
+
+@Component({
+    selector: "app-cube",
+    template: `
+        <ngt-mesh #mesh
+            [position]="[positionX(), 1, 0]"
+            [scale]="clicked() ? 1.5 : 1"
+            (pointerover)="hovered.set(true)"
+            (pointerout)="hovered.set(false)"
+            (click)="clicked.set(!clicked())"
++            castShadow
+        >
+            <ngt-box-geometry *args="[1, 2, 1]" />
+            <ngt-mesh-standard-material [color]="hovered() ? 'hotpink' : 'mediumpurple'" />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class Cube {
+    positionX = input(0);
+
+    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
+    protected hovered = signal(false);
+    protected clicked = signal(false);
+
+    constructor() {
+        injectBeforeRender(({ delta }) => {
+            this.meshRef().nativeElement.rotation.y += delta;
+        });
+    }
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <FirstScene client:only step={9} />
+</div>
+
+## Conclusion
+
+Congratulations. We have learned how to create a basic scene, add some lights, and make our cubes interactive. This guide, while short, includes important THREE.js and Angular Three concepts that should give you a good starting point for your own projects.
+
+Here are several things you can play around to understand more how THREE.js works:
+
+- Can you change the cube to a different geometry?
+- Can you change how the objects are animated?
+- Can you change the lights' positions and intensities?
+- Can you integrate [`OrbitControls`](https://www.npmjs.com/package/three-stdlib) to take control of the camera? (hint: use `extend`)

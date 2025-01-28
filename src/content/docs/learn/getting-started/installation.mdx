@@ -1,0 +1,105 @@
+---
+title: Installation
+description: Install Angular Three and its dependencies.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+We'll always need: `angular-three` core package and the `three` itself.
+
+<Tabs>
+  <TabItem label="Using template repository">
+    The easiest way to get started with Angular Three is to use the [template repository](https://github.com/angular-threejs/template)
+
+    The template repository is kept up to date with the latest version of Angular Three.
+
+    :::tip[Did you know?]
+
+    If you have the [Github CLI](https://cli.github.com/) installed, you can use the `gh repo create` command to clone the template repository directly from the command line.
+
+    ```shell
+    gh repo create <username>/<repository-name>
+      --template angular-threejs/template
+      --public
+      --clone
+    ```
+
+    :::
+
+  </TabItem>
+  <TabItem label="Angular CLI / Nx CLI">
+    1. Install `angular-three-plugin` as a dev dependency
+
+    <Tabs>
+        <TabItem label="npm">
+        ```shell
+        npm install --save-dev angular-three-plugin
+        ```
+        </TabItem>
+        <TabItem label="yarn">
+        ```shell
+        yarn add --save-dev angular-three-plugin
+        ```
+        </TabItem>
+        <TabItem label="pnpm">
+        ```shell
+        pnpm add --dev angular-three-plugin
+        ```
+        </TabItem>
+    </Tabs>
+
+    2. Use a schematic / generator to set up `angular-three`
+
+    <Tabs>
+        <TabItem label="ng">
+        ```shell
+        ng generate angular-three-plugin:init
+        ```
+        </TabItem>
+        <TabItem label="nx">
+        ```shell
+        nx generate angular-three-plugin:init
+        ```
+        </TabItem>
+    </Tabs>
+
+  </TabItem>
+</Tabs>
+
+## Auxiliary packages
+
+Once you have `angular-three-plugin` installed, you can invoke the respective schematics/generators
+to set up the auxiliary packages.
+
+<Tabs>
+
+    <TabItem label="soba">
+    ```shell
+    ng generate angular-three-plugin:soba
+    # nx generate angular-three-plugin:soba
+    ```
+    </TabItem>
+    <TabItem label="postprocessing">
+    ```shell
+    ng generate angular-three-plugin:postprocessing
+    # nx generate angular-three-plugin:postprocessing
+    ```
+    </TabItem>
+    <TabItem label="cannon">
+    ```shell
+    ng generate angular-three-plugin:cannon
+    # nx generate angular-three-plugin:cannon
+    ```
+    </TabItem>
+    <TabItem label="rapier">
+    ```shell
+    ng generate angular-three-plugin:rapier
+    # nx generate angular-three-plugin:rapier
+    ```
+    </TabItem>
+
+</Tabs>
+
+## Compatibility Matrix
+
+TBD

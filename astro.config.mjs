@@ -102,15 +102,26 @@ export default defineConfig({
       customCss: ["./src/tailwind.css"],
       sidebar: [
         {
-          label: "Guides",
+          label: "Learn",
           items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Example Guide", slug: "guides/example" },
+            {
+              label: "Getting started",
+              items: [
+                {
+                  label: "Introduction",
+                  slug: "learn/getting-started/introduction",
+                },
+                {
+                  label: "Installation",
+                  slug: "learn/getting-started/installation",
+                },
+                {
+                  label: "Your First Scene",
+                  slug: "learn/getting-started/first-scene",
+                },
+              ],
+            },
           ],
-        },
-        {
-          label: "Reference",
-          autogenerate: { directory: "reference" },
         },
       ],
     }),

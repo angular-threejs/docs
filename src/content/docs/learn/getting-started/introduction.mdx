@@ -1,0 +1,62 @@
+---
+title: Introduction
+description: Get started building your scene graph with Angular Three.
+---
+
+Angular Three (NGT) is an [Angular](https://angular.dev) renderer for using [THREE.js](https://threejs.org) in a
+**declarative** way in Angular applications.
+
+## Key Features
+
+##### Declarative Scene Graph
+
+Angular Three allows the users to declaratively build a scene graph using the familiar Angular template syntax. This approach enables Angular developers to leverage familiar skills and tools of Angular template to build 3D scenes.
+
+##### Performance
+
+Angular Three is a custom renderer that _renders_ THREE.js entities directly to the Canvas. This means that there is no overhead of instantiating custom Components or Directives to turn them into THREE.js objects.
+
+##### Compatibility
+
+_"Anything that can be done in THREE.js, can be done in Angular Three."_ This is the motto that Angular Three stands for.
+
+##### Signals
+
+Angular Three fully embraces [Angular Signals](https://angular.dev/guide/signals) to drive the state of the scene graph. Most, if not all, of Angular Three's APIs are based on `Signal<T>` and return `Signal<T>`.
+
+## Acknowledgements
+
+Angular Three would not have been possible without the following open source projects:
+
+#### [THREE.js](https://threejs.org/)
+
+The foundation of Angular Three is THREE.js. It is a powerful and flexible 3D library that provides a wide range of tools for creating 3D scenes.
+
+#### [React Three Fiber (R3F)](https://github.com/pmndrs/react-three-fiber)
+
+Fundamentally, NGT and R3F are both custom renderers for THREE.js. Technically, there are differences between Angular Renderer (NGT) and React Reconciler (R3F). However, the core concepts are the same and R3F has been a major inspiration for NGT.
+
+## Versioning
+
+NGT follows the [Semantic Versioning](https://semver.org/) convention. The versioning scheme is `MAJOR.MINOR.PATCH`.
+
+- The `MAJOR` version is incremented when there are breaking changes in the API.
+- The `MINOR` version is incremented when new features are added.
+- The `PATCH` version is incremented when bug fixes are made.
+
+:::note
+
+Experimental APIs are not subject to the Semantic Versioning convention. They may change at any time.
+
+:::
+
+## Ecosystem
+
+NGT is compised of several packages
+
+- [angular-three](/reference/core/getting-started) is the core package that provides the renderer and context that THREE.js entities can understand.
+- [angular-three-plugin](/reference/plugin/getting-started) provides generators/schematics for `angular-three`. It also includes a [GLTF](https://en.wikipedia.org/wiki/GlTF) pipeline for ease of working with **glTF** models.
+- [angular-three-soba](/reference/soba/getting-started) is a collection of utilities that are built on top of `angular-three` to provide additional functionalities out of the box.
+- [angular-three-cannon](/reference/cannon/getting-started) is an integration for [Cannon.js](https://github.com/pmndrs/cannon-es) physics engine.
+- [angular-three-postprocessing](/reference/postprocessing/getting-started) is an integration for [Postprocessing](https://github.com/pmndrs/postprocessing?tab=readme-ov-file) postprocessing library.
+- [angular-three-rapier](/reference/rapier/getting-started) is an integration for [Rapier](https://rapier.rs/) physics engine.
