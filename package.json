@@ -26,6 +26,7 @@
     "@astrojs/starlight-tailwind": "^3.0.0",
     "@astrojs/tailwind": "^5.1.5",
     "@dimforge/rapier3d-compat": "^0.14.0",
+    "@monogrid/gainmap-js": "^3.1.0",
     "@pmndrs/vanilla": "^1.20.2",
     "angular-three": "next",
     "angular-three-cannon": "next",

@@ -40,10 +40,16 @@ export class Floor {
 @Component({
   selector: "app-box",
   template: `
-    <ngt-object3D rigidBody [position]="position()">
-      <ngt-mesh castShadow receiveShadow [rotation]="[0.4, 0.2, 0.5]">
+    <ngt-object3D rigidBody>
+      <ngt-mesh
+        #mesh
+        castShadow
+        receiveShadow
+        [position]="position()"
+        [rotation]="[0.4, 0.2, 0.5]"
+      >
         <ngt-box-geometry />
-        <ngt-mesh-standard-material color="hotpink" />
+        <ngt-mesh-standard-material [roughness]="0.5" color="#E3B6ED" />
       </ngt-mesh>
     </ngt-object3D>
   `,
@@ -66,8 +72,6 @@ export class Box {
 
     <ngtr-physics [options]="{ debug: true }">
       <ng-template>
-        <ngtr-debug />
-
         <app-floor />
         @for (position of positions; track $index) {
           <app-box [position]="position" />

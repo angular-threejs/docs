@@ -1,9 +1,6 @@
+```angular-ts
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import {
-  NgtCanvas,
-  NgtCanvasContent,
-  provideNgtRenderer,
-} from "angular-three/dom";
+import { NgtCanvas, NgtCanvasContent } from "angular-three/dom";
 import { SceneGraph } from "./scene-graph";
 
 @Component({
@@ -22,6 +19,5 @@ import { SceneGraph } from "./scene-graph";
   imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class PointerDemo {
-  static clientProviders = [provideNgtRenderer()];
-}
+export default class PointerDemo {}
+```

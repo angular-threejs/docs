@@ -50,6 +50,20 @@ export default defineConfig({
       jsxDev: true,
     },
     plugins: [includeContentPlugin()],
+    ssr: {
+      noExternal: [
+        "angular-three-soba/**",
+        "angular-three-cannon",
+        "angular-three-cannon/**",
+        "angular-three-rapier",
+        "angular-three-rapier/**",
+        "angular-three-postprocessing",
+        "angular-three-postprocessing/**",
+        "@pmndrs/vanilla",
+        "@pmndrs/cannon-worker-api",
+        "three-custom-shader-material",
+      ],
+    },
   },
   integrations: [
     analogjsangular({
@@ -103,4 +117,3 @@ export default defineConfig({
     tailwind({ applyBaseStyles: false }),
   ],
 });
-

@@ -1,3 +1,4 @@
+```angular-ts
 import { DOCUMENT } from "@angular/common";
 import {
   ChangeDetectionStrategy,
@@ -83,3 +84,4 @@ export class SceneGraph {
     });
   }
 }
+```

@@ -22,6 +22,7 @@ hero:
 import FloatingCodeBlock from "../../components/ui/floating-code-block.astro";
 import SimpleScene from "../../components/scenes/simple-scene/simple-scene";
 import RapierDemo from "../../components/scenes/rapier-demo/rapier-demo";
+import PointerDemo from "../../components/scenes/pointer-demo/pointer-demo";
 
 <section class="min-h-screen w-full flex justify-center items-center">
   <div class="h-full w-full grid grid-cols-8 gap-4">
@@ -43,8 +44,8 @@ import RapierDemo from "../../components/scenes/rapier-demo/rapier-demo";
     <FloatingCodeBlock
       class="col-span-5 max-h-[800px]"
       snippets={[
-        { title: "scene-graph.ts", name: "simple-scene" },
         { title: "canvas.ts", name: "simple-scene-canvas" },
+        { title: "scene-graph.ts", name: "simple-scene" },
       ]}
     />
   </div>
@@ -55,8 +56,8 @@ import RapierDemo from "../../components/scenes/rapier-demo/rapier-demo";
     <FloatingCodeBlock
       class="col-span-5 max-h-[800px]"
       snippets={[
-        { title: "scene-graph.ts", name: "rapier-demo-scene-graph" },
         { title: "canvas.ts", name: "rapier-demo" },
+        { title: "scene-graph.ts", name: "rapier-demo-scene-graph" },
       ]}
     />
     <div class="col-span-3">
@@ -82,25 +83,25 @@ import RapierDemo from "../../components/scenes/rapier-demo/rapier-demo";
   <div class="h-full w-full grid grid-cols-8 gap-4">
     <div class="col-span-3">
       <h1>
-        Powerful{" "}
-        <span class="text-accent-600 dark:text-accent-200">utilities</span>
+        Apply <span class="text-accent-600 dark:text-accent-200">familiar</span>
+        workflow
       </h1>
       <p>
-        Angular Three comes with integrations for physics engines like{" "}
-        <strong>Rapier</strong> and <strong>Cannon</strong>; as well as
-        postprocessing library like <strong>Postprocessing</strong>. On top of
-        that, <code>angular-three-soba</code> provides a collection of utilities
-        to help you focus on building your ideas.
+        Angular Three, as a custom Angular renderer, allows you to apply your
+        Angular knowledge to THREE.js elements. Extend Angular Three with{" "}
+        <strong>Components</strong> or provide THREE.js elements custom
+        behaviors with custom <strong>Directives</strong>. Everything Angular
+        provides is at your fingertips.
       </p>
       <div class="h-[300px] w-full">
-        <RapierDemo client:only />
+        <PointerDemo client:only />
       </div>
     </div>
     <FloatingCodeBlock
       class="col-span-5 max-h-[800px]"
       snippets={[
-        { title: "scene-graph.ts", name: "rapier-demo-scene-graph" },
-        { title: "canvas.ts", name: "rapier-demo" },
+        { title: "canvas.ts", name: "pointer-demo" },
+        { title: "scene-graph.ts", name: "pointer-demo-scene-graph" },
       ]}
     />
   </div>
