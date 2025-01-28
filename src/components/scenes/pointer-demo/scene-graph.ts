@@ -9,36 +9,27 @@ import {
   signal,
   viewChild,
 } from "@angular/core";
-import {
-  extend,
-  getInstanceState,
-  injectBeforeRender,
-  injectObjectEvents,
-} from "angular-three";
+import { extend, injectBeforeRender, injectObjectEvents } from "angular-three";
 import { NgtsEnvironment } from "angular-three-soba/staging";
 import * as THREE from "three";
 
 @Directive({ selector: "ngt-mesh[cursor]" })
 export class Cursor {
   constructor() {
+    const document = inject(DOCUMENT);
     const elementRef = inject<ElementRef<THREE.Mesh>>(ElementRef);
     const nativeElement = elementRef.nativeElement;
 
-    if (!nativeElement.isObject3D) return;
-
-    const instanceState = getInstanceState(nativeElement);
-    if (!instanceState) return;
-
-    const document = inject(DOCUMENT);
-
-    injectObjectEvents(() => nativeElement, {
-      pointerover: () => {
-        document.body.style.cursor = "pointer";
-      },
-      pointerout: () => {
-        document.body.style.cursor = "default";
-      },
-    });
+    if (nativeElement.isMesh) {
+      injectObjectEvents(() => nativeElement, {
+        pointerover: () => {
+          document.body.style.cursor = "pointer";
+        },
+        pointerout: () => {
+          document.body.style.cursor = "default";
+        },
+      });
+    }
   }
 }
 
