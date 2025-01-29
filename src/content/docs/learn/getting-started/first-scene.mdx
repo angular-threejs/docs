@@ -14,7 +14,7 @@ This guide assumes that you have knowledge of [Angular](https://angular.dev/) an
 
 ## Initial application structure
 
-First step is to open up the `app.component.ts` file and import [`NgtCanvas`](/reference/core/dom/canvas-tbd) component then render it on the template.
+First step is to open up the `app.component.ts` file and import [`NgtCanvas`](/reference/core/dom/canvas) component then render it on the template.
 
 ```angular-ts
 // app.component.ts
@@ -37,7 +37,7 @@ for a **THREE.js** application.
 
 :::tip[Did you know?]
 
-Notice that `NgtCanvas` is imported from [`angular-three/dom`](/reference/core/dom-tbd). This allows `angular-three` to target the appropriate platform that your application is running on.
+Notice that `NgtCanvas` is imported from [`angular-three/dom`](/reference/core/dom/introduction). This allows `angular-three` to target the appropriate platform that your application is running on.
 
 :::
 
@@ -91,7 +91,7 @@ We'll also need to adjust the `NgtCanvas` dimensions by adjusting the parent's d
 
 :::
 
-`NgtCanvas` also provides a [**store**](/reference/core/store-tbd) that the Angular Three application will act upon. To improve accessing this store via [Dependency Injection](https://angular.dev/guide/dependency-injection), it is [recommended](/learn/basics/app-structure) to create a separate component `scene-graph.ts` and render it as the `NgtCanvas` content.
+`NgtCanvas` also provides a [**store**](/reference/core/store) that the Angular Three application will act upon. To improve accessing this store via [Dependency Injection](https://angular.dev/guide/dependency-injection), it is [recommended](/learn/basics/app-structure) to create a separate component `scene-graph.ts` and render it as the `NgtCanvas` content.
 
 <Tabs>
 
@@ -132,7 +132,7 @@ We'll also need to adjust the `NgtCanvas` dimensions by adjusting the parent's d
 
 :::tip[Did you know?]
 
-In order to render your scene graph properly, Angular Three needs to _wait_ until it finishes setting up the context (i.e: store) before rendering. This is where [`NgtCanvasContent`](/reference/core/dom/canvas-content) directive comes in. It acts _purely_ as an anchor so `NgtCanvas` can render the content when it is ready.
+In order to render your scene graph properly, Angular Three needs to _wait_ until it finishes setting up the context (i.e: store) before rendering. This is where [`NgtCanvasContent`](/reference/core/dom/canvas) directive comes in. It acts _purely_ as an anchor so `NgtCanvas` can render the content when it is ready.
 
 <details>
 <summary>Angular Structural Directive Syntax</summary>
@@ -188,7 +188,7 @@ export const appConfig: ApplicationConfig = {
 
 In `scene-graph.ts`, we'll create a simple THREE.js cube which is comprised of a [`THREE.Mesh`](https://threejs.org/docs/#api/en/objects/Mesh) with a [`THREE.BoxGeometry`](https://threejs.org/docs/#api/en/geometries/BoxGeometry) and a [`THREE.MeshBasicMaterial`](https://threejs.org/docs/#api/en/materials/MeshBasicMaterial).
 
-But before we can do so, we need to tell Angular Three about these objects by [extending the catalogue](/reference/core/extend-tbd). By default, this catalogue is empty. Angular Three maps the catalogue to Custom Elements tags with the following naming convention:
+But before we can do so, we need to tell Angular Three about these objects by [extending the catalogue](/reference/core/renderer). By default, this catalogue is empty. Angular Three maps the catalogue to Custom Elements tags with the following naming convention:
 
 ```angular-html
 <ngt-{entityName-in-kebab-case} />
@@ -262,7 +262,7 @@ export class SceneGraph {}
 
 **attach**
 
-Internally, Angular Three uses an attribute [`attach`](/reference/core/attach-tbd) to **attach an object to a property of its parent**
+Internally, Angular Three uses an attribute [`attach`](/reference/core/renderer) to **attach an object to a property of its parent**
 
 <details>
 <summary>Learn more</summary>
@@ -355,7 +355,7 @@ material.color.set("mediumpurple");
 
 </details>
 
-As for entities like `THREE.BoxGeometry` whose **Constructor Arguments** changes will require the entity to be **reconstructed**, Angular Three provides a structural directive called [`NgtArgs`](/reference/core/args-tbd). Let's see how we can use it to modify the `THREE.BoxGeometry`
+As for entities like `THREE.BoxGeometry` whose **Constructor Arguments** changes will require the entity to be **reconstructed**, Angular Three provides a structural directive called [`NgtArgs`](/reference/core/args). Let's see how we can use it to modify the `THREE.BoxGeometry`
 
 ```diff lang="angular-ts"
 // scene-graph.ts
@@ -409,7 +409,7 @@ material.color.set("mediumpurple");
 
 :::tip[Did you know?]
 
-You can learn more about how Angular Three handles THREE.js properties via **Property Binding** [here](/reference/core/renderer-tbd)
+You can learn more about how Angular Three handles THREE.js properties via **Property Binding** [here](/reference/core/renderer)
 
 :::
 

@@ -4,6 +4,22 @@ import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import { readFileSync } from "node:fs";
 import starlightBlog from "starlight-blog";
+import { ngtSidebar } from "./astro.sidebar.mjs";
+import glob from "fast-glob";
+
+function devServerFileWatcher(paths) {
+  return {
+    name: "dev-server-file-watcher",
+    hooks: {
+      async "astro:config:setup"({ addWatchFile, config }) {
+        for (const path of paths) {
+          const files = await glob(path);
+          files.forEach((file) => addWatchFile(new URL(file, config.root)));
+        }
+      },
+    },
+  };
+}
 
 function includeContentPlugin() {
   const map = new Map();
@@ -66,6 +82,7 @@ export default defineConfig({
     },
   },
   integrations: [
+    devServerFileWatcher(["./astro.sidebar.mjs"]),
     analogjsangular({
       vite: {
         transformFilter: (_, id) => {
@@ -77,6 +94,7 @@ export default defineConfig({
     starlight({
       title: "Angular Three",
       plugins: [
+        ngtSidebar(),
         starlightBlog({
           authors: {
             chau: {
@@ -100,30 +118,6 @@ export default defineConfig({
         github: "https://github.com/angular-threejs/angular-three",
       },
       customCss: ["./src/tailwind.css"],
-      sidebar: [
-        {
-          label: "Learn",
-          items: [
-            {
-              label: "Getting started",
-              items: [
-                {
-                  label: "Introduction",
-                  slug: "learn/getting-started/introduction",
-                },
-                {
-                  label: "Installation",
-                  slug: "learn/getting-started/installation",
-                },
-                {
-                  label: "Your First Scene",
-                  slug: "learn/getting-started/first-scene",
-                },
-              ],
-            },
-          ],
-        },
-      ],
     }),
     tailwind({ applyBaseStyles: false }),
   ],
