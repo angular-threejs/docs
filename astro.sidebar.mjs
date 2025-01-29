@@ -89,17 +89,18 @@ export function ngtSidebar() {
         },
       ],
     },
-    {
-      label: "Blog",
-      link: "/blog/",
-      icon: "rss",
-      items: [
-        {
-          label: "Angular Three v2 is here!",
-          slug: "blog/v2",
-        },
-      ],
-    },
+    // TODO: reenable blog
+    // {
+    //   label: "Blog",
+    //   link: "/blog/",
+    //   icon: "rss",
+    //   items: [
+    //     {
+    //       label: "Angular Three v2 is here!",
+    //       slug: "blog/v2",
+    //     },
+    //   ],
+    // },
     {
       label: "Examples",
       link: "https://angularthre-soba-next.netlify.app",

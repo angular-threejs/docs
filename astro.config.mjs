@@ -95,15 +95,16 @@ export default defineConfig({
       title: "Angular Three",
       plugins: [
         ngtSidebar(),
-        starlightBlog({
-          authors: {
-            chau: {
-              name: "Chau Tran",
-              url: "https://nartc.me",
-              picture: "https://avatars.githubusercontent.com/u/25516557?v=4",
-            },
-          },
-        }),
+        // TODO: reenable blog
+        // starlightBlog({
+        //   authors: {
+        //     chau: {
+        //       name: "Chau Tran",
+        //       url: "https://nartc.me",
+        //       picture: "https://avatars.githubusercontent.com/u/25516557?v=4",
+        //     },
+        //   },
+        // }),
       ],
       favicon: "./src/assets/angular-three-dark.svg",
       tableOfContents: {
