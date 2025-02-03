@@ -80,6 +80,7 @@ export default defineConfig({
         "three-custom-shader-material",
       ],
     },
+    assetsInclude: ["**/*.gltf", "**/*.glb"],
   },
   integrations: [
     devServerFileWatcher(["./astro.sidebar.mjs"]),

@@ -1,0 +1,311 @@
+---
+title: Loading Assets
+description: Loading assets in 3D applications
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import GLTFDemo from "../../../../components/scenes/gltf-demo/gltf-demo";
+import GLTFDemoAnimation from "../../../../components/scenes/gltf-demo-animation/gltf-demo-animation";
+import TextureDemo from "../../../../components/scenes/texture-demo/texture-demo";
+
+In a THREE.js application, there are various types of assets that you can load and THREE.js provides [different types of loaders](https://threejs.org/docs/index.html?q=loader)
+for these different types of assets.
+
+<details>
+<summary>THREE.js <code>GLTFLoader</code> example</summary>
+
+```ts
+// Instantiate a loader
+const loader = new GLTFLoader();
+
+// Optional: Provide a DRACOLoader instance to decode compressed mesh data
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath("/examples/jsm/libs/draco/");
+loader.setDRACOLoader(dracoLoader);
+
+// Load a glTF resource
+loader.load(
+  // resource URL
+  "models/gltf/duck/duck.gltf",
+  // called when the resource is loaded
+  function (gltf) {
+    scene.add(gltf.scene);
+
+    gltf.animations; // Array<THREE.AnimationClip>
+    gltf.scene; // THREE.Group
+    gltf.scenes; // Array<THREE.Group>
+    gltf.cameras; // Array<THREE.Camera>
+    gltf.asset; // Object
+  },
+);
+```
+
+</details>
+
+In Angular Three, the recommended way is to use [`injectLoader`](/reference/core/loader) API. `injectLoader` loads the asset, caches the result,
+and returns it as a [`Signal`](https://angular.dev/api/core/Signal). Caching assets will reduce network requests, bandwidth, and memory usage, which will improve the performance of your application.
+
+:::tip[Did you know?]
+
+In addition to handling [`assets` traditionally in the application configuration](https://angular.dev/reference/configs/workspace-config#assets-configuration), Angular's
+new `application` builder also supports configuring assets via [`loader` option](https://angular.dev/tools/cli/build-system-migration#file-extension-loader-customization)
+or [import attribute](https://angular.dev/tools/cli/build-system-migration#import-attribute-loader-customization)
+
+:::
+
+## Generic assets
+
+`injectLoader` can accept a THREE.js `Loader` class as the first argument. For the second argument, `injectLoader` can accept a single path to the asset, an array of paths, or a dictionary (i.e: `Record`) of paths to multiple assets.
+
+```angular-ts
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { Component } from '@angular/core';
+import { injectLoader } from 'angular-three'
+
+@Component({
+    template: `
+        @if (gltf(); as gltf) {
+            <!-- use gltf.scene, gltf.animations etc... -->
+        }
+    `
+})
+export class MyCmp {
+    gltf = injectLoader(() => GLTFLoader, () => './path/to/my-model.gltf');
+}
+```
+
+For asset types that do not have a dedicated section on this page, feel free to check out [THREE.js examples](https://threejs.org/examples/) to see how the models are loaded using what `Loader` as well as techniques, then you
+can build your own [abstractions](/learn/advanced/abstractions).
+
+## GLTF Assets
+
+GLTF assets are usually for premade 3D models and it can come in `.gltf` or `.glb` extensions. `injectLoader` can be used as shown above but a better way is to use [`injectGLTF`](/reference/soba/loaders/gltf) instead
+for GLTF assets.
+
+```angular-ts
+// scene-graph.ts
+
+import {
+    ChangeDetectionStrategy,
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+} from "@angular/core";
+import { NgtArgs } from "angular-three";
+import { NgtsCameraControls } from "angular-three-soba/controls";
+import { injectGLTF } from "angular-three-soba/loaders";
+import { NgtsCenter, NgtsEnvironment } from "angular-three-soba/staging";
+
+import littlestTokyo from "./LittlestTokyo-transformed.glb" with { loader: "file" };
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngts-center>
+            <ngt-primitive *args="[gltf.scene()]" [parameters]="{ scale: 0.0075 }" />
+        </ngts-center>
+
+        <ngts-environment [options]="{ preset: 'city' }" />
+
+        <ngts-camera-controls />
+    `,
+    imports: [NgtArgs, NgtsCameraControls, NgtsEnvironment, NgtsCenter],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SceneGraph {
+    protected gltf = injectGLTF(() => littlestTokyo);
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <GLTFDemo client:only />
+</div>
+
+### Animations
+
+GLTF models can come with built-in animations. When `GLTFLoader` loads the GLTF asset, these animations become available as [`AnimationClip`](https://threejs.org/docs/#api/en/animation/AnimationClip) and
+[`AnimationMixer`](https://threejs.org/docs/#api/en/animation/AnimationMixer) can be used to interact with them.
+
+Angular Three provides an [`injectAnimations`](/reference/soba/misc/animations) to simplify the process of using GLTF animations.
+
+```angular-ts
+// scene-graph-animation.ts
+
+import {
+    ChangeDetectionStrategy,
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    effect,
+} from "@angular/core";
+import { injectGLTF } from "angular-three-soba/loaders";
+import { NgtArgs } from "angular-three";
+import { NgtsCameraControls } from "angular-three-soba/controls";
+import { NgtsCenter, NgtsEnvironment } from "angular-three-soba/staging";
+import {
+    injectAnimations,
+    type NgtsAnimationClips,
+} from "angular-three-soba/misc";
+import type { GLTF } from "three-stdlib";
+
+import littlestTokyo from "../gltf-demo/LittlestTokyo-transformed.glb" with { loader: "file" };
+
+interface LittlestTokyoGLTF extends GLTF {
+    animations: NgtsAnimationClips<"Take 001">[];
+}
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngts-center>
+            <ngt-primitive *args="[gltf.scene()]" [parameters]="{ scale: 0.0075 }" />
+        </ngts-center>
+
+        <ngts-environment [options]="{ preset: 'city' }" />
+
+        <ngts-camera-controls />
+    `,
+    imports: [NgtArgs, NgtsCameraControls, NgtsEnvironment, NgtsCenter],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SceneGraph {
+    protected gltf = injectGLTF<LittlestTokyoGLTF>(() => littlestTokyo);
+    private animations = injectAnimations(this.gltf, this.gltf.scene);
+
+    constructor() {
+        effect((onCleanup) => {
+            if (!this.animations.isReady) return;
+            const { actions } = this.animations;
+            actions["Take 001"].reset().fadeIn(0.5).play();
+            onCleanup(() => actions["Take 001"].fadeOut(0.5).stop());
+        });
+    }
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <GLTFDemoAnimation client:only />
+</div>
+
+:::note
+
+Best practice is to always type your GLTF model that extends `GLTF` from `three-stdlib`.
+The `animations` property from `LittlestTokyoGLTF` provides the `actions` type from `injectAnimations`.
+
+:::
+
+### Reusing GLTF
+
+When working with 3D models, you might run into some challenges:
+
+- Models are premade and are demo'ed with [`ngt-primitive`](/reference/core/primitive) component which makes it tricky to modify parts of the model.
+- Models, used with `injectLoader`, are cached and loaded once. This is a performance boost. However since it is loaded once, the `uuid` (of the underlying `Object3D`) never changes and THREE.js will not render the **same** `Object3D` more than once.
+
+To address both of these challenges, Angular Three provides a generator/schematic to generate an Angular component from your GLTF model. Learn more about [`angular-three-plugin:gltf`](/reference/plugin/gltf)
+
+## Textures
+
+Another common type of assets used in THREE.js applications is [`Texture`](https://threejs.org/docs/#api/en/textures/Texture) via [`TextureLoader`](https://threejs.org/docs/#api/en/loaders/TextureLoader).
+
+```angular-ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { injectLoader } from "angular-three";
+import { TextureLoader } from "three/src/loaders/TextureLoader.js";
+
+
+@Component({
+    template: `
+        <ngt-mesh-standard-material [map]="texture()" />
+    `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class MyCmp {
+    protected texture = injectLoader(() => TextureLoader, () => './path/to/my-texture.png');
+}
+```
+
+Similarly to GLTF assets, you can use a dedicated [`injectTexture`](/reference/soba/loaders/texture) instead of `injectLoader`
+
+```angular-ts
+// scene-graph.ts
+
+import {
+    ChangeDetectionStrategy,
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+} from "@angular/core";
+import { NgtArgs } from "angular-three";
+import { NgtsOrbitControls } from "angular-three-soba/controls";
+import { injectTexture } from "angular-three-soba/loaders";
+import { NgtsEnvironment } from "angular-three-soba/staging";
+
+/**
+ *
+Image Attributions
+
+The images used in this project are sourced from NASA and ESA and may require attribution. Please refer to the image sources for specific attribution requirements.
+
+- Earth Albedo map: https://visibleearth.nasa.gov/images/57730/the-blue-marble-land-surface-ocean-color-and-sea-ice/82679l
+- Earth Bump map: https://visibleearth.nasa.gov/images/73934/topography/84331l
+*/
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngt-mesh>
+            <ngt-sphere-geometry *args="[10, 64, 64]" />
+
+            @let _textures = textures();
+            @let map = _textures?.map;
+            @let bumpMap = _textures?.bumpMap;
+
+            <ngt-mesh-standard-material [map]="map" [bumpMap]="bumpMap" />
+        </ngt-mesh>
+
+        <ngts-environment [options]="{ preset: 'sunset' }" />
+        <ngts-orbit-controls [options]="{ autoRotate: true, autoRotateSpeed: 0.25 }" />
+    `,
+    imports: [NgtArgs, NgtsOrbitControls, NgtsEnvironment],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SceneGraph {
+    protected textures = injectTexture(() => ({
+        map: "https://raw.githubusercontent.com/nartc/threejs-earth/refs/heads/main/src/assets/Albedo.jpg",
+        bumpMap: "https://raw.githubusercontent.com/nartc/threejs-earth/refs/heads/main/src/assets/Bump.jpg",
+    }));
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <TextureDemo client:only />
+</div>
+
+The main difference between `injectLoader` and `injectTexture` is the ease of loading multiple textures; both with `Array` and `Record` types.
+
+:::tip[Did you know?]
+
+All Angular Three elements have a special [`parameters`](/reference/core/renderer) property and you can use this to pass in the `textures` object when you use `Record` type to load multiple textures.
+Just make sure the keys of the `Record` textures match with the properties on the `Material` object.
+
+```angular-html
+<ngt-mesh-standard-material [parameters]="textures()" />
+```
+
+:::
+
+### `onLoad`
+
+One of the more common use-cases when working with `Texture` is to modify the Texture properties like `colorSpace`, `wrapS`, `wrapT`, etc. In order to do this with `injectTexture`,
+you can pass in an `onLoad` callback.
+
+```angular-ts
+injectTexture(() => "input", {
+    onLoad: (textures) => {
+        // textures is an Array of Texture
+        textures[0].wrapS = THREE.RepeatWrapping;
+        textures[0].wrapT = THREE.RepeatWrapping;
+        textures[0].colorSpace = THREE.SRGBColorSpace;
+    },
+});
+```

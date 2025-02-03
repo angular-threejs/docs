@@ -31,13 +31,26 @@ export function ngtSidebar() {
               label: "App Structure",
               slug: "learn/basics/app-structure",
             },
+            {
+              label: "Loading Assets",
+              slug: "learn/basics/loading-assets",
+            },
+          ],
+        },
+        {
+          label: "Advanced",
+          items: [
+            {
+              label: "Custom Abstractions",
+              slug: "learn/advanced/abstractions",
+            },
           ],
         },
       ],
     },
     {
       label: "Core",
-      link: "/reference/core/renderer",
+      link: "/reference/core/introduction",
       icon: "seti:svg",
       items: [
         {
@@ -60,8 +73,16 @@ export function ngtSidebar() {
               slug: "reference/core/args",
             },
             {
+              label: "ngt-primitive",
+              slug: "reference/core/primitive",
+            },
+            {
               label: "injectBeforeRender",
               slug: "reference/core/before-render",
+            },
+            {
+              label: "injectLoader",
+              slug: "reference/core/loader",
             },
           ],
         },
@@ -84,6 +105,68 @@ export function ngtSidebar() {
             {
               label: "Introduction",
               slug: "reference/core/testing/introduction",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      label: "Plugin",
+      link: "/reference/plugin/introduction",
+      icon: "puzzle",
+      items: [
+        {
+          label: "angular-three-plugin",
+          items: [
+            {
+              label: "Introduction",
+              slug: "reference/plugin/introduction",
+            },
+            {
+              label: "GLTF",
+              slug: "reference/plugin/gltf",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      label: "Soba",
+      link: "/reference/soba/introduction",
+      icon: "puzzle",
+      items: [
+        {
+          label: "angular-three-soba",
+          items: [
+            {
+              label: "Introduction",
+              slug: "reference/soba/introduction",
+            },
+          ],
+        },
+        {
+          label: "angular-three-soba/loaders",
+          items: [
+            {
+              label: "Introduction",
+              slug: "reference/soba/loaders/introduction",
+            },
+            {
+              label: "injectGLTF",
+              slug: "reference/soba/loaders/gltf",
+            },
+          ],
+        },
+        {
+          label: "angular-three-soba/misc",
+          items: [
+            {
+              label: "Introduction",
+              slug: "reference/soba/misc/introduction",
+            },
+            {
+              label: "injectAnimations",
+              slug: "reference/soba/misc/animations",
             },
           ],
         },
