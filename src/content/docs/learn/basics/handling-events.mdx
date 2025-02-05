@@ -3,6 +3,8 @@ title: Handling Events
 description: Events in Angular Three
 ---
 
+import EventPropagationDemo from "../../../../components/scenes/event-propagation-demo/event-propagation-demo";
+
 The events system in Angular Three is inspired by [React Three Fiber (R3F)](https://r3f.docs.pmnd.rs/api/events) but adapted to Angular's syntax and conventions. Below, we explore how to handle events, customize interactions, and leverage Angular-specific features.
 
 ## Document/Window Events
@@ -77,7 +79,7 @@ THREE.js objects that implement their own raycast method (meshes, lines, etc.) c
 
 :::note
 
-Additionally, there are two special events `(updated)` and `(attached)` that Angular Three has for all elements. [Events reference page](/reference/core/primitive) also mentions these two events.
+Additionally, there are two special events `(updated)` and `(attached)` that Angular Three has for all elements. [Events reference page](/reference/core/renderer) also mentions these two events.
 
 :::
 
@@ -168,6 +170,10 @@ export class MyCmp {
 
 1. Stops the event from bubbling up to ancestors.
 2. Prevents the event from reaching objects further along the ray. This means that if the "blocked" objects were previously delivered `pointerover` events, they will immediately be delivered `pointerout` events.
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <EventPropagationDemo client:only />
+</div>
 
 ### Pointer Capturing
 
