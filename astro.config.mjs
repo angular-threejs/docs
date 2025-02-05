@@ -3,9 +3,10 @@ import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import { readFileSync } from "node:fs";
-import starlightBlog from "starlight-blog";
 import { ngtSidebar } from "./astro.sidebar.mjs";
 import glob from "fast-glob";
+
+// import starlightBlog from "starlight-blog";
 
 function devServerFileWatcher(paths) {
   return {

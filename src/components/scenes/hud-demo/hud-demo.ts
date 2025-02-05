@@ -11,17 +11,14 @@ import { SceneGraph } from "./scene-graph";
     <ngt-canvas>
       <app-scene-graph *canvasContent />
     </ngt-canvas>
-
-    <span class="font-mono absolute bottom-0 right-0 text-sm">
+    <span class="absolute font-mono text-xs bottom-4 right-4">
       * click/hover the cube
     </span>
   `,
-  host: {
-    class: "relative flex h-full !mt-0",
-  },
   imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: "hud-demo-docs block h-full relative !mt-0" },
 })
-export default class PointerDemo {
+export default class HudDemo {
   static clientProviders = [provideNgtRenderer()];
 }

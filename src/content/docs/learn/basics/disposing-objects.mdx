@@ -1,0 +1,80 @@
+---
+title: Disposing Objects
+description: Disposing objects in Angular Three
+---
+
+In THREE.js, freeing up resources is a [manual process](https://threejs.org/docs/index.html#manual/en/introduction/How-to-dispose-of-objects) that requires calling `dispose()` method
+on objects that implement it. Angular Three, as a custom renderer, is aware of the life-cycles of the elements rendered on the template. Hence, Angular Three automatically handles disposal of THREE.js resources for you. Additionally, Angular's own concept like Components and Directives in Angular Three follow standard Angular life-cycle management making resource cleanup more intuitive.
+
+## Automatic Disposal
+
+Angular Three will automatically call `dispose()` on destroyed elements.
+
+```angular-html
+<ngt-mesh>
+    <ngt-box-geometry />
+    <ngt-mesh-standard-material />
+</ngt-mesh>
+```
+
+When `ngt-mesh` is destroyed or its host component is destroyed, the underlying `BoxGeometry` and `MeshStandardMaterial` (from `ngt-box-geometry` and `ngt-mesh-standard-material` respectively) will be disposed properly.
+
+This also applies to elements that are subject to [Angular's Control Flow](https://angular.dev/guide/templates/control-flow#conditionally-display-content-with-if-else-if-and-else). When an element is taken out of the template by Angular's mechanism, Angular Three will also automatically dispose of it and its children.
+
+```angular-html
+@if (show()) {
+    <ngt-mesh>
+        <ngt-box-geometry />
+        <ngt-mesh-standard-material />
+    </ngt-mesh>
+}
+```
+
+## Disable Automatic Disposal
+
+You can disable automatic disposal by passing in `null` to `[dispose]` input on Angular Three elements.
+
+```angular-html
+<ngt-mesh [dispose]="null">
+    <ngt-box-geometry />
+    <ngt-mesh-standard-material />
+</ngt-mesh>
+```
+
+## Custom Disposal
+
+You can implement custom disposal logic by using `DestroyRef` or `ngOnDestroy`
+
+```angular-ts
+@Component({
+    template: ``
+})
+export class MyCmp {
+    private destroyRef = inject(DestroyRef);
+
+    constructor() {
+        this.destroyRef.onDestroy(() => {
+            // clean up logic
+        })
+    }
+}
+```
+
+## Resource Management in Custom Inject Functions (CIFs)
+
+Custom inject functions in Angular Three handle resource cleanup internally. For example, `injectTexture` manages texture disposal automatically
+
+```angular-ts
+import { injectTexture } from 'angular-three-soba/loaders';
+
+@Component({
+    template: `
+        <ngt-mesh-standard-material [map]="texture()" />
+    `
+})
+export class MyCmp {
+    protected texture = injectTexture(() => './path/to/texture');
+}
+```
+
+When `MyCmp` is destroyed, `injectTexture` will dispose the `texture` properly.

@@ -39,14 +39,39 @@ export function ngtSidebar() {
               label: "Handling Events",
               slug: "learn/basics/handling-events",
             },
+            {
+              label: "Disposing Objects",
+              slug: "learn/basics/disposing-objects",
+            },
           ],
         },
         {
           label: "Advanced",
           items: [
             {
+              label: "Using Directives",
+              slug: "learn/advanced/using-directives",
+            },
+            {
+              label: "Portals",
+              slug: "learn/advanced/portals",
+            },
+            {
+              label: "Routed Scene",
+              slug: "learn/advanced/routed-scene",
+            },
+            {
+              label: "Performance",
+              slug: "learn/advanced/performance",
+            },
+            {
               label: "Custom Abstractions",
               slug: "learn/advanced/abstractions",
+            },
+            {
+              label: "WebGPU",
+              slug: "learn/advanced/webgpu",
+              badge: { text: "Experimental", variant: "caution" },
             },
           ],
         },
@@ -77,6 +102,14 @@ export function ngtSidebar() {
               slug: "reference/core/args",
             },
             {
+              label: "NgtParent",
+              slug: "reference/core/parent",
+            },
+            {
+              label: "NgtPortal",
+              slug: "reference/core/portal",
+            },
+            {
               label: "ngt-primitive",
               slug: "reference/core/primitive",
             },
@@ -87,6 +120,10 @@ export function ngtSidebar() {
             {
               label: "injectLoader",
               slug: "reference/core/loader",
+            },
+            {
+              label: "injectObjectEvents",
+              slug: "reference/core/object-events",
             },
           ],
         },
@@ -145,6 +182,19 @@ export function ngtSidebar() {
             {
               label: "Introduction",
               slug: "reference/soba/introduction",
+            },
+          ],
+        },
+        {
+          label: "angular-three-soba/cameras",
+          items: [
+            {
+              label: "Introduction",
+              slug: "reference/soba/cameras/introduction",
+            },
+            {
+              label: "NgtsPerspectiveCamera",
+              slug: "reference/soba/cameras/perspective-camera",
             },
           ],
         },

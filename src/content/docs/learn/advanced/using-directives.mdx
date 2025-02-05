@@ -1,0 +1,128 @@
+---
+title: Using Directives
+description: Using custom directives in Angular Three
+---
+
+import PointerDemo from "../../../../components/scenes/pointer-demo/pointer-demo";
+
+Angular Three elements are like any other elements on Angular template except for they are rendered to the canvas. With that in mind, you can extend the functionality of
+Angular Three elements by using [**Directives**](https://angular.dev/guide/directives/attribute-directives) like we do with regular elements.
+
+## The `host` element
+
+Attaching directive on the host element allows the directive instance to access to the `host` via `inject(ElementRef)`. Angular Three elements return the actual THREE.js object as the host element so that you can access THREE.js APIs to extend the functionality of that element.
+
+```angular-ts
+import { Component, Directive, ElementRef, inject } from "@angular/core";
+import * as THREE from "three";
+
+@Directive({ selector: "ngt-mesh[dir]" })
+export class MyDir {
+    private host = inject<ElementRef<THREE.Mesh>>(ElementRef);
+
+    constructor() {
+        this.host.nativeElement; // THREE.Mesh instance
+    }
+}
+
+@Component({
+    template: `
+        <ngt-mesh dir></ngt-mesh>
+    `,
+    imports: [MyDir]
+})
+export class MyCmp {}
+```
+
+## Examples
+
+### `cursor`
+
+:::note
+
+This only applies to the browser platform.
+
+:::
+
+You might have already seen this directive in action on the home page. Let's build it here together. The key is [`injectObjectEvents`](/reference/core/object-events) function from `angular-three`.
+
+```angular-ts {"1. Constraint the directive to ngt-mesh": 4-5} {"2. Inject from DI": 9-11} {"3. Cursor logic": 15-23}
+// cursor.ts
+
+@Directive({
+
+    selector: "ngt-mesh[cursor]"
+})
+export class Cursor {
+    constructor() {
+
+        const document = inject(DOCUMENT);
+        const elementRef = inject<ElementRef<THREE.Mesh>>(ElementRef);
+        const nativeElement = elementRef.nativeElement;
+
+        if (nativeElement.isMesh) {
+
+            injectObjectEvents(() => nativeElement, {
+                pointerover: () => {
+                    document.body.style.cursor = "pointer";
+                },
+                pointerout: () => {
+                    document.body.style.cursor = "default";
+                },
+            });
+        }
+    }
+}
+```
+
+Now, you can apply `[cursor]` directive to any `ngt-mesh` on the template.
+
+```angular-ts {"->": 8}
+// scene-graph.ts
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngt-mesh
+            #mesh
+            cursor
+            [scale]="scale()"
+            (pointerover)="hovered.set(true)"
+            (pointerout)="hovered.set(false)"
+            (click)="scale.set(scale() === 2 ? 3 : 2)"
+        >
+            <ngt-box-geometry />
+            <ngt-mesh-standard-material
+                [color]="hovered() ? 'mediumpurple' : 'maroon'"
+                [roughness]="0.5"
+                [metalness]="0.5"
+            />
+        </ngt-mesh>
+
+        <ngts-environment [options]="{ preset: 'warehouse' }" />
+    `,
+    imports: [Cursor, NgtsEnvironment],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>("mesh");
+
+    protected hovered = signal(false);
+    protected scale = signal(2);
+
+    constructor() {
+        extend(THREE);
+
+        injectBeforeRender(({ delta }) => {
+            const mesh = this.meshRef().nativeElement;
+            mesh.rotation.x += delta;
+            mesh.rotation.y += delta;
+        });
+    }
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <PointerDemo client:only step={1} />
+</div>

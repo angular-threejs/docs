@@ -11,17 +11,11 @@ import { SceneGraph } from "./scene-graph";
     <ngt-canvas>
       <app-scene-graph *canvasContent />
     </ngt-canvas>
-
-    <span class="font-mono absolute bottom-0 right-0 text-sm">
-      * click/hover the cube
-    </span>
   `,
-  host: {
-    class: "relative flex h-full !mt-0",
-  },
   imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: "template-outlet-docs" },
 })
-export default class PointerDemo {
+export default class TemplateOutletDemo {
   static clientProviders = [provideNgtRenderer()];
 }

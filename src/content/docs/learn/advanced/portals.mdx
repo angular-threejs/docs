@@ -1,0 +1,197 @@
+---
+title: Portals
+description: Portals in Angular Three
+---
+
+import FloatingCodeBlock from "../../../../components/ui/floating-code-block.astro";
+import TemplateOutletDemo from "../../../../components/scenes/template-outlet/template-outlet";
+import HudDemo from "../../../../components/scenes/hud-demo/hud-demo";
+
+Portals might have different meaning depending on the use-cases. In general,
+it means that we want to render something as children of something else without following
+the hierarchy of the template. Pseudo-code looks something like this:
+
+```html
+<ngt-group>
+  <!-- render ngt-mesh here -->
+</ngt-group>
+
+<!-- outside of the hierarchy -->
+<ngt-mesh></ngt-mesh>
+```
+
+## `NgTemplateOutlet`
+
+For many cases, you can use [`NgTemplateOutlet`](https://angular.dev/api/common/NgTemplateOutlet?tab=api) if you just want to _portal_ objects around with (or without) different context data. In other words, you can
+use this technique to _reuse_ templates.
+
+```angular-ts
+// scene-graph.ts
+
+@Component({
+    selector: "app-scene-graph",
+    template: `
+        <ngts-perspective-camera [options]="{ makeDefault: true, position: [10, 10, 10], fov: 30 }" />
+        <ngts-orbit-controls [options]="{ enableZoom: false, maxPolarAngle: 85 * DEG2RAD, minPolarAngle: 20 * DEG2RAD, maxAzimuthAngle: 45 * DEG2RAD, minAzimuthAngle: -45 * DEG2RAD }" />
+        <ngts-grid [options]="{ planeArgs: [10.5, 10.5], position: [0, -0.01, 0], cellSize: 0.6, cellThickness: 1, cellColor: '#6f6f6f', sectionSize: 3.3, sectionThickness: 1.5, sectionColor: '#9d4b4b', fadeDistance: 25, fadeStrength: 1, followCamera: false, infiniteGrid: true }" />
+
+        <ngt-directional-light [position]="[5, 10, 3]" />
+
+        <ngt-object3D #trail [position]="[0, 0.5, 0]">
+            <ng-container [ngTemplateOutlet]="forTrail" />
+        </ngt-object3D>
+
+        <ng-template #forTrail>
+            <ng-container [ngTemplateOutlet]="mesh" [ngTemplateOutletContext]="{ color: '#fe3d00' }" />
+            <ngt-group [position]="[0, 1, 0]">
+                <ng-container [ngTemplateOutlet]="mesh" [ngTemplateOutletContext]="{ color: '#2f7dc6' }" />
+            </ngt-group>
+        </ng-template>
+
+        <ng-template #mesh let-color="color">
+            <ngt-mesh>
+                <ngt-box-geometry />
+                <ngt-mesh-standard-material [color]="color" />
+            </ngt-mesh>
+        </ng-template>
+    `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgtsOrbitControls,
+        NgtsPerspectiveCamera,
+        NgtsGrid,
+        NgTemplateOutlet,
+    ],
+})
+export class SceneGraph {
+    protected readonly DEG2RAD = THREE.MathUtils.DEG2RAD;
+
+    private trailRef = viewChild.required<ElementRef<THREE.Object3D>>("trail");
+
+    constructor() {
+        extend(THREE);
+
+        injectBeforeRender(() => {
+            const obj = this.trailRef().nativeElement;
+            obj.position.x = Math.sin(Date.now() / 1000) * 4;
+        });
+    }
+}
+```
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <TemplateOutletDemo client:only step={1} />
+</div>
+
+What you're seeing here is:
+
+- An `Object3D` that is being moved back and forth
+- A `Mesh` as a child of the `Object3D`
+- A `Group`
+- Another `Mesh` as a child of the `Group`
+
+The main takeaway here is that this `Mesh` is being _reused_ and has different color based on where it's rendered.
+
+```angular-html
+<ngt-object3D>
+    <ng-container [ngTemplateOutlet]="forObject3D" />
+</ngt-object3D>
+
+<ng-template #forObject3D>
+    <ng-container [ngTemplateOutlet]="mesh" [ngTemplateOutletContext]="{ color: '#fe3d00' }" />
+    <ngt-group [position]="[0, 1, 0]">
+        <ng-container [ngTemplateOutlet]="mesh" [ngTemplateOutletContext]="{ color: '#2f7dc6' }" />
+    </ngt-group>
+</ng-template>
+
+<ng-template #mesh let-color="color">
+    <ngt-mesh>
+        <ngt-box-geometry />
+        <ngt-mesh-standard-material [color]="color" />
+    </ngt-mesh>
+</ng-template>
+```
+
+## `NgtParent`
+
+This technique is useful for when you _cannot_ control the template for, well, **ng-template**.
+For example, routed components via [`router-outlet`](https://angular.dev/api/router/RouterOutlet)
+
+[`NgtParent`](/reference/core/parent) is a structural directive and it takes an input `parent`. `parent` accepts
+
+- A `string`: which will be used to look up the object with `getObjectByName()`
+- An `Object3D`
+- An `ElementRef<Object3D>`
+- or a `Signal` of all of these above
+
+Attaching `*parent` on an element will _portal_ that element as a child to the `parent` input.
+
+:::note
+
+It is tricky to setup Angular routing within MDX so please check out [routed rocks example](https://demo.angularthree.org/routed-rocks)
+
+:::
+
+## `NgtPortal`
+
+In THREE.js, there is a construct called [`WebGLRenderTarget`](https://threejs.org/docs/#api/en/renderers/WebGLRenderTarget). It is used to render the scene into a texture and then
+render the texture into the canvas. This is useful for things like post-processing effects, or HUD-like visuals.
+
+:::tip
+
+Recommended read: [Beautiful and Mind-bending Effects with WebGLRenderTarget](https://blog.maximeheckel.com/posts/beautiful-and-mind-bending-effects-with-webgl-render-targets/)
+
+:::
+
+In Angular Three, you can use [`NgtPortal`](/reference/core/portal) component to create an off-screen buffer that can be used to render secondary scenes.
+
+`NgtPortal` provides a _layered_ **store** that its children can inject. This makes sure that children of `NgtPortal`
+access the state of the `NgtPortal` and not the root **store**.
+
+```angular-ts
+@Component({
+    template: `
+        <ngt-mesh>
+            <ngt-torus-geometry />
+        </ngt-mesh>
+
+        <ngt-portal [container]="secondaryScene">
+            <ng-template portalContent>
+                <ngts-perspective-camera [options]="{ makeDefault: true }" />
+                <ngt-mesh>
+                    <ngt-box-geometry />
+                </ngt-mesh>
+            </ng-template>
+        </ngt-portal>
+    `,
+    imports: [NgtPortal, NgtPortalContent, NgtsPerspectiveCamera],
+})
+export class HUD {
+    secondaryScene = new Scene();
+}
+```
+
+The portal can have its own scene, camera, and children.
+
+:::note
+
+The [`NgtsPerspectiveCamera`](/reference/soba/cameras/perspective-camera) in the example above is an abstraction
+over `THREE.PerspectiveCamera` that has the ability to make itself the default camera for the closest **store**
+
+:::
+
+<FloatingCodeBlock
+  class="h-[600px] max-h-[600px] w-full"
+  snippets={[
+    { title: "scene-graph.ts", name: "hud-demo-scene-graph" },
+    { title: "view-cube.ts", name: "hud-demo-view-cube" },
+    { title: "box.ts", name: "hud-demo-box" },
+    { title: "face-material.ts", name: "hud-demo-face-material" },
+    { title: "torus.ts", name: "hud-demo-torus" },
+  ]}
+/>
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <HudDemo client:only step={1} />
+</div>
