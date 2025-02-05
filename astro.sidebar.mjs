@@ -35,6 +35,10 @@ export function ngtSidebar() {
               label: "Loading Assets",
               slug: "learn/basics/loading-assets",
             },
+            {
+              label: "Handling Events",
+              slug: "learn/basics/handling-events",
+            },
           ],
         },
         {

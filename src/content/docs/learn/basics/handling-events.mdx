@@ -1,0 +1,280 @@
+---
+title: Handling Events
+description: Events in Angular Three
+---
+
+The events system in Angular Three is inspired by [React Three Fiber (R3F)](https://r3f.docs.pmnd.rs/api/events) but adapted to Angular's syntax and conventions. Below, we explore how to handle events, customize interactions, and leverage Angular-specific features.
+
+## Document/Window Events
+
+:::note
+
+This section only applies to the browser platform.
+
+:::
+
+Custom components and directives within the `NgtCanvas` component are rendered to the Canvas but you can always attach events to the [`Document`](https://developer.mozilla.org/en-US/docs/Web/API/Document) or [`Window`](https://developer.mozilla.org/en-US/docs/Web/API/Window) objects via [`host`](https://angular.dev/guide/components/host-elements#) property.
+
+```angular-ts
+import { Component } from "@angular/core";
+import { injectStore } from "angular-three";
+
+@Component({
+    host: {
+        '(document:keydown)': 'onKeyDown($event)',
+        '(window:scroll)': 'onScroll($event)'
+    }
+})
+export class MyCmp {
+    private store = injectStore(); // can still inject Angular Three context store
+
+    onKeyDown(event: KeyboardEvent) {
+        // able to handle events on the Document object
+    }
+
+    onScroll(event: Event) {
+        // able to handle events on the Window object
+    }
+}
+```
+
+If you want to attach events to the `HTMLCanvasElement`, you can get access this element via the **store**
+
+```angular-ts
+@Component({})
+export class MyCmp {
+    private store = injectStore();
+    private canvasElement = this.store.gl.domElement(); // Signal<HTMLCanvasElement>
+
+    // or you can grab the snapshot if you're sure at this point, the Canvas is available
+    // private canvasElement = this.store.snapshot.gl.domElement; // HTMLCanvasElement
+}
+```
+
+## THREE.js Events
+
+Angular Three supports native THREE.js events using Angular's event binding syntax. Check out [events reference page](/reference/core/renderer) for details.
+
+## Raycast Events
+
+THREE.js objects that implement their own raycast method (meshes, lines, etc.) can be interacted with using Angular's event binding syntax. Events contain both the browser event and THREE.js event data.
+
+```angular-html
+<ngt-mesh
+  (click)="handleClick($event)"
+  (contextmenu)="handleContextMenu($event)"
+  (dblclick)="handleDoubleClick($event)"
+  (pointerup)="handlePointerUp($event)"
+  (pointerdown)="handlePointerDown($event)"
+  (pointerover)="handlePointerOver($event)"
+  (pointerout)="handlePointerOut($event)"
+  (pointermove)="handlePointerMove($event)"
+  (wheel)="handleWheel($event)"
+  (pointermissed)="handlePointerMissed($event)"
+>
+</ngt-mesh>
+```
+
+:::note
+
+Additionally, there are two special events `(updated)` and `(attached)` that Angular Three has for all elements. [Events reference page](/reference/core/primitive) also mentions these two events.
+
+:::
+
+:::note
+
+`pointerenter` and `pointerleave` events function identically to `pointerover` and `pointerout`. When `pointerout` occurs, the event may contain intersection data from the previous event with that object.
+
+:::
+
+### Event Data
+
+Here are the interfaces that comprise `NgtThreeEvent` which is the interface for the data of these raycast events
+
+```angular-ts
+export interface NgtIntersection extends THREE.Intersection {
+    /** The event source (the object which registered the handler) */
+    eventObject: THREE.Object3D;
+}
+
+export interface NgtIntersectionEvent<TSourceEvent> extends NgtIntersection {
+    /** The event source (the object which registered the handler) */
+    eventObject: THREE.Object3D;
+    /** An array of intersections */
+    intersections: NgtIntersection[];
+    /** vec3.set(pointer.x, pointer.y, 0).unproject(camera) */
+    unprojectedPoint: THREE.Vector3;
+    /** Normalized event coordinates */
+    pointer: THREE.Vector2;
+    /** Delta between first click and this event */
+    delta: number;
+    /** The ray that pierced it */
+    ray: THREE.Ray;
+    /** The camera that was used by the raycaster */
+    camera: NgtCamera;
+    /** stopPropagation will stop underlying handlers from firing */
+    stopPropagation: () => void;
+    /** The original host event */
+    nativeEvent: TSourceEvent;
+    /** If the event was stopped by calling stopPropagation */
+    stopped: boolean;
+}
+
+export type NgtThreeEvent<TEvent> = NgtIntersectionEvent<TEvent> & NgtProperties<TEvent>;
+
+export interface NgtEventHandlers {
+    click?: (event: NgtThreeEvent<MouseEvent>) => void;
+    contextmenu?: (event: NgtThreeEvent<MouseEvent>) => void;
+    dblclick?: (event: NgtThreeEvent<MouseEvent>) => void;
+    pointerup?: (event: NgtThreeEvent<PointerEvent>) => void;
+    pointerdown?: (event: NgtThreeEvent<PointerEvent>) => void;
+    pointerover?: (event: NgtThreeEvent<PointerEvent>) => void;
+    pointerout?: (event: NgtThreeEvent<PointerEvent>) => void;
+    pointerenter?: (event: NgtThreeEvent<PointerEvent>) => void;
+    pointerleave?: (event: NgtThreeEvent<PointerEvent>) => void;
+    pointermove?: (event: NgtThreeEvent<PointerEvent>) => void;
+    pointermissed?: (event: MouseEvent) => void;
+    pointercancel?: (event: NgtThreeEvent<PointerEvent>) => void;
+    wheel?: (event: NgtThreeEvent<WheelEvent>) => void;
+}
+```
+
+### Event Propagation (bubbling)
+
+The event system handles propagation uniquely to accommodate 3D space and object occlusion:
+
+1. When a ray intersects multiple objects, the system creates an ordered list of intersections based on distance from the camera
+2. The event is first delivered to the nearest object
+3. It then bubbles up through that object's ancestors (similar to DOM event bubbling)
+4. After completing that path, it moves to the next nearest object
+5. This process continues through all intersected objects
+
+This means objects are naturally "transparent" to pointer events by default, even when they handle the event themselves.
+
+#### `stopPropagation()`
+
+To make an object "block" events from reaching objects behind it:
+
+```angular-ts
+export class MyCmp {
+    handlePointerOver(event: NgtThreeEvent<PointerEvent>) {
+        event.stopPropagation();
+        // Your event handling logic here
+    }
+}
+```
+
+`stopPropagation()` has two effects:
+
+1. Stops the event from bubbling up to ancestors.
+2. Prevents the event from reaching objects further along the ray. This means that if the "blocked" objects were previously delivered `pointerover` events, they will immediately be delivered `pointerout` events.
+
+### Pointer Capturing
+
+Angular Three supports pointer capture for maintaining interaction control:
+
+```angular-ts
+@Component({
+    template: `
+        <ngt-mesh
+            (pointerdown)="onPointerDown($event)"
+            (pointerup)="onPointerUp($event)"
+        >
+            <!-- mesh contents -->
+        </ngt-mesh>
+    `
+})
+export class MeshComponent {
+    onPointerDown(event: NgtThreeEvent<PointerEvent>) {
+        event.stopPropagation();
+        // Capture ensures subsequent pointer events go to this object
+        event.target.setPointerCapture(event.nativeEvent.pointerId);
+    }
+
+    onPointerUp(event: NgtThreeEvent<PointerEvent>) {
+        event.stopPropagation();
+        // Release the capture when interaction is complete
+        event.target.releasePointerCapture(event.nativeEvent.pointerId);
+    }
+}
+```
+
+:::caution
+
+Currently, the pointer capture system supports single-pointer interactions. For multi-touch scenarios, additional handling may be required.
+
+:::
+
+### Custom Event Configuration
+
+For advanced use cases, you can customize the event system's behavior using the `events` input on `NgtCanvas` component. The `events` input accepts a function
+that expects the **store** and returns a `NgtEventManager<EventTarget>` where `EventTarget` is the type of element that events will be attached to.
+
+```angular-ts
+@Component({
+    template: `
+        <ngt-canvas
+            [events]="eventConfig"
+        >
+            <!-- scene contents -->
+        </ngt-canvas>
+    `
+})
+export class SceneComponent {
+    eventConfig = (store: NgtStore): NgtEventManager<HTMLElement> => ({
+        enabled: true,                 // Enable/disable event system
+        priority: 1,                   // Event layer priority
+        filter: (items: THREE.Intersection[], store: NgtStore) => items,  // Custom intersection filter
+        compute: (event: PointerEvent, store: NgtStore) => {
+            // Custom pointer/raycaster computation
+            store.pointer.set(
+                (event.offsetX / store.get('size').width) * 2 - 1,
+                -(event.offsetY / store.get('size').height) * 2 + 1
+            );
+            store.raycaster.setFromCamera(store.pointer, store.get('camera'));
+        }
+    });
+}
+```
+
+Here's the `NgtEventManager` interface
+
+```angular-ts
+export interface NgtEventManager<TTarget> {
+    /** Determines if the event layer is active */
+    enabled: boolean;
+    /** Event layer priority, higher prioritized layers come first and may stop(-propagate) lower layer  */
+    priority: number;
+    /** The compute function needs to set up the raycaster and an xy- pointer  */
+    compute?: NgtComputeFunction;
+    /** The filter can re-order or re-structure the intersections  */
+    filter?: NgtFilterFunction;
+    /** The target node the event layer is tied to */
+    connected?: TTarget;
+    /** All the pointer event handlers through which the host forwards native events */
+    handlers?: NgtEvents;
+    /** Allows re-connecting to another target */
+    connect?: (target: TTarget) => void;
+    /** Removes all existing events handlers from the target */
+    disconnect?: () => void;
+    /** Triggers a onPointerMove with the last known event. This can be useful to enable raycasting without
+    *  explicit user interaction, for instance when the camera moves a hoverable object underneath the cursor.
+    */
+    update?: () => void;
+}
+```
+
+### Forcing Raycast Updates
+
+By default, raycasting only occurs during user interactions. To force a raycast update (e.g., when camera or objects move under a static cursor), you can call `update()` from the `NgtEventManager` in the **store**. More common use-case is to force raycast update in the before render loop to react to Camera movements.
+
+```angular-ts
+export class MyCmp {
+    constructor() {
+        injectBeforeRender(({ events }) => {
+            // Trigger a raycast with the last known pointer position
+            events.update?.();
+        })
+    }
+}
+```
