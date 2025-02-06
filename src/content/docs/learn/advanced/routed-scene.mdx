@@ -2,3 +2,142 @@
 title: Routed Scene
 description: Routing in Angular Three
 ---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Angular Three supports routed scene graphs via the familiar [`RouterOutlet`](https://angular.dev/api/router/RouterOutlet) component with one caveat: the `RouterOutlet` has to be wrapped by another component.
+
+```angular-html
+<!-- ❌ won't work -->
+<ngt-canvas>
+    <router-outlet *canvasContent />
+</ngt-canvas>
+
+<!-- ✅ works -->
+<ngt-canvas>
+    <app-scene-graph *canvasContent />
+</ngt-canvas>
+
+<!-- scene-graph html -->
+<router-outlet />
+```
+
+## `NgtRoutedScene`
+
+For simple cases that you just need to wrap `RouterOutlet` by itself, Angular Three provides a [`NgtRoutedScene`](/reference/core/routed-scene) component that you can use instead.
+
+```angular-html
+<ngt-canvas>
+    <ngt-routed-scene *canvasContent />
+</ngt-canvas>
+```
+
+## Routed Scene Layout
+
+Like other route layouts in regular Angular applications, you can create your routed scene layout with default camera controls, default lighting etc...
+
+```angular-html
+// custom-routed-scene.html
+
+<!-- some default lighting -->
+<ngt-ambient-light />
+<ngt-directional-light />
+
+<!-- group router outlet -->
+<ngt-group #parent>
+    <router-outlet />
+</ngt-group>
+
+<!-- camera controls -->
+<ngts-camera-controls />
+```
+
+Once you have the routed scene in place, all you need to do is to configure some routes.
+
+<Tabs>
+    <TabItem label="red-scene.ts">
+    ```angular-ts
+    import { Component, viewChild, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
+    import { injectBeforeRender } from 'angular-three';
+
+    @Component({
+        template: `
+            <ngt-mesh #cube>
+                <ngt-box-geometry />
+                <ngt-mesh-basic-material color="red" />
+            </ngt-mesh>
+        `,
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export default class RedScene {
+        private cubeRef = viewChild.required<ElementRef<THREE.Mesh>>('cube');
+
+        constructor() {
+            injectBeforeRender(({ clock }) => {
+                this.cube().nativeElement.rotation.x = clock.elapsedTime;
+                this.cube().nativeElement.rotation.y = clock.elapsedTime;
+            });
+        }
+    }
+    ```
+    </TabItem>
+    <TabItem label="blue-scene.ts">
+    ```angular-ts
+    import { Component, viewChild, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
+    import { injectBeforeRender } from 'angular-three';
+
+    @Component({
+        template: `
+            <ngt-mesh #cube>
+                <ngt-box-geometry />
+                <ngt-mesh-basic-material color="blue" />
+            </ngt-mesh>
+        `,
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export default class BlueScene {
+        private cubeRef = viewChild.required<ElementRef<THREE.Mesh>>('cube');
+
+        constructor() {
+            injectBeforeRender(({ clock }) => {
+                this.cube().nativeElement.rotation.x = clock.elapsedTime;
+                this.cube().nativeElement.rotation.y = clock.elapsedTime;
+            });
+        }
+    }
+    ```
+    </TabItem>
+    <TabItem label="main.ts">
+    ```angular-ts
+    import { bootstrapApplication } from '@angular/platform-browser';
+    import { provideRouter } from '@angular/router';
+    import { provideNgtRenderer } from 'angular-three';
+    import { AppComponent } from './app/app.component';
+
+    bootstrapApplication(AppComponent, {
+        providers: [
+            provideNgtRenderer(),
+            provideRouter([
+                {
+                    path: '',
+                    loadComponent: () => import('./app/red-scene'),
+                },
+                {
+                    path: 'blue',
+                    loadComponent: () => import('./app/blue-scene'),
+                },
+            ]),
+        ],
+    }).catch((err) => console.error(err));
+    ```
+    </TabItem>
+
+</Tabs>
+
+:::note
+
+It is tricky to setup Angular routing within MDX so please check out [routed example](https://demo.angularthree.org/routed)
+
+:::

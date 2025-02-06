@@ -79,9 +79,11 @@ export default defineConfig({
         "@pmndrs/vanilla",
         "@pmndrs/cannon-worker-api",
         "three-custom-shader-material",
+        "postprocessing",
+        "stats-gl",
       ],
     },
-    assetsInclude: ["**/*.gltf", "**/*.glb"],
+    assetsInclude: ["**/*.gltf", "**/*.glb", "**/*.png", "**/*.CUBE"],
   },
   integrations: [
     devServerFileWatcher(["./astro.sidebar.mjs"]),

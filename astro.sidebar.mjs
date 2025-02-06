@@ -110,6 +110,10 @@ export function ngtSidebar() {
               slug: "reference/core/portal",
             },
             {
+              label: "NgtRoutedScene",
+              slug: "reference/core/routed-scene",
+            },
+            {
               label: "ngt-primitive",
               slug: "reference/core/primitive",
             },

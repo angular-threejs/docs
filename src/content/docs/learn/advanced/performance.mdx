@@ -2,3 +2,346 @@
 title: Performance
 description: Performance tips and tricks in Angular Three
 ---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import ColorGradingDemo from "../../../../components/scenes/color-grading-demo/color-grading-demo";
+import ReuseGLTFDemo from "../../../../components/scenes/reuse-gltf-demo/reuse-gltf-demo";
+
+:::note
+
+The content of this page is inspired by [React Three Fiber's Performance tips and tricks](https://r3f.docs.pmnd.rs/advanced/scaling-performance)
+
+:::
+
+Running WebGL applications can be resource-intensive, depending on your device's capabilities. If you're aiming to make your application accessible to a wide range of devices, implementing performance optimizations becomes crucial. This page outlines some of them.
+
+## On-demand Rendering
+
+Like most THREE.js applications, Angular Three typically operates in a game loop that executes 60 times per second (60fps). This approach works well for scenes with constant animation or movement, like games.
+
+However, continuous rendering cycle can be the primary cause of battery drain and increased CPU usage. For scenes where motion is occasional or elements eventually come to rest, continuous rendering becomes inefficient.
+
+Angular Three allows you to opt-in to on-demand rendering, which triggers renders only when changes occur. This optimization significantly reduces battery consumption and minimizes system load.
+
+<Tabs>
+    <TabItem label="canvas.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal } from "@angular/core";
+    import { NgtCanvas, NgtCanvasContent, } from "angular-three/dom";
+    import { NgtsStats } from "angular-three-soba/stats";
+    import { SceneGraph } from "./scene-graph";
+
+    @Component({
+        template: `
+            <ngt-canvas [frameloop]="frameloop()" [camera]="{ position: [0, 0, 3], fov: 45 }">
+                <app-scene-graph *canvasContent />
+            </ngt-canvas>
+            <button [(toggleButton)]="onDemand" class="absolute top-4 right-4">
+                on-demand renderering
+            </button>
+        `,
+        imports: [NgtCanvas, NgtCanvasContent, SceneGraph, ToggleButton],
+    })
+    export default class ColorGradingDemo {
+        protected onDemand = signal(true);
+        protected frameloop = computed(() => (this.onDemand() ? "demand" : "always"));
+    }
+    ```
+    </TabItem>
+    <TabItem label="scene-graph.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+    import { NgtsEnvironment } from "angular-three-soba/staging";
+    import { NgtsOrbitControls } from "angular-three-soba/controls";
+
+    @Component({
+        selector: "app-scene-graph",
+        template: `
+            <ngt-ambient-light />
+            <ngt-spot-light [intensity]="Math.PI * 0.5" [angle]="0.2" [decay]="0" [penumbra]="1" [position]="[5, 15, 10]" />
+
+            <app-sphere />
+            <app-grading />
+
+            <ngts-environment [options]="{ preset: 'warehouse', background: true, blur: 0.6 }" />
+            <ngts-orbit-controls />
+        `,
+        imports: [Sphere, Grading, NgtsEnvironment, NgtsOrbitControls],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export class SceneGraph {
+        protected readonly Math = Math;
+    }
+    ```
+    </TabItem>
+    <TabItem label="sphere.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+    import { NgtArgs } from "angular-three";
+    import { injectTexture } from "angular-three-soba/loaders";
+
+    import terrazoUrl from "./terrazo.png" with { loader: "file" };
+
+    @Component({
+        selector: "app-sphere",
+        template: `
+            <ngt-mesh>
+                <ngt-sphere-geometry *args="[1, 64, 64]" />
+                <ngt-mesh-physical-material [clearcoat]="1" [clearcoatRoughness]="0" [roughness]="0" [metalness]="0.5" [map]="texture()" />
+            </ngt-mesh>
+        `,
+        imports: [NgtArgs],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    })
+    export class Sphere {
+        protected texture = injectTexture(() => terrazoUrl.src);
+    }
+    ```
+    </TabItem>
+    <TabItem label="grading.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component } from "@angular/core";
+    import { NgtpEffectComposer, NgtpLUT } from "angular-three-postprocessing";
+    import { LUTCubeLoader } from "postprocessing";
+    import { injectLoader } from "angular-three";
+
+    import cubicleCube from "./cubicle-99.CUBE" with { loader: "file" };
+
+    @Component({
+        selector: "app-grading",
+        template: `
+            <ngtp-effect-composer>
+                @if (result(); as lut) {
+                    <ngtp-lut [options]="{ lut, tetrahedralInterpolation: true }" />
+                }
+            </ngtp-effect-composer>
+        `,
+        imports: [NgtpEffectComposer, NgtpLUT],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export class Grading {
+        protected result = injectLoader(
+            () => LUTCubeLoader,
+            () => cubicleCube,
+        );
+    }
+    ```
+    </TabItem>
+
+</Tabs>
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <ColorGradingDemo client:only />
+</div>
+
+In the above example, you can see that the performance monitor does not update continuously when **on-demand rendering** is enabled. Try toggling **on-demand rendering**, move the camera around, then look at the performance monitor to see the effect. The `onDemand` signal is controlling the [`frameloop`](/reference/core/dom/canvas) input
+
+```angular-ts
+protected onDemand = signal(true);
+protected frameloop = computed(() => (this.onDemand() ? "demand" : "always"));
+```
+
+### Manual Frames Invalidation
+
+When using `frameloop="demand"`, a key consideration is that Angular cannot automatically detect changes that occur through direct mutation of THREE.js objects. For example, camera controls directly modify the camera's properties without going through Angular's change detection system.
+
+In these scenarios, you can use Angular Three's `invalidate()` function, available through the **store**, to manually request new frames
+
+```angular-ts
+import { OrbitControls } from 'three-stdlib;'
+import { NgtArgs, injectStore } from 'angular-three';
+
+@Component({
+    template: `
+        <ngt-orbit-controls *args="[store.camera(), store.gl.domElement()]" (change)="onChange()" />
+    `,
+    imports: [NgtArgs]
+})
+export class MyCmp {
+    protected store = injectStore();
+
+    constructor() {
+        // if you were to implement OrbitControls without angular-three-soba
+        extend({ OrbitControls })
+    }
+
+    onChange() {
+        // manual invalidate frames on camera change
+        this.store.snapshot.invalidate();
+    }
+}
+```
+
+:::note
+
+Calling `invalidate()` doesn't trigger an immediate render - it simply flags the system that a new frame is needed. Multiple calls to `invalidate()` within the same frame will be batched into a single render request.
+
+:::
+
+## Reusing Geometries and Materials
+
+Each Geometry and Material consumes the GPU’s resources. If you know certain geometries and/or materials will repeat, you can reuse them
+
+### Imperative
+
+You can have static geometries and materials as Component’s properties
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[1, 1, 1]" />
+    <ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[2, 2, 2]" />
+  `,
+})
+export class SceneGraph {
+  protected readonly sphere = new THREE.SphereGeometry(1, 32, 32);
+  protected readonly redMaterial = new THREE.MeshBasicMaterial({ color: 'red' });
+}
+```
+
+We can also store these static objects in a Service to reuse across the application.
+
+:::tip
+
+With Signals, you might be tempted to turn these into Signals but since these objects should remain static, turning them into Signals does not provide any value because when these objects change, you might need to dispose them and recreate them manually.
+
+:::
+
+### Declarative
+
+If you want your static objects to react to changes, you can also put them on the template declaratively.
+
+```angular-html
+<ngt-sphere-geometry #sphere *args="[1, 32, 32]" attach="none" />
+<ngt-mesh-basic-material #redMaterial [color]="color()" attach="none" />
+
+<ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[1, 1, 1]" />
+<ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[2, 2, 2]" />
+```
+
+:::tip
+
+[`attach=none`](/reference/core/renderer) opts the object out of automatic attaching. This means that the object will become a dangling element on the template, you have to attach it manually.
+
+:::
+
+Imperative or Declarative, each has its own set of trade-offs so you should pick what works for you in various scenarios.
+
+### Using `angular-three-plugin:gltf`
+
+Another performance optimization that you can achieve is to optimize your GLTF models by using [`angular-three-plugin:gltf`](/reference/plugin/gltf). `angular-three-plugin:gltf` turns a GLTF/GLB model file into an Angular component which reuse the materials and geometries from the model by default. Then, you can reuse the component itself to render multiple instances of the same model without worrying about geometries/materials bloat.
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <ReuseGLTFDemo client:only />
+</div>
+
+<details>
+<summary>Shoe GLTF generated component</summary>
+
+```angular-ts
+/**Auto-generated by: https://github.com/angular-threejs/gltf
+Command: npx angular-three-gltf&#64;2.0.5 src/components/scenes/reuse-gltf-demo/shoe.gltf -o src/components/scenes/reuse-gltf-demo/shoe.ts --selector app-shoe --name Shoe --shadows --importattribute
+**/
+
+import type * as THREE from "three";
+import { Group, Mesh } from "three";
+import { extend, type NgtThreeElements, NgtObjectEvents } from "angular-three";
+import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, input, viewChild, ElementRef, inject, effect } from "@angular/core";
+import { injectGLTF } from "angular-three-soba/loaders";
+import type { GLTF } from "three-stdlib";
+
+// @ts-expect-error - import .glb/.gltf file
+import ShoeGLTF from "./shoe.gltf" with { loader: "file" };
+
+export type ShoeGLTFGLTFResult = GLTF & {
+    nodes: {
+        shoe: THREE.Mesh;
+        shoe_1: THREE.Mesh;
+        shoe_2: THREE.Mesh;
+        shoe_3: THREE.Mesh;
+        shoe_4: THREE.Mesh;
+        shoe_5: THREE.Mesh;
+        shoe_6: THREE.Mesh;
+        shoe_7: THREE.Mesh;
+    };
+    materials: {
+        laces: THREE.MeshStandardMaterial;
+        mesh: THREE.MeshStandardMaterial;
+        caps: THREE.MeshStandardMaterial;
+        inner: THREE.MeshStandardMaterial;
+        sole: THREE.MeshStandardMaterial;
+        stripes: THREE.MeshStandardMaterial;
+        band: THREE.MeshStandardMaterial;
+        patch: THREE.MeshStandardMaterial;
+    };
+};
+
+@Component({
+    selector: "app-shoe",
+    template: `
+        @if (gltf(); as gltf) {
+            <ngt-group #model [parameters]="options()" [dispose]="null">
+                <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe.geometry" [material]="gltf.materials.laces" />
+                <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe_1.geometry" >
+                    <!-- this was modified so we can change color -->
+                    <ngt-mesh-standard-material [parameters]="gltf.materials.mesh" [color]="color()" />
+                </ngt-mesh>
+                <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe_2.geometry" [material]="gltf.materials.caps" />
+                <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe_3.geometry" [material]="gltf.materials.inner" />
+                <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe_4.geometry" [material]="gltf.materials.sole" />
+                <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe_5.geometry" [material]="gltf.materials.stripes" />
+                <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe_6.geometry" [material]="gltf.materials.band" />
+                <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe_7.geometry" [material]="gltf.materials.patch" />
+
+                <ng-content />
+            </ngt-group>
+        }
+    `,
+    hostDirectives: [
+        {
+            directive: NgtObjectEvents,
+            outputs: ["click", "dblclick", "contextmenu", "pointerup", "pointerdown", "pointerover", "pointerout", "pointerenter", "pointerleave", "pointermove", "pointermissed", "pointercancel", "wheel"],
+        },
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class Shoe {
+    protected readonly Math = Math;
+
+    options = input({} as Partial<NgtThreeElements["ngt-group"]>);
+    color = input.required<string>();
+
+    modelRef = viewChild<ElementRef<Group>>("model");
+
+    protected gltf = injectGLTF<ShoeGLTFGLTFResult>(() => ShoeGLTF);
+
+    constructor() {
+        extend({ Group, Mesh });
+
+        const objectEvents = inject(NgtObjectEvents, { host: true });
+        effect(() => {
+            const model = this.modelRef()?.nativeElement;
+            if (!model) return;
+
+            objectEvents.ngtObjectEvents.set(model);
+        });
+    }
+}
+```
+
+</details>
+
+## Instancing
+
+TBA
+
+## Level of Details
+
+TBA
+
+## Movement Regression
+
+TBA
