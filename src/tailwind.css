@@ -32,6 +32,16 @@ Add additional Tailwind styles to this file, for example with @layer:
 https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer
 */
 
+/* code */
+.expressive-code pre {
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
 /* Hero style */
 .hero {
   min-height: 100vh;
