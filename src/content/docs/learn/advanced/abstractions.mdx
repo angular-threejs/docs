@@ -2,3 +2,99 @@
 title: Custom Abstractions
 description: Build custom abstractions for angular-three
 ---
+
+Most of [`angular-three-soba`](/reference/soba/introduction) are custom abstractions built on top of `angular-three`.
+
+Common use-cases for building custom abstractions are:
+
+- Reuse functionalities / behaviors like an orbit control [`NgtsOrbitControls`](/reference/soba/controls/orbit-controls) or a text component [`NgtsText`](/reference/soba/abstractions/text)
+- Wrap a 3rd-party THREE.js object to provide Angular declarative APIs like a [globe](https://globe.gl/)
+
+Building a custom abstraction is similar to buildign a custom component or directive. However, there are a couple of things that you might want to look out for.
+
+More than often, a custom abstraction would wrap a THREE.js object like a `Group` or `Mesh` and you usually want the consumers to be able to use your abstraction
+like they use THREE.js object being wrapped.
+
+In other words, the consumers should be able to pass `position`, `rotation`, `scale` to the abstraction; or the consumers should be able to render children for the abstraction; or the consumers don't have to think about `extend()` anything to use the abstraction. Things should just work as long as they import it and drop it on the template.
+
+## Extend the catalogue
+
+The abstraction should `extend()` what it actually uses. The best place to do this is in the `constructor`
+
+```angular-ts
+// billboard.ts
+
+import { extend } from 'angular-three';
+import { Group } from 'three';
+
+@Component({})
+export class Billboard {
+    constructor() {
+        extend({ Group })
+    }
+}
+```
+
+## Forward properties to wrapped THREE.js object
+
+Angular does not have the concept of **Props Spreading** like other ecosystem. That said, we can accept an [**Object Inputs**](https://nartc.me/blog/angular-object-inputs/) and Signals API make this a lot easier than it is before in terms of change detection.
+
+```angular-ts {"1. Extend the wrapped element type": 5-6} {"2. Add custom properties": 7-8} {"3. Setup default options if needed": 11-12} {"4. Use transform with mergeInputs": 23-24} {"5. Omit enabled to get parameters": 25-26} {"6. Pick enabled": 27-28}
+import { NgtThreeElements, omit } from 'angular-three';
+import { mergeInputs } from 'ngxtension/inject-inputs';
+import { input } from '@angular/core';
+
+
+export type BillboardOptions = Partial<NgtThreeElements['ngt-group']> & {
+
+    enabled: boolean;
+}
+
+
+const defaultOptions: BillboardOptions = {
+    enabled: true
+}
+
+@Component({
+    template: `
+        <ngt-group [parameters]="parameters()">
+        </ngt-group>
+    `
+})
+export class Billboard {
+
+    options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
+    parameters = omit(this.options, ['enabled']); // Signal<Partial<NgtThreeElements['ngt-group']>>
+
+    enabled = pick(this.options, 'enabled'); // Signal<boolean>
+}
+```
+
+1. Extend the underlying THREE.js object that you wrap allows the consumers to pass inputs into your abstraction in a type-safe way.
+2. Add custom properties to your abstraction if it needs it.
+3. Set up default options if needed
+4. Set up an object input, `options` is a recommended name, with the `defaultOptions` and `mergeInputs`. Types will be inferred correctly.
+5. [`omit`](/reference/core/omit) `enabled` from `options` so you get everything else in `parameters` signal.
+6. [`pick`](/reference/core/pick) `enabled` from `options` so you can have an `enabled` signal. This is powerful because this is a `Signal<boolean>` which means it automatically has some equality check.
+
+## Content Projection
+
+You can use regular [Content Projection](https://angular.dev/guide/components/content-projection) with `ng-content`. In some cases, you might require some initial setup before you can render the children. This is where [ng-template](https://angular.dev/api/core/TemplateRef) is needed.
+
+```angular-ts
+@Component({
+    template: `
+        <ngt-group>
+            <ng-content />
+        </ngt-group>
+    `
+})
+export class Billboard {
+    template = contentChild.required(TemplateRef);
+}
+```
+
+`contentChild.required` requires the consumers to use an `ng-template` as the content child of `Billboard` component. This allows you to have some level of enforcement when it comes to consuming this `Billboard` abstraction.
+
+Make sure to check out [`angular-three-soba`](/reference/soba/introduction) for many examples of custom abstractions over Angular Three.

@@ -129,6 +129,14 @@ export function ngtSidebar() {
               label: "injectObjectEvents",
               slug: "reference/core/object-events",
             },
+            {
+              label: "omit",
+              slug: "reference/core/omit",
+            },
+            {
+              label: "pick",
+              slug: "reference/core/pick",
+            },
           ],
         },
         {
