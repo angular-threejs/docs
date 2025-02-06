@@ -62,7 +62,20 @@ export function ngtSidebar() {
             },
             {
               label: "Performance",
-              slug: "learn/advanced/performance",
+              items: [
+                {
+                  label: "Overview",
+                  slug: "learn/advanced/performance/overview",
+                },
+                {
+                  label: "On-demand Rendering",
+                  slug: "learn/advanced/performance/on-demand-rendering",
+                },
+                {
+                  label: "Reusing Resources",
+                  slug: "learn/advanced/performance/reusing-resources",
+                },
+              ],
             },
             {
               label: "Custom Abstractions",

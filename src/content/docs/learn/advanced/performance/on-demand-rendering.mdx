@@ -1,0 +1,170 @@
+---
+title: On-demand Rendering
+description: Performance / on-demand rendering in Angular Three
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import ColorGradingDemo from "../../../../../components/scenes/color-grading-demo/color-grading-demo";
+
+Like most THREE.js applications, Angular Three typically operates in a game loop that executes 60 times per second (60fps). This approach works well for scenes with constant animation or movement, like games.
+
+However, continuous rendering cycle can be the primary cause of battery drain and increased CPU usage. For scenes where motion is occasional or elements eventually come to rest, continuous rendering becomes inefficient.
+
+Angular Three allows you to opt-in to on-demand rendering, which triggers renders only when changes occur. This optimization significantly reduces battery consumption and minimizes system load.
+
+<Tabs>
+    <TabItem label="canvas.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal } from "@angular/core";
+    import { NgtCanvas, NgtCanvasContent, } from "angular-three/dom";
+    import { NgtsStats } from "angular-three-soba/stats";
+    import { SceneGraph } from "./scene-graph";
+
+    @Component({
+        template: `
+            <ngt-canvas [frameloop]="frameloop()" [camera]="{ position: [0, 0, 3], fov: 45 }">
+                <app-scene-graph *canvasContent />
+            </ngt-canvas>
+            <button [(toggleButton)]="onDemand" class="absolute top-4 right-4">
+                on-demand renderering
+            </button>
+        `,
+        imports: [NgtCanvas, NgtCanvasContent, SceneGraph, ToggleButton],
+    })
+    export default class ColorGradingDemo {
+        protected onDemand = signal(true);
+        protected frameloop = computed(() => (this.onDemand() ? "demand" : "always"));
+    }
+    ```
+    </TabItem>
+    <TabItem label="scene-graph.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+    import { NgtsEnvironment } from "angular-three-soba/staging";
+    import { NgtsOrbitControls } from "angular-three-soba/controls";
+
+    @Component({
+        selector: "app-scene-graph",
+        template: `
+            <ngt-ambient-light />
+            <ngt-spot-light [intensity]="Math.PI * 0.5" [angle]="0.2" [decay]="0" [penumbra]="1" [position]="[5, 15, 10]" />
+
+            <app-sphere />
+            <app-grading />
+
+            <ngts-environment [options]="{ preset: 'warehouse', background: true, blur: 0.6 }" />
+            <ngts-orbit-controls />
+        `,
+        imports: [Sphere, Grading, NgtsEnvironment, NgtsOrbitControls],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export class SceneGraph {
+        protected readonly Math = Math;
+    }
+    ```
+    </TabItem>
+    <TabItem label="sphere.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+    import { NgtArgs } from "angular-three";
+    import { injectTexture } from "angular-three-soba/loaders";
+
+    import terrazoUrl from "./terrazo.png" with { loader: "file" };
+
+    @Component({
+        selector: "app-sphere",
+        template: `
+            <ngt-mesh>
+                <ngt-sphere-geometry *args="[1, 64, 64]" />
+                <ngt-mesh-physical-material [clearcoat]="1" [clearcoatRoughness]="0" [roughness]="0" [metalness]="0.5" [map]="texture()" />
+            </ngt-mesh>
+        `,
+        imports: [NgtArgs],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    })
+    export class Sphere {
+        protected texture = injectTexture(() => terrazoUrl.src);
+    }
+    ```
+    </TabItem>
+    <TabItem label="grading.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component } from "@angular/core";
+    import { NgtpEffectComposer, NgtpLUT } from "angular-three-postprocessing";
+    import { LUTCubeLoader } from "postprocessing";
+    import { injectLoader } from "angular-three";
+
+    import cubicleCube from "./cubicle-99.CUBE" with { loader: "file" };
+
+    @Component({
+        selector: "app-grading",
+        template: `
+            <ngtp-effect-composer>
+                @if (result(); as lut) {
+                    <ngtp-lut [options]="{ lut, tetrahedralInterpolation: true }" />
+                }
+            </ngtp-effect-composer>
+        `,
+        imports: [NgtpEffectComposer, NgtpLUT],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export class Grading {
+        protected result = injectLoader(
+            () => LUTCubeLoader,
+            () => cubicleCube,
+        );
+    }
+    ```
+    </TabItem>
+
+</Tabs>
+
+<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
+  <ColorGradingDemo client:only />
+</div>
+
+In the above example, you can see that the performance monitor does not update continuously when **on-demand rendering** is enabled. Try toggling **on-demand rendering**, move the camera around, then look at the performance monitor to see the effect. The `onDemand` signal is controlling the [`frameloop`](/reference/core/dom/canvas) input
+
+```angular-ts
+protected onDemand = signal(true);
+protected frameloop = computed(() => (this.onDemand() ? "demand" : "always"));
+```
+
+## Manual Frames Invalidation
+
+When using `frameloop="demand"`, a key consideration is that Angular cannot automatically detect changes that occur through direct mutation of THREE.js objects. For example, camera controls directly modify the camera's properties without going through Angular's change detection system.
+
+In these scenarios, you can use Angular Three's `invalidate()` function, available through the **store**, to manually request new frames
+
+```angular-ts
+import { OrbitControls } from 'three-stdlib;'
+import { NgtArgs, injectStore } from 'angular-three';
+
+@Component({
+    template: `
+        <ngt-orbit-controls *args="[store.camera(), store.gl.domElement()]" (change)="onChange()" />
+    `,
+    imports: [NgtArgs]
+})
+export class MyCmp {
+    protected store = injectStore();
+
+    constructor() {
+        // if you were to implement OrbitControls without angular-three-soba
+        extend({ OrbitControls })
+    }
+
+    onChange() {
+        // manual invalidate frames on camera change
+        this.store.snapshot.invalidate();
+    }
+}
+```
+
+:::note
+
+Calling `invalidate()` doesn't trigger an immediate render - it simply flags the system that a new frame is needed. Multiple calls to `invalidate()` within the same frame will be batched into a single render request.
+
+:::
