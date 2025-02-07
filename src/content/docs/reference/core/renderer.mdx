@@ -7,6 +7,14 @@ The custom renderer powers the entire Angular Three and is provided via a dedica
 
 - [`angular-three/dom`](./dom/introduction) for DOM/Browser platform
 
+```angular-ts
+import { provideNgtRenderer } from 'angular-three/dom';
+
+bootstrapApplication(AppComponent, {
+    providers: [provideNgtRenderer()]
+});
+```
+
 ## Catalogue
 
 Angular Three maintains a **single catalogue** of THREE.js objects to render. By default, the catalogue is empty.
