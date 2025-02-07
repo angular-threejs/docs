@@ -122,8 +122,13 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
 </Tabs>
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<ColorGradingDemo client:only />
+ <ColorGradingDemo client:only />
+ <a class="font-mono text-sm" href="https://codesandbox.io/s/color-grading-demo-3f-1" target="_blank">
+  Credits: R3F Color Grading Demo
+ </a>
 </div>
+
+---
 
 In the above example, you can see that the performance monitor does not update continuously when **on-demand rendering** is enabled. Try toggling **on-demand rendering**, move the camera around, then look at the performance monitor to see the effect. The `onDemand` signal is controlling the [`frameloop`](/reference/core/dom/canvas) input
 
