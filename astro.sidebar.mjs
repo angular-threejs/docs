@@ -143,6 +143,10 @@ export function ngtSidebar() {
 							slug: 'reference/core/primitive',
 						},
 						{
+							label: 'ngt-value',
+							slug: 'reference/core/raw-value',
+						},
+						{
 							label: 'injectBeforeRender',
 							slug: 'reference/core/before-render',
 						},

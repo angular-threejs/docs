@@ -2,3 +2,392 @@
 title: Renderer
 description: angular-three Renderer API
 ---
+
+The custom renderer powers the entire Angular Three and is provided via a dedicated platform entry point.
+
+- [`angular-three/dom`](./dom/introduction) for DOM/Browser platform
+
+## Catalogue
+
+Angular Three maintains a **single catalogue** of THREE.js objects to render. By default, the catalogue is empty.
+
+### `extend`
+
+In order to populate the catalogue, you can call the `extend()` function and pass in a `Record` of THREE.js objects. Angular Three then maps the catalogue to **Custom Element** tags with the following naming convention:
+
+```angular-ts
+import { extend } from 'angular-three';
+import { Mesh, MeshBasicMaterial, LOD, Object3D } from 'three';
+
+extend({
+    Mesh, // makes ngt-mesh available
+    MeshBasicMaterial, // makes ngt-mesh-basic-material available
+    LOD, // makes ngt-lOD available
+    Object3D, // makes ngt-object3D
+    MyMesh: Mesh, // makes ngt-my-mesh available
+});
+```
+
+#### Overrides
+
+`extend()` can be called multiple times and the later invocation will merge the `Record` with the existing catalogue. This is useful for when you want to provide a different implementation for a specific **Custom Element** tag like switching between `WebGPURenderer` and `WebGLRenderer`
+
+```angular-ts
+import { extend } from 'angular-three';
+import { DirectionalLight  } from 'three';
+import { DirectionalLight as WebGPUDirectionalLight } from 'three/webgpu';
+
+extend({ DirectionalLight }); // make ngt-directional-light available
+extend({ DirectionalLight: WebGPUDirectionalLight }); // after this, ngt-directional-light will now instantiate the WebGPU DirectionalLight instead
+```
+
+:::note
+
+`extend()` should be called **before rendering** takes place like outside of the class body or in the `constructor`
+
+:::
+
+### `CUSTOM_ELEMENTS_SCHEMA`
+
+Since Angular Three works with **Custom Element** tags, you need to have `schemas: [CUSTOM_ELEMENTS_SCHEMA]` in your component's metadata.
+
+:::tip
+
+`CUSTOM_ELEMENTS_SCHEMA` is only needed if you actually render `ngt-*` elements on the component's template. This only affects the compiler, not the runtime.
+
+```angular-ts
+@Component({
+    selector: 'app-box',
+    template: `
+        <ngt-mesh>
+            <ngt-box-geometry />
+        </ngt-mesh>
+    `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class Box {}
+
+@Component({
+    template: `
+        <app-box />
+    `,
+    imports: [Box]
+})
+export class SceneGraph {}
+```
+
+:::
+
+## Property Bindings
+
+You can bind values to any `ngt-*` elements using [**Property Binding**](https://angular.dev/tutorials/learn-angular/6-property-binding) syntax.
+
+```angular-html {2,6}
+<ngt-mesh
+    [position]="[1, 2, 3]"
+>
+    <ngt-box-geometry />
+    <ngt-mesh-basic-material
+        color="red"
+    />
+</ngt-mesh>
+```
+
+### Shortcuts
+
+Some THREE.js objects have different methods to update their values due to performance and how WebGL works. For example, `THREE.Vector3` has a `set` method that accepts a tuple of `[x, y, z]` instead. On the other hand, if we pass in a `THREE.Vector3` instance, the current `THREE.Vector3` will call `copy` and pass in the new instance instead.
+
+This characteristic is baked into the custom renderer so it is more intuitive to pass values to these properties.
+
+```angular-html {"accept a tuple": 2-3} {"accept a scalar": 4-5} {"accept an instance": 6-7}
+<ngt-mesh
+
+  [position]="[0, 1, 0]"
+
+  [scale]="1.5"
+
+  [rotation]="myRotation"
+/>
+```
+
+#### `ColorRepresentation`
+
+Any elements that accept a color property can accept a `ColorRepresentation` type
+
+```angular-html {"accept a css color": 2-3} {"accept a hex color": 5-6} {"accept a rgb color": 8-9} {"accept a color instance": 11-12} {"accept a hex color": 14-15}
+<!-- different ways to pass in color -->
+
+<ngt-mesh-basic-material color="hotpink" />
+
+
+<ngt-mesh-basic-material color="#ff00ff" />
+
+
+<ngt-mesh-basic-material color="rgb(255, 0, 255)" />
+
+
+<ngt-mesh-basic-material [color]="myColor" />
+
+
+<ngt-mesh-basic-material [color]="myHexadecimalColor" />
+```
+
+### Coercion
+
+Angular Three custom renderer automatically coerces primitive values.
+
+```angular-html
+<ngt-mesh
+    castShadow
+    receiveShadow
+/>
+```
+
+:::tip
+
+Although primitive values are coerced but the recommendation is to only rely on coercion for `boolean` values for consistency and correctness
+
+```angular-html
+<ngt-spot-light
+    castShadow
+    [decay]="0"
+/>
+```
+
+Technically, `decay="0"` works but it is not necessarily shorter than `[decay]="0"` but `castShadow` is substantially more concise than `[castShadow]="true"`
+
+:::
+
+### Angular Three Properties
+
+Beside the properties of the native THREE.js objects, there are some special properties that are specific to Angular Three.
+
+#### `parameters`
+
+All custom elements accept a `parameters` property that accepts an object of properties to pass to the underlying object.
+
+```angular-html
+<ngt-mesh-basic-material
+    [parameters]="{ color: 'hotpink', side: BackSide, transparent: true }"
+/>
+```
+
+Shortcuts are still applied with `parameters`
+
+```angular-html
+<ngt-mesh
+    [parameters]="{
+        position: [1, 2, 3],
+        scale: 1.5,
+        rotation: myRotation
+    }"
+/>
+```
+
+#### `attach`
+
+This property is used to specify a property on the parent that this element should be attached to. Attaching takes into account the life-cycle of the elements and will automatically detach when the elements are destroyed.
+
+##### Static Attach
+
+If you want to bind a static value to `attach`, use **Attribute Binding** to bind a static string to it
+
+```angular-html
+<ngt-mesh>
+    <ngt-box-geometry attach="geometry" />
+    <ngt-mesh-basic-material attach="material" />
+</ngt-mesh>
+```
+
+<details>
+<summary>THREE.js equivalent</summary>
+
+```angular-ts
+const mesh = new THREE.Mesh();
+const material = new THREE.MeshBasicMaterial();
+const geometry = new THREE.BoxGeometry();
+
+mesh.material = material;
+mesh.geometry = geometry;
+```
+
+</details>
+
+:::tip
+
+For convenience, Angular Three automatically assigns `attach=geometry` on all Geometries and `attach=material` on all Materials.
+
+:::
+
+##### Nested Path Attach
+
+You can attach to a deeply nested property on the parent by using dot-separated path
+
+```angular-html
+<ngt-spot-light castShadow>
+    <ngt-vector2 attach="shadow.mapSize" />
+</ngt-spot-light>
+```
+
+<details>
+<summary>THREE.js equivalent</summary>
+
+```angular-ts
+const spotLight = new THREE.SpotLight();
+spotLight.castShadow = true;
+
+const vector2 = new THREE.Vector2();
+// shortcut is still applied automatically
+spotLight.shadow.mapSize.copy(vector2);
+```
+
+</details>
+
+##### Dynamic Attach
+
+You can pass a dynamic value by using **Property Binding** syntax `[attach]`. When this is the case, `attach` accepts `Array<string | number>` in addition to just `string`. Common use-case for this is to attach difference materials to difference faces of a geometry.
+
+```angular-ts
+@Component({
+    template: `
+        <ngt-mesh>
+            <ngt-box-geometry />
+            @for (color of colors; track $index) {
+                <ngt-mesh-basic-material
+                    [attach]="['material', $index]"
+                    [color]="color"
+                />
+            }
+        </ngt-mesh>
+    `
+})
+export class MyCube {
+  protected colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple']; // cube has 6 faces
+}
+```
+
+<details>
+<summary>THREE.js equivalent</summary>
+
+```angular-ts
+const mesh = new THREE.Mesh();
+const geometry = new THREE.BoxGeometry();
+
+mesh.geometry = geometry;
+mesh.material = [];
+
+const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple'];
+
+for (let i = 0; i < colors.length; i++) {
+    const material = new THREE.MeshBasicMaterial();
+    material.color.set(colors[i]);
+    mesh.material[i] = material;
+}
+```
+
+</details>
+
+##### `NgtAttachFunction`
+
+Last but not least, you can pass a `NgtAttachFunction` to `[attach]` property. When this is the case, you are responsible for attaching and detaching the element yourself.
+
+`NgtAttachFunction` can be created using an identity function `createAttachFunction` to help with typings.
+
+```angular-ts
+import { createAttachFunction } from 'angular-three';
+
+@Component({
+  template: `
+        <ngt-mesh>
+            <ngt-mesh-basic-material [attach]="attachFn" />
+        </ngt-mesh>
+  `
+})
+export class SceneGraph {
+    protected attachFn = createAttachFunction<THREE.MeshBasicMaterial, THREE.Mesh>(({ parent, child }) => {
+        const oldMaterial = parent.material;
+        parent.material = child;
+
+        // return a clean-up function that will be called when `ngt-mesh-basic-material` is destroyed
+        return () => {
+            parent.material = oldMaterial;
+        }
+    })
+}
+```
+
+## Event Bindings
+
+As you've learned in [**Handling Events**](/learn/basics/handling-events), you can use [**Event Binding**](https://angular.dev/guide/templates/event-listeners) syntax to listen to various events on the elements. This section will go over some THREE.js native events and some specific Angular Three events that all objects share in addition to **Raycast Events**.
+
+### THREE.js native events
+
+Most THREE.js objects extends [`EventDispatcher`](https://threejs.org/docs/index.html#api/en/core/EventDispatcher) and can emit arbitrary events. There are some well-known events that Angular Three renderer supports via the **Event Binding** syntax.
+
+- `added`: when the object is added to the parent
+- `removed`: when the object is removed from the parent
+- `childadded`: when a child is added to the object
+- `childremoved`: when a child is removed from the object
+- `change`: when the object's properties change. This is mostly applied to controls like `OrbitControls`
+- `disposed`: when the object is disposed. The original event name is `dispose` but Angular Three uses `disposed` to not have conflict with `[dispose]` property
+
+```angular-html
+<ngt-group (childadded)="onChildAdded()">
+    <ngt-mesh (added)="onAdded()"></ngt-mesh>
+</ngt-group>
+```
+
+<details>
+<summary>THREE.js equivalent</summary>
+
+```angular-ts
+const group = new THREE.Group();
+group.addEventListener('childadded', onChildAdded);
+
+const mesh = new THREE.Mesh();
+mesh.addEventListener('added', onAdded);
+
+group.add(mesh);
+```
+
+</details>
+
+### Angular Three events
+
+#### `attached`
+
+This event is emitted when the element is **attached** or **added** to the parent. This is subtly different than the THREE.js `added` event because it also emits when a non-Object3D object (i.e: Material) is attached to the parent.
+
+```angular-ts
+@Component({
+    template: `
+        <ngt-mesh>
+            <ngt-mesh-basic-material (attached)="onAttached($event)" />
+        </ngt-mesh>
+    `
+})
+export class SceneGraph {
+    onAttached(event: NgtAfterAttach<THREE.MeshBasicMaterial, THREE.Mesh>) {
+        const { parent, node } = event;
+        //       ^? Mesh ^? MeshBasicMaterial
+    }
+}
+```
+
+#### `updated`
+
+This event is emitted when the element is **updated**, mostly via **Property Binding**
+
+```angular-ts
+@Component({
+    template: `
+        <ngt-mesh
+            [position]="[1, 1, 1]"
+            (updated)="onUpdated($event)"
+        ></ngt-mesh>
+    `
+})
+export class SceneGraph {
+    onUpdated(event: THREE.Mesh) { }
+}
+```
