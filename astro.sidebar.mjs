@@ -79,6 +79,14 @@ export function ngtSidebar() {
 									label: 'Instancing',
 									slug: 'learn/advanced/performance/instancing',
 								},
+								{
+									label: 'Level of Details',
+									slug: 'learn/advanced/performance/lod',
+								},
+								{
+									label: 'Movement Regression',
+									slug: 'learn/advanced/performance/movement-regression',
+								},
 							],
 						},
 						{
@@ -250,6 +258,23 @@ export function ngtSidebar() {
 						{
 							label: 'injectAnimations',
 							slug: 'reference/soba/misc/animations',
+						},
+					],
+				},
+				{
+					label: 'angular-three-soba/performances',
+					items: [
+						{
+							label: 'Introduction',
+							slug: 'reference/soba/performances/introduction',
+						},
+						{
+							label: 'NgtsDetailed',
+							slug: 'reference/soba/performances/detailed',
+						},
+						{
+							label: 'NgtsAdaptiveDpr',
+							slug: 'reference/soba/performances/adaptive-dpr',
 						},
 					],
 				},

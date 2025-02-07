@@ -29,7 +29,7 @@ interface FlowerGLTFResult extends GLTF {
 	};
 }
 
-const blossomPalette = [0xffb5e8, 0xffc9de, 0xf0b6d4, 0xe2b5ff, 0xc5a3ff];
+const blossomPalette = [0xf20587, 0xf2d479, 0xf2c879, 0xf2b077, 0xf24405];
 
 @Component({
 	selector: 'app-scene-graph',

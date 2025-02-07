@@ -1,0 +1,82 @@
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { extend, NgtArgs, type NgtEuler, type NgtVector3 } from 'angular-three';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { injectGLTF } from 'angular-three-soba/loaders';
+import { NgtsBakeShadows } from 'angular-three-soba/misc';
+import { NgtsDetailed } from 'angular-three-soba/performances';
+import { NgtsEnvironment } from 'angular-three-soba/staging';
+import * as THREE from 'three';
+import type { GLTF } from 'three-stdlib';
+
+import bust1GLB from './bust-1-d.glb' with { loader: 'file' };
+import bust2GLB from './bust-2-d.glb' with { loader: 'file' };
+import bust3GLB from './bust-3-d.glb' with { loader: 'file' };
+import bust4GLB from './bust-4-d.glb' with { loader: 'file' };
+import bust5GLB from './bust-5-d.glb' with { loader: 'file' };
+
+const positions = [...Array(800)].map(() => ({
+	position: [40 - Math.random() * 80, 40 - Math.random() * 80, 40 - Math.random() * 80],
+	rotation: [Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2],
+})) as Array<{ position: [number, number, number]; rotation: [number, number, number] }>;
+
+interface BustGLTF extends GLTF {
+	nodes: { Mesh_0001: THREE.Mesh };
+	materials: { default: THREE.MeshStandardMaterial };
+}
+
+@Component({
+	selector: 'app-bust',
+	template: `
+		<ngts-detailed [distances]="[0, 15, 25, 35, 100]" [options]="{ position: position(), rotation: rotation() }">
+			@for (level of gltfs() || []; track $index) {
+				<ngt-mesh
+					castShadow
+					receiveShadow
+					[geometry]="level.nodes.Mesh_0001.geometry"
+					[material]="level.materials.default"
+				>
+					<ngt-value [rawValue]="0.25" attach="material.envMapIntensity" />
+				</ngt-mesh>
+			}
+		</ngts-detailed>
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsDetailed],
+})
+export class LODBust {
+	position = input<NgtVector3>([0, 0, 0]);
+	rotation = input<NgtEuler>([0, 0, 0]);
+
+	protected gltfs = injectGLTF<BustGLTF[]>(() => [bust1GLB, bust2GLB, bust3GLB, bust4GLB, bust5GLB]);
+}
+
+@Component({
+	selector: 'app-scene-graph',
+	template: `
+		<ngt-color *args="['#cecece']" attach="background" />
+
+		@for (p of positions; track $index) {
+			<app-bust [position]="p.position" [rotation]="p.rotation" />
+		}
+
+		<ngts-orbit-controls [options]="{ zoomSpeed: 0.075 }" />
+
+		<ngt-point-light [intensity]="0.5 * Math.PI" [decay]="0" color="mediumpurple" />
+		<ngt-spot-light [position]="50" [intensity]="1.5 * Math.PI" castShadow [decay]="0" color="mediumpurple" />
+		<ngts-environment [options]="{ preset: 'city' }" />
+		<ngts-bake-shadows />
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsBakeShadows, NgtsEnvironment, NgtsOrbitControls, LODBust, NgtArgs],
+	host: { class: 'lod-soba-experience' },
+})
+export class SceneGraph {
+	protected readonly Math = Math;
+	protected readonly positions = positions;
+
+	constructor() {
+		extend(THREE);
+	}
+}
