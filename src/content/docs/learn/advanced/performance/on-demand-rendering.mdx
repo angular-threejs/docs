@@ -3,8 +3,8 @@ title: On-demand Rendering
 description: Performance / on-demand rendering in Angular Three
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import ColorGradingDemo from "../../../../../components/scenes/color-grading-demo/color-grading-demo";
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import ColorGradingDemo from '../../../../../components/scenes/color-grading-demo/color-grading-demo';
 
 Like most THREE.js applications, Angular Three typically operates in a game loop that executes 60 times per second (60fps). This approach works well for scenes with constant animation or movement, like games.
 
@@ -121,8 +121,8 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
 
 </Tabs>
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <ColorGradingDemo client:only />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<ColorGradingDemo client:only />
 </div>
 
 In the above example, you can see that the performance monitor does not update continuously when **on-demand rendering** is enabled. Try toggling **on-demand rendering**, move the camera around, then look at the performance monitor to see the effect. The `onDemand` signal is controlling the [`frameloop`](/reference/core/dom/canvas) input

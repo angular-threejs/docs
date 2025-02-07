@@ -3,7 +3,7 @@ title: Using Directives
 description: Using custom directives in Angular Three
 ---
 
-import PointerDemo from "../../../../components/scenes/pointer-demo/pointer-demo";
+import PointerDemo from '../../../../components/scenes/pointer-demo/pointer-demo';
 
 Angular Three elements are like any other elements on Angular template except for they are rendered to the canvas. With that in mind, you can extend the functionality of
 Angular Three elements by using [**Directives**](https://angular.dev/guide/directives/attribute-directives) like we do with regular elements.
@@ -123,6 +123,6 @@ export class SceneGraph {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <PointerDemo client:only step={1} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<PointerDemo client:only step={1} />
 </div>

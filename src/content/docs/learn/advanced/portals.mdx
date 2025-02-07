@@ -3,9 +3,9 @@ title: Portals
 description: Portals in Angular Three
 ---
 
-import FloatingCodeBlock from "../../../../components/ui/floating-code-block.astro";
-import TemplateOutletDemo from "../../../../components/scenes/template-outlet/template-outlet";
-import HudDemo from "../../../../components/scenes/hud-demo/hud-demo";
+import FloatingCodeBlock from '../../../../components/ui/floating-code-block.astro';
+import TemplateOutletDemo from '../../../../components/scenes/template-outlet/template-outlet';
+import HudDemo from '../../../../components/scenes/hud-demo/hud-demo';
 
 Portals might have different meaning depending on the use-cases. In general,
 it means that we want to render something as children of something else without following
@@ -13,7 +13,7 @@ the hierarchy of the template. Pseudo-code looks something like this:
 
 ```html
 <ngt-group>
-  <!-- render ngt-mesh here -->
+	<!-- render ngt-mesh here -->
 </ngt-group>
 
 <!-- outside of the hierarchy -->
@@ -80,8 +80,8 @@ export class SceneGraph {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <TemplateOutletDemo client:only step={1} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<TemplateOutletDemo client:only step={1} />
 </div>
 
 What you're seeing here is:
@@ -182,16 +182,16 @@ over `THREE.PerspectiveCamera` that has the ability to make itself the default c
 :::
 
 <FloatingCodeBlock
-  class="h-[600px] max-h-[600px] w-full"
-  snippets={[
-    { title: "scene-graph.ts", name: "hud-demo-scene-graph" },
-    { title: "view-cube.ts", name: "hud-demo-view-cube" },
-    { title: "box.ts", name: "hud-demo-box" },
-    { title: "face-material.ts", name: "hud-demo-face-material" },
-    { title: "torus.ts", name: "hud-demo-torus" },
-  ]}
+	class="h-[600px] max-h-[600px] w-full"
+	snippets={[
+		{ title: 'scene-graph.ts', name: 'hud-demo-scene-graph' },
+		{ title: 'view-cube.ts', name: 'hud-demo-view-cube' },
+		{ title: 'box.ts', name: 'hud-demo-box' },
+		{ title: 'face-material.ts', name: 'hud-demo-face-material' },
+		{ title: 'torus.ts', name: 'hud-demo-torus' },
+	]}
 />
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <HudDemo client:only step={1} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<HudDemo client:only step={1} />
 </div>

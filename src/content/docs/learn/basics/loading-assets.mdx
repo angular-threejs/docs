@@ -3,10 +3,10 @@ title: Loading Assets
 description: Loading assets in 3D applications
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import GLTFDemo from "../../../../components/scenes/gltf-demo/gltf-demo";
-import GLTFDemoAnimation from "../../../../components/scenes/gltf-demo-animation/gltf-demo-animation";
-import TextureDemo from "../../../../components/scenes/texture-demo/texture-demo";
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import GLTFDemo from '../../../../components/scenes/gltf-demo/gltf-demo';
+import GLTFDemoAnimation from '../../../../components/scenes/gltf-demo-animation/gltf-demo-animation';
+import TextureDemo from '../../../../components/scenes/texture-demo/texture-demo';
 
 In a THREE.js application, there are various types of assets that you can load and THREE.js provides [different types of loaders](https://threejs.org/docs/index.html?q=loader)
 for these different types of assets.
@@ -20,23 +20,23 @@ const loader = new GLTFLoader();
 
 // Optional: Provide a DRACOLoader instance to decode compressed mesh data
 const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath("/examples/jsm/libs/draco/");
+dracoLoader.setDecoderPath('/examples/jsm/libs/draco/');
 loader.setDRACOLoader(dracoLoader);
 
 // Load a glTF resource
 loader.load(
-  // resource URL
-  "models/gltf/duck/duck.gltf",
-  // called when the resource is loaded
-  function (gltf) {
-    scene.add(gltf.scene);
+	// resource URL
+	'models/gltf/duck/duck.gltf',
+	// called when the resource is loaded
+	function (gltf) {
+		scene.add(gltf.scene);
 
-    gltf.animations; // Array<THREE.AnimationClip>
-    gltf.scene; // THREE.Group
-    gltf.scenes; // Array<THREE.Group>
-    gltf.cameras; // Array<THREE.Camera>
-    gltf.asset; // Object
-  },
+		gltf.animations; // Array<THREE.AnimationClip>
+		gltf.scene; // THREE.Group
+		gltf.scenes; // Array<THREE.Group>
+		gltf.cameras; // Array<THREE.Camera>
+		gltf.asset; // Object
+	},
 );
 ```
 
@@ -117,8 +117,8 @@ export class SceneGraph {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <GLTFDemo client:only />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<GLTFDemo client:only />
 </div>
 
 ### Animations
@@ -183,8 +183,8 @@ export class SceneGraph {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <GLTFDemoAnimation client:only />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<GLTFDemoAnimation client:only />
 </div>
 
 :::note
@@ -277,8 +277,8 @@ export class SceneGraph {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <TextureDemo client:only />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<TextureDemo client:only />
 </div>
 
 The main difference between `injectLoader` and `injectTexture` is the ease of loading multiple textures; both with `Array` and `Record` types.

@@ -4,13 +4,14 @@ import { SceneGraph } from './scene-graph';
 
 @Component({
 	template: `
-		<ngt-canvas>
+		<ngt-canvas [camera]="{ position: [25, 25, 25], fov: 60, near: 0.1, far: 100 }">
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
 	`,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	host: { class: 'instance-scatter-demo' },
 })
-export default class GLTFDemoAnimation {
+export default class InstanceScatterDemo {
 	static clientProviders = [provideNgtRenderer()];
 }

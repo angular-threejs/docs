@@ -3,8 +3,8 @@ title: Your First Scene
 description: Create our first 3D scene with Angular Three.
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import FirstScene from "../../../../components/scenes/first-scene/first-scene";
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import FirstScene from '../../../../components/scenes/first-scene/first-scene';
 
 :::note
 
@@ -215,8 +215,8 @@ import { Component } from "@angular/core";
 `extend` accepts any `Record`. This means that you can extend the entire THREE.js library by passing `THREE` object as the argument.
 
 ```ts
-import { extend } from "angular-three";
-import * as THREE from "three";
+import { extend } from 'angular-three';
+import * as THREE from 'three';
 
 extend(THREE);
 ```
@@ -254,8 +254,8 @@ export class SceneGraph {}
 
 :::
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={1} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={1} />
 </div>
 
 :::note[Did you know?]
@@ -283,7 +283,7 @@ In our case, we're attaching the `THREE.BoxGeometry` to the property `geometry` 
 <summary>THREE.js equivalent</summary>
 
 ```ts
-import * as THREE from "three";
+import * as THREE from 'three';
 
 // create a mesh, geometry, and material
 const mesh = new THREE.Mesh();
@@ -329,15 +329,15 @@ extend(THREE);
 export class SceneGraph {}
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={2} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={2} />
 </div>
 
 <details>
 <summary>THREE.js equivalent</summary>
 
 ```ts
-import * as THREE from "three";
+import * as THREE from 'three';
 
 const mesh = new THREE.Mesh();
 const geometry = new THREE.BoxGeometry();
@@ -350,7 +350,7 @@ mesh.material = material;
 mesh.position.fromArray([0, 1, 0]);
 
 // set the color of the material
-material.color.set("mediumpurple");
+material.color.set('mediumpurple');
 ```
 
 </details>
@@ -383,15 +383,15 @@ extend(THREE);
 export class SceneGraph {}
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={3} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={3} />
 </div>
 
 <details>
 <summary>THREE.js equivalent</summary>
 
 ```ts
-import * as THREE from "three";
+import * as THREE from 'three';
 
 const mesh = new THREE.Mesh();
 // set the dimensions of the geometry
@@ -402,7 +402,7 @@ mesh.geometry = geometry;
 mesh.material = material;
 
 mesh.position.fromArray([0, 1, 0]);
-material.color.set("mediumpurple");
+material.color.set('mediumpurple');
 ```
 
 </details>
@@ -445,8 +445,8 @@ import { SceneGraph } from "./scene-graph";
 export class AppComponent {}
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={4} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={4} />
 </div>
 
 ## Animate the Cube
@@ -519,8 +519,8 @@ export class SceneGraph {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={5} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={5} />
 </div>
 
 ## Make a component
@@ -649,8 +649,8 @@ export class Cube {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={6} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={6} />
 </div>
 
 ### Render another cube
@@ -731,8 +731,8 @@ extend(THREE);
 export class SceneGraph {}
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={7} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={7} />
 </div>
 
 Now, we have two cubes that have their own states, and react to events independently.
@@ -826,8 +826,8 @@ export class Cube {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={8} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={8} />
 </div>
 
 ## Cast shadows
@@ -957,8 +957,8 @@ export class Cube {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <FirstScene client:only step={9} />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<FirstScene client:only step={9} />
 </div>
 
 ## Conclusion

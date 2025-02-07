@@ -3,8 +3,8 @@ title: WebGPU Renderer
 description: Using WebGPU renderer Angular Three
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import WebGPURendererDemo from "../../../../components/scenes/webgpu-demo/webgpu-demo";
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import WebGPURendererDemo from '../../../../components/scenes/webgpu-demo/webgpu-demo';
 
 :::caution
 
@@ -215,6 +215,6 @@ export class MyCmp {
 
 </Tabs>
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <WebGPURendererDemo client:only />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<WebGPURendererDemo client:only />
 </div>

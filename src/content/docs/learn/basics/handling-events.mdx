@@ -3,7 +3,7 @@ title: Handling Events
 description: Events in Angular Three
 ---
 
-import EventPropagationDemo from "../../../../components/scenes/event-propagation-demo/event-propagation-demo";
+import EventPropagationDemo from '../../../../components/scenes/event-propagation-demo/event-propagation-demo';
 
 The events system in Angular Three is inspired by [React Three Fiber (R3F)](https://r3f.docs.pmnd.rs/api/events) but adapted to Angular's syntax and conventions. Below, we explore how to handle events, customize interactions, and leverage Angular-specific features.
 
@@ -234,8 +234,8 @@ export class SceneGraph {
 }
 ```
 
-<div class="h-[600px] w-full border border-dashed border-accent-600 dark:border-accent-200 rounded">
-  <EventPropagationDemo client:only />
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+	<EventPropagationDemo client:only />
 </div>
 
 ### Pointer Capturing
