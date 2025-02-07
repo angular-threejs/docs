@@ -4,7 +4,8 @@ description: Performance / reusing resources in Angular Three
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import ReuseGLTFDemo from '../../../../../components/scenes/reuse-gltf-demo/reuse-gltf-demo';
+import ReuseGLTFDemo from '@scenes/reuse-gltf-demo/reuse-gltf-demo';
+import Credit from '@ui/credit.astro';
 
 Each Geometry and Material consumes the GPU’s resources. If you know certain geometries and/or materials will repeat, you can reuse them
 
@@ -59,10 +60,8 @@ Another performance optimization that you can achieve is to optimize your GLTF m
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
  <ReuseGLTFDemo client:only />
- <a class="font-mono text-sm" href="https://codesandbox.io/s/dix1y" target="_blank">
-  Credits: R3F Reuse GLTF Demo
- </a>
 </div>
+<Credit link="https://codesandbox.io/s/dix1y">Credits: R3F Reuse GLTF Demo</Credit>
 
 ---
 

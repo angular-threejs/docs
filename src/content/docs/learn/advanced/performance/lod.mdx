@@ -3,7 +3,8 @@ title: Level of Details
 description: Performance / level of details in Angular Three
 ---
 
-import LODDemo from '../../../../../components/scenes/lod-demo/lod-demo';
+import Credit from '@ui/credit.astro';
+import LODDemo from '@scenes/lod-demo/lod-demo';
 
 Managing mesh complexity based on camera distance can significantly improve GPU performance. The concept is straightforward: when objects are far from the camera and occupy fewer pixels, they don't need to maintain high resolution or detail.
 
@@ -91,10 +92,8 @@ export class SceneGraph {
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
  <LODDemo client:only />
- <a class="font-mono text-sm" href="https://codesandbox.io/s/12nmp">
-  Credits: R3F Bust LOD
- </a>
 </div>
+<Credit link="https://codesandbox.io/s/12nmp">Credits: R3F Bust LOD</Credit>
 
 ---
 

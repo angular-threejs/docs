@@ -3,7 +3,8 @@ title: Instancing
 description: Performance / instancing in Angular Three
 ---
 
-import InstanceScatterDemo from '../../../../../components/scenes/instance-scatter-demo/instance-scatter-demo';
+import Credit from '@ui/credit.astro';
+import InstanceScatterDemo from '@scenes/instance-scatter-demo/instance-scatter-demo';
 
 When rendering 3D scenes, each mesh typically results in a draw call to the GPU. For optimal performance, it's important to manage these draw calls effectively:
 
@@ -178,14 +179,7 @@ export class SceneGraph {
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
  <InstanceScatterDemo client:only />
- <a
-  class="font-mono text-sm"
-  href="https://threejs.org/examples/#webgl_instancing_scatter"
-  target="_blank"
-  noreferer
- >
-  Credits: THREE.js Instancing Scatter
- </a>
 </div>
+<Credit link="https://threejs.org/examples/#webgl_instancing_scatter">Credits: THREE.js Instancing Scatter</Credit>
 
 Setting up instancing can be confusing if you're new to THREE.js. Consult [THREE.js docs](https://threejs.org/docs/#api/en/objects/InstancedMesh) if you need help.

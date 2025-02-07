@@ -4,7 +4,8 @@ description: Performance / movement regression in Angular Three
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import MovementRegressionDemo from '../../../../../components/scenes/movement-regression-demo/movement-regression-demo';
+import Credit from '@ui/credit.astro';
+import MovementRegressionDemo from '@scenes/movement-regression-demo/movement-regression-demo';
 
 High-end 3D platforms maintain fluid 60 FPS experiences across all devices by implementing performance regression. This technique temporarily reduces quality of effects, textures, and shadows during movement to maintain responsiveness.
 
@@ -178,15 +179,10 @@ Play with the example below to see the effect of this technique.
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
  <MovementRegressionDemo client:only />
- <a
-  class="font-mono text-sm"
-  href="https://codesandbox.io/p/sandbox/pz0q6?file=/src/App.js:1,1-115,1"
-  target="_blank"
-  noreferer
- >
-  Credits: R3F Movement Regression
- </a>
 </div>
+<Credit link="https://codesandbox.io/p/sandbox/pz0q6?file=/src/App.js:1,1-115,1">
+ Credits: R3F Movement Regression
+</Credit>
 
 ## Performance State
 

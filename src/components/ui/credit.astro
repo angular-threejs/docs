@@ -1,0 +1,9 @@
+---
+interface Props {
+	link: string;
+}
+---
+
+<a class="mb-4 mt-2 block font-mono text-sm" href={Astro.props.link} target="_blank">
+	<slot />
+</a>
