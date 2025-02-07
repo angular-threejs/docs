@@ -4,6 +4,7 @@ description: Using WebGPU renderer Angular Three
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Credit from '@ui/credit.astro';
 import WebGPURendererDemo from '@scenes/webgpu-demo/webgpu-demo';
 
 :::caution
@@ -217,7 +218,5 @@ export class MyCmp {
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
  <WebGPURendererDemo client:only />
- <a class="font-mono text-sm" href="https://threlte.xyz/docs/learn/advanced/webgpu" target="_blank">
-  Credits: Threlte's WebGPU Demo
- </a>
 </div>
+<Credit link="https://threlte.xyz/docs/learn/advanced/webgpu">Credits: Threlte's WebGPU Demo</Credit>
