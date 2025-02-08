@@ -2,3 +2,55 @@
 title: NgtParent
 description: angular-three NgtParent API
 ---
+
+`NgtParent` is a [structural directive](https://angular.dev/guide/structural-directives) that allows you to attach a THREE.js object to an arbitrary parent that does not _necessarily_ have to be on the same template hierarchy.
+This is most common when working with [**portals**](/learn/advanced/portals) where you cannot control attaching logic of `router-outlet`
+
+## Usage
+
+```angular-ts
+import { NgtParent } from 'angular-three';
+
+@Component({
+    template: `
+        @for (name of names; track name) {
+            <ngt-mesh [name]="name" (click)="router.navigate([name])">
+                <!-- ... -->
+            </ngt-mesh>
+        }
+
+        <router-outlet />
+    `,
+    imports: [RouterOutlet]
+})
+export class MyCmp {
+    names = ['a', 'b', 'c']
+}
+
+@Component({
+    template: `
+        <ngt-group *parent="parent">
+            <ngts-text [text]="parent()" />
+        </ngt-group>
+    `,
+    imports: [NgtParent, NgtsText]
+})
+export class MyText {
+    private route = inject(ActivatedRoute);
+    protected parent = toSignal(
+        this.route.params.map(params => params.get('name')),
+        { initialValue: '' }
+    );
+}
+```
+
+## How it works
+
+`NgtParent` resolves the `parent` input to a `THREE.Object3D` and when it's ready to render its template, Angular Three will be able to access the provided `parent` (as a `THREE.Object3D`) and attach the template to that parent, effectively _portal_ that template to the provided parent.
+
+`NgtParent` accepts:
+
+- A `string`: which will be used to look up the object with `getObjectByName()`
+- An `Object3D`
+- An `ElementRef<Object3D>`
+- or a `Signal` of all of these above

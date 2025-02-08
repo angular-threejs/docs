@@ -2,3 +2,60 @@
 title: NgtArgs
 description: angular-three NgtArgs API
 ---
+
+There are THREE.js objects that require **Constructor Arguments** upon instantiation like `new OrbitControls(camera, domElement)` or objects that require reconstructing when **Constructor Arguments** change like `new THREE.BoxGeometry(2, 2, 2)`
+
+```angular-ts
+let geometry = new BoxGeometry(); // [1, 1, 1] box
+mesh.geometry = geometry;
+
+// later when we want a bigger box
+mesh.geometry.dispose(); // dispose old box
+
+// construct new box
+geometry = new BoxGeometry(2, 2, 2); // [2, 2, 2] box
+mesh.geometry = geometry;
+```
+
+To achieve this in Angular Three, you will use the `NgtArgs` [structural directive](https://angular.dev/guide/directives/structural-directives)
+
+## Usage
+
+```angular-ts
+import { NgtArgs } from 'angular-three';
+
+@Component({
+    template: `
+        <ngt-mesh>
+            <ngt-box-geometry *args="boxArgs()" />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs]
+})
+export class MyBox {
+    boxArgs = input<ConstructorParameters<typeof THREE.BoxGeometry>>([1, 1, 1]);
+}
+```
+
+## How it works
+
+When `NgtArgs` deems ready to render its template `ngt-box-geometry`, based on `boxArgs`, it will do so and Angular Three is able to access `boxArgs` value to construct `THREE.BoxGeometry(...boxArgsValue)`.
+
+When `boxArgs` changes, `NgtArgs` will destroy its template; ultimately dispose the current `ngt-box-geometry` and detach it; then it re-creates the template and a new `THREE.BoxGeometry(...newBoxArgsValue)` is instantiated.
+
+`NgtArgs` accepts an array of values that the underlying THREE.js object accepts for its constructor. Please consult [THREE.js documentation](https://threejs.org/) for details.
+
+```angular-html
+<ngt-box-geometry *args="[width, height, depth, widthSegments, heightSegments, depthSegments]" />
+
+<ngt-instanced-mesh *args="[geometry, material, count]" />
+
+<ngt-instanced-mesh *args="[undefined, undefined, count]">
+    <ngt-box-geometry />
+    <ngt-mesh-standard-material />
+</ngt-instanced-mesh>
+
+<ngt-spot-light>
+    <ngt-vector2 *args="[2048, 2048]" attach="shadow.mapSize" />
+</ngt-spot-light>
+```
