@@ -2,3 +2,44 @@
 title: pick
 description: angular-three pick API
 ---
+
+`pick` is a utility function that accepts a `Signal<object>` and a key or an array of keys of the object. It returns a `Signal<object[key]>` if a single key is passed in, or a `Signal<object>` of the selected properties when an array of keys is passed in.
+
+## Usage
+
+```angular-ts
+interface MyCmpOptions extends Partial<NgtThreeElements['ngt-group']> {
+    foo: string;
+    bar: number;
+}
+
+const defaultOptions: MyCmpOptions = {
+    foo: 'foo',
+    bar: 1,
+}
+
+@Component({
+    template: `
+    `
+})
+export class MyCmp {
+    options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
+    foo = pick(this.options, 'foo'); // Signal<string>
+    bar = pick(this.options, 'bar'); // Signal<number>
+}
+```
+
+This is extremely useful when working with Object Inputs because you can pick primitive values out of the object input then you can pass these primitive values around instead of having to worry about change detection and the object input itself.
+
+### Equality function
+
+By default, `pick` uses shallow check for objects and array values when an array of keys is passed in. You can pass a custom equality function in via the 3rd argument `equal`
+
+```angular-ts
+export class MyCmp {
+    options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
+    foo = pick(this.options, 'foo', (a, b) => a.length !== b.length); // Signal<string>
+}
+```

@@ -155,7 +155,7 @@ export function ngtSidebar() {
 							slug: 'reference/core/loader',
 						},
 						{
-							label: 'injectObjectEvents',
+							label: 'Object Events',
 							slug: 'reference/core/object-events',
 						},
 						{

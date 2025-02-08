@@ -2,3 +2,88 @@
 title: injectBeforeRender
 description: angular-three injectBeforeRender API
 ---
+
+`injectBeforeRender` is a [Custom Inject Function](https://nartc.me/blog/inject-function-the-right-way/) that allows you to execute logic before each frame render. This is useful for animations, updates, or any computations that need to happen on every frame.
+
+## Usage
+
+`injectBeforeRender` requires a before render callback. This callback is invoked on every frame with `NgtRenderState`
+
+```angular-ts
+export interface NgtRenderState extends NgtState {
+    delta: number;
+    frame?: XRFrame;
+}
+```
+
+Check out [`Store section`](./store) for details on `NgtState`.
+
+```angular-ts
+export class MyCmp {
+    constructor() {
+        injectBeforeRender(({ camera, delta }) => {
+            camera.position.x = Math.sin(Date.now() / 1000) * delta;
+        });
+    }
+}
+```
+
+### Optional `injector`
+
+Since `injectBeforeRender` is a CIF, it has to be invoked in an [**Injection Context**](https://angular.dev/guide/di/dependency-injection-context). In order to invoke `injectBeforeRender` outside of an **Injection Context**, you can provide an `Injector` to the `injector` property of the 2nd argument to `injectBeforeRender`
+
+```angular-ts
+export class MyCmp {
+    constructor() {
+        const injector = inject(Injector);
+        afterNextRender(() => {
+            // outside of Injection Context, provide Injector ✅
+            injectBeforeRender(() => {}, { injector })
+        })
+    }
+}
+```
+
+### Optional `priority`
+
+The `priority` parameter determines the order of execution when multiple before render callbacks are registered:
+
+```angular-ts
+// executes first
+injectBeforeRender(cb1, { priority: 1 });
+// executes second
+injectBeforeRender(cb2, { priority: 2 });
+```
+
+`priority` can also be dynamic using a `Signal<number>`
+
+```angular-ts
+export class MyCmp {
+    priority = input(0);
+
+    constructor() {
+        injectBeforeRender(
+            ({ camera, delta }) => {
+                camera.position.x = Math.sin(Date.now() / 1000) * delta;
+            },
+            {
+                priority: this.priority
+            }
+        );
+    }
+}
+```
+
+## How it works
+
+`injectBeforeRender` subscribes to the internal render loop of Angular Three.
+
+When using a static `priority` number, it returns an unsubscribe function, but you typically don't need to use it as it's automatically handled by Angular's [`DestroyRef`](https://angular.dev/api/core/DestroyRef)
+
+When using a dynamic `priority`, it sets up an internal [`effect`](https://angular.dev/api/core/Effect) and returns the `EffectRef#destroy` function. Again, cleanup is automatically handled through `DestroyRef`.
+
+:::tip
+
+Since the before render callback is invoked on every frame, you don't necessarily to use Signals in the callback body unless things are already Signals like Queries or Inputs.
+
+:::

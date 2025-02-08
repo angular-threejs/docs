@@ -2,3 +2,81 @@
 title: NgtPortal
 description: angular-three NgtPortal API
 ---
+
+`NgtPortal` component allows you to create an off-screen buffer to render secondary scenes. This is particularly useful for creating effects like HUDs, mini-maps, or any scenario where you need to render things to a separate scene then combine it with your main scene graph.
+
+## Usage
+
+`NgtPortal` requires a `[container]` input, usually a `THREE.Scene`, to render the content into. Optionally, you can pass in some initial `[state]` to configure the portal's behavior.
+
+```angular-ts
+export interface NgtPortalState extends Omit<NgtState, 'events'> {
+    events: {
+        enabled?: boolean;
+        priority?: number;
+        compute?: NgtComputeFunction;
+        connected?: any;
+    };
+}
+```
+
+Check out [`Store section`](./store) for details on `NgtState`.
+
+```angular-ts
+import { NgtPortal, NgtPortalContent } from 'angular-three';
+
+@Component({
+    template: `
+        <ngt-portal [container]="container">
+            <ng-template portalContent>
+                <!-- things to render in the portal -->
+            </ng-template>
+        </ngt-portal>
+    `,
+    imports: [NgtPortal, NgtPortalContent]
+})
+export class MyCmp {}
+```
+
+### Auto Rendering
+
+By default, `NgtPortal` does not automatically render the portal content and leaves that up to the consumers to decide when and where to render it.
+
+To automatically render the portal content, you can use `NgtPortalAutoRender` directive that attaches on the `<ngt-portal>` component.
+
+```angular-ts
+import { NgtPortal, NgtPortalContent, NgtPortalAutoRender } from 'angular-three';
+
+@Component({
+    template: `
+        <ngt-portal [container]="container" autoRender>
+            <ng-template portalContent>
+                <!-- things to render automatically in the portal -->
+            </ng-template>
+        </ngt-portal>
+    `,
+    imports: [NgtPortal, NgtPortalContent, NgtPortalAutoRender]
+})
+export class MyCmp {}
+```
+
+`NgtPortalAutoRender` accepts a `[autoRender]` input to determine the render priority of the portal content (default to `1`).
+
+- Priority 1: Clears and renders the main scene first
+- Priority > 1: Renders the portal content on top without clearing
+
+## How it works
+
+`NgtPortal` creates a layered store that provides its own:
+
+- Scene
+- Pointer
+- Raycaster
+- Event handling
+- Viewport calculations
+
+This ensures that components within the portal operate independently from the main scene while maintaining access to the **store** with the correct context (root or portal) when use `injectStore`. This allows you to reuse the component under different contexts whether it's in the main scene graph or in the secondary scene graphs.
+
+For many cases, the portal content is rendered to a [`THREE.WebGLRenderTarget`](https://threejs.org/docs/index.html#api/en/renderers/WebGLRenderTarget) and `NgtPortal` leaves that to you to render that target anywhere you want.
+
+For practical examples, check out the [Portals guide](/learn/advanced/portals)

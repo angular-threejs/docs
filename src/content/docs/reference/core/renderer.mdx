@@ -166,6 +166,36 @@ Technically, `decay="0"` works but it is not necessarily shorter than `[decay]="
 
 :::
 
+### Pierced Properties
+
+Angular Three supports **pierced properties** via dot-notation. Imagine you want to turn a plane (`THREE.Mesh` with `THREE.PlaneGeometry`) on its side to make the plane into a floor, instead of passing `[rotation]="[-Math.PI / 2, 0, 0]"` to the `<ngt-mesh>`, you can pierce the rotation property with `[rotation.x]="-Math.PI / 2"`.
+
+```angular-html
+<ngt-mesh [position.y]="-0.5" [rotation.x]="-Math.PI / 2">
+    <ngt-plane-geometry />
+</ngt-mesh>
+```
+
+#### Pierced properties trade-offs
+
+There are trade-offs worth noting for piercing properties.
+
+The pro is it works extremely well for component-based frameworks like Angular where underlying operations use some sort of change detection strategy to determine whether to update the template or not. Since pierced properties allow us to work with more primitive values on the template, it is easier for the change detection mechanism to work with.
+
+However, when it comes to piercing properties of a non-builtin object like an external `THREE.Material` that you bind to a `<ngt-mesh>` via `[material]`, timing of property bindings might get weird and things might not work the way you expect it to. For cases like this, it is recommended to use [`ngt-value`](./raw-value) instead.
+
+Considering the following example
+
+```angular-html
+<ngt-mesh [material]="gltf.materials.material" material.color="green" />
+<!-- vs -->
+<ngt-mesh [material]="gltf.materials.material" [material.color]="'green'">
+```
+
+These 2 snippets behave differently in terms of timing. The first snippet will update the **original material** first then bind a new material later; while the second snippet will bind correctly but the order matters. It gets trickier when it comes to more complex objects like textures.
+
+Hence, pierce properties are **only recommended** for built-in properties of a THREE.js object that are **less likely** to change like `position`, `rotation`, `scale` etc...
+
 ### Angular Three Properties
 
 Beside the properties of the native THREE.js objects, there are some special properties that are specific to Angular Three.

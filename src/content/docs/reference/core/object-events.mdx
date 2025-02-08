@@ -1,4 +1,130 @@
 ---
-title: injectObjectEvents
-description: angular-three injectObjectEvents API
+title: Object Events
+description: angular-three Object Events API
 ---
+
+Object Events is an API that allows you to forward [pointer events](/learn/basics/handling-events) to a THREE.js object, usually in a [custom abstractions](/learn/advanced/abstractions).
+
+## Usage
+
+There are 2 ways to use Object Events API.
+
+### `injectObjectEvents`
+
+This is a more direct way to use the API. It is useful for cases where you control the events you want to forward to the underlying THREE.js object, like in [using directives guide](/learn/advanced/using-directives).
+
+```angular-ts
+@Directive({ selector: "ngt-mesh[cursor]" })
+export class Cursor {
+    constructor() {
+        const document = inject(DOCUMENT);
+        const elementRef = inject<ElementRef<THREE.Mesh>>(ElementRef);
+        const nativeElement = elementRef.nativeElement;
+
+        if (nativeElement.isMesh) {
+            injectObjectEvents(() => nativeElement, {
+                pointerover: () => {
+                    document.body.style.cursor = "pointer";
+                },
+                pointerout: () => {
+                    document.body.style.cursor = "default";
+                },
+            });
+        }
+    }
+}
+```
+
+Then all `<ngt-mesh cursor>` will have `pointerover` and `pointerout` events forwarded to the underlying `THREE.Mesh` object.
+
+### `NgtObjectEvents`
+
+This is intended to be used as a [`hostDirectives`](https://angular.dev/guide/directives/directive-composition-api) on a custom abstraction. This is useful for cases where you don't know which events the abstraction's consumers will use. `NgtObjectEvents` calls `injectObjectEvents` internally.
+
+```angular-ts
+@Component({
+    selector: 'app-my-mesh',
+    template: `
+        <ngt-mesh #mesh>
+            <!-- mesh contents -->
+        </ngt-mesh>
+    `,
+    hostDirectives: [{
+        directive: NgtObjectEvents,
+        outputs: [
+            'click',
+            'pointerover',
+            'pointerout',
+            // ... other events you want to expose
+        ]
+    }]
+})
+export class MyMesh {
+    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
+    constructor() {
+        const objectEvents = inject(NgtObjectEvents, { host: true });
+        objectEvents.ngtObjectEvents.set(this.meshRef);
+    }
+}
+```
+
+`ngtObjectEvents` is a [Model Input](https://angular.dev/guide/components/inputs#model-inputs) that can accept:
+
+- an `ElementRef<THREE.Object3D>`
+- a `THREE.Object3D`
+- a `Signal<ElementRef<THREE.Object3D> | THREE.Object3D>`
+
+## How it works
+
+When using `injetObjectEvents`:
+
+- It takes a target function that returns the object to attach events to
+- Event handlers are registered using [`Renderer2`](https://angular.dev/api/core/Renderer2)
+- Event cleanup is handled automatically through [`DestroyRef`](https://angular.dev/api/core/DestroyRef)
+- Returns an array of cleanup functions if manual cleanup is needed
+
+### Example: GLTF Model with Events
+
+```angular-ts
+@Component({
+    selector: 'app-astronaut',
+    template: `
+        @if (gltf(); as gltf) {
+            <ngt-group #model [parameters]="options()">
+                <ngt-mesh
+                    receiveShadow
+                    castShadow
+                    [geometry]="gltf.nodes.Astronaut_mesh.geometry"
+                    [material]="gltf.materials.Astronaut_mat"
+                />
+            </ngt-group>
+        }
+    `,
+    hostDirectives: [{
+        directive: NgtObjectEvents,
+        outputs: ['click', 'pointerover', 'pointerout']
+    }]
+})
+export class Astronaut {
+    modelRef = viewChild<ElementRef<Group>>('model');
+
+    constructor() {
+        const objectEvents = inject(NgtObjectEvents, { host: true });
+        effect(() => {
+            const model = this.modelRef()?.nativeElement;
+            if (!model) return;
+            objectEvents.ngtObjectEvents.set(model);
+        });
+    }
+}
+```
+
+Now consumers can use the `Astronaut` component with event handling
+
+```angular-html
+<app-astronaut
+    (click)="onAstronautClick($event)"
+    (pointerover)="onAstronautHover($event)"
+/>
+```

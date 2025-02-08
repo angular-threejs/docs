@@ -2,3 +2,47 @@
 title: omit
 description: angular-three omit API
 ---
+
+`omit` is a utility function that accepts a `Signal<object>` and an array of properties to omit. It returns a `Signal<object>` with the passed in properties omitted.
+
+## Usage
+
+```angular-ts
+interface MyCmpOptions extends Partial<NgtThreeElements['ngt-group']> {
+    foo: string;
+    bar: number;
+}
+
+const defaultOptions: MyCmpOptions = {
+    foo: 'foo',
+    bar: 1,
+}
+
+@Component({
+    template: `
+        <ngt-group [parameters]="parameters()">
+        </ngt-group>
+    `
+})
+export class MyCmp {
+    options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
+    parameters = omit(this.options, ['foo', 'bar']);
+}
+```
+
+### Equality function
+
+By default, `omit` uses shallow check for objects and array values when an array of keys is passed in. You can pass a custom equality function in via the 3rd argument `equal`
+
+```angular-ts
+export class MyCmp {
+    options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
+    parameters = omit(
+        this.options,
+        ['foo', 'bar'],
+        (a, b) => a.name !== b.name
+    );
+}
+```

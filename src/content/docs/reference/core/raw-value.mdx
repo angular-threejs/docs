@@ -2,3 +2,24 @@
 title: ngt-value
 description: angular-three ngt-value API
 ---
+
+When you have a need to change some deeply nested property of a THREE.js object but you don't want to go through the whole [`viewChild`](https://angular.dev/api/core/ViewChild) to get the reference to the object to change that property, you can use `ngt-value` and take advantage of [`attaching`](./renderer)
+
+## Usage
+
+```angular-ts
+@Component({
+    template: `
+        @if (gltf(); as gltf) {
+            <ngt-mesh [geometry]="gltf.nodes.model.geometry" [material]="gltf.materials.material">
+                <ngt-value rawValue="green" attach="material.color" />
+            </ngt-mesh>
+        }
+    `
+})
+export class MyCmp {
+    protected gltf = injectGLTF(() => someGLTF);
+}
+```
+
+In this example, you load a GLTF model and [reuse the geometry alongside the material](/learn/advanced/performance/reusing-resources). In order to change the color of the `material`, it is tricky without `ngt-value`. With `ngt-value`, you _declaratively_ tell the template that you want to update the `material.color` to `green`. You can also use property binding with `[rawValue]` to make it reactive too.
