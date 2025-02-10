@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
@@ -9,7 +9,7 @@ import { SceneGraph } from './scene-graph';
 		</ngt-canvas>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 	host: { class: 'instance-scatter-demo' },
 })
 export default class InstanceScatterDemo {

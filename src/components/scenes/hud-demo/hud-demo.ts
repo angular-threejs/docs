@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
@@ -9,7 +9,7 @@ import { SceneGraph } from './scene-graph';
 		</ngt-canvas>
 		<span class="absolute bottom-4 right-4 font-mono text-xs"> * click/hover the cube </span>
 	`,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'hud-demo-docs block h-full relative !mt-0' },
 })

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgtCanvasDeclarations, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
@@ -8,7 +8,7 @@ import { SceneGraph } from './scene-graph';
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
 	`,
-	imports: [NgtCanvasDeclarations, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 })
 export default class SimpleScene {
 	static clientProviders = [provideNgtRenderer()];

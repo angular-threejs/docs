@@ -1,6 +1,6 @@
 ```angular-ts
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { NgtCanvas, NgtCanvasContent } from "angular-three/dom";
+import { NgtCanvas } from "angular-three/dom";
 import { SceneGraph } from "./scene-graph";
 
 @Component({
@@ -16,7 +16,7 @@ import { SceneGraph } from "./scene-graph";
     host: {
         class: "relative flex h-full",
     },
-    imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+    imports: [NgtCanvas, SceneGraph],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PointerDemo {}

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { ToggleButton } from '../toggle-button';
 import { SceneGraph } from './scene-graph';
 
@@ -12,7 +12,7 @@ import { SceneGraph } from './scene-graph';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'pointer-events relative block !mt-0 h-full w-full' },
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph, ToggleButton],
+	imports: [NgtCanvas, SceneGraph, ToggleButton],
 })
 export default class EventPropagationDemo {
 	static clientProviders = [provideNgtRenderer()];

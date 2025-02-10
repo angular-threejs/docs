@@ -9,15 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import {
-	extend,
-	injectBeforeRender,
-	injectStore,
-	NgtArgs,
-	NgtPortal,
-	NgtPortalAutoRender,
-	NgtPortalContent,
-} from 'angular-three';
+import { extend, injectBeforeRender, injectStore, NgtArgs, NgtPortal, NgtPortalAutoRender } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrthographicCamera, NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -139,7 +131,7 @@ export class Box {
 			</ng-template>
 		</ngt-portal>
 	`,
-	imports: [Box, NgtPortal, NgtPortalContent, NgtsPerspectiveCamera, NgtPortalAutoRender],
+	imports: [Box, NgtPortal, NgtsPerspectiveCamera, NgtPortalAutoRender],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

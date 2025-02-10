@@ -1,5 +1,5 @@
 ```angular-ts
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
@@ -8,7 +8,7 @@ import { SceneGraph } from './scene-graph';
             <app-scene-graph *canvasContent />
         </ngt-canvas>
     `,
-    imports: [NgtCanvas, NgtCanvasContent, SceneGraph]
+    imports: [NgtCanvas, SceneGraph]
 })
 export class SimpleScene {}
 ```

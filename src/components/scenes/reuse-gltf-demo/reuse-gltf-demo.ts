@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { NgtHexify } from 'angular-three';
-import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
@@ -14,7 +14,7 @@ import { SceneGraph } from './scene-graph';
 		</div>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph, NgtHexify],
+	imports: [NgtCanvas, SceneGraph, NgtHexify],
 	host: { class: 'reuse-gltf-demo block relative h-full !mt-0' },
 })
 export default class ReuseGLTFDemo {

@@ -110,8 +110,7 @@ We'll also need to adjust the `NgtCanvas` dimensions by adjusting the parent's d
     <TabItem label="app.component.ts">
     ```diff lang="angular-ts"
     import { Component } from "@angular/core";
-    -import { NgtCanvas } from "angular-three/dom";
-    +import { NgtCanvas, NgtCanvasContent } from "angular-three/dom";
+    import { NgtCanvas } from "angular-three/dom";
     +import { SceneGraph } from "./scene-graph";
 
     @Component({
@@ -121,8 +120,8 @@ We'll also need to adjust the `NgtCanvas` dimensions by adjusting the parent's d
     +           <app-scene-graph *canvasContent />
             </ngt-canvas>
         `,
-    -   imports: [NgtCanvas, SceneGraph]
-    +   imports: [NgtCanvas, NgtCanvasContent, SceneGraph]
+    -   imports: [NgtCanvas]
+    +   imports: [NgtCanvas, SceneGraph]
     })
     export class AppComponent {}
     ```
@@ -255,7 +254,7 @@ export class SceneGraph {}
 :::
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={1} />
+ <FirstScene client:only step={1} />
 </div>
 
 :::note[Did you know?]
@@ -330,7 +329,7 @@ export class SceneGraph {}
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={2} />
+ <FirstScene client:only step={2} />
 </div>
 
 <details>
@@ -384,7 +383,7 @@ export class SceneGraph {}
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={3} />
+ <FirstScene client:only step={3} />
 </div>
 
 <details>
@@ -421,7 +420,7 @@ Up to this point, we've only been looking at the side of the cube. This is becau
 // app.component.ts
 
 import { Component } from "@angular/core";
-import { NgtCanvas, NgtCanvasContent } from "angular-three/dom";
+import { NgtCanvas } from "angular-three/dom";
 import { SceneGraph } from "./scene-graph";
 
 @Component({
@@ -434,7 +433,7 @@ import { SceneGraph } from "./scene-graph";
             <app-scene-graph *canvasContent />
         </ngt-canvas>
     `,
-    imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+    imports: [NgtCanvas, SceneGraph],
     styles: `
         :host {
             display: block;
@@ -446,7 +445,7 @@ export class AppComponent {}
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={4} />
+ <FirstScene client:only step={4} />
 </div>
 
 ## Animate the Cube
@@ -520,7 +519,7 @@ export class SceneGraph {
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={5} />
+ <FirstScene client:only step={5} />
 </div>
 
 ## Make a component
@@ -650,7 +649,7 @@ export class Cube {
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={6} />
+ <FirstScene client:only step={6} />
 </div>
 
 ### Render another cube
@@ -732,7 +731,7 @@ export class SceneGraph {}
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={7} />
+ <FirstScene client:only step={7} />
 </div>
 
 Now, we have two cubes that have their own states, and react to events independently.
@@ -827,7 +826,7 @@ export class Cube {
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={8} />
+ <FirstScene client:only step={8} />
 </div>
 
 ## Cast shadows
@@ -840,7 +839,7 @@ First, we need to turn on **shadows** support explicitly since rendering shadows
 // app.component.ts
 
 import { Component } from "@angular/core";
-import { NgtCanvas, NgtCanvasContent } from "angular-three/dom";
+import { NgtCanvas } from "angular-three/dom";
 import { SceneGraph } from "./scene-graph";
 
 @Component({
@@ -854,7 +853,7 @@ import { SceneGraph } from "./scene-graph";
             <app-scene-graph *canvasContent />
         </ngt-canvas>
     `,
-    imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+    imports: [NgtCanvas, SceneGraph],
     styles: `
         :host {
             display: block;
@@ -958,7 +957,7 @@ export class Cube {
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
-	<FirstScene client:only step={9} />
+ <FirstScene client:only step={9} />
 </div>
 
 ## Conclusion

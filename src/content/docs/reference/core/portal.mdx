@@ -23,7 +23,7 @@ export interface NgtPortalState extends Omit<NgtState, 'events'> {
 Check out [`Store section`](./store) for details on `NgtState`.
 
 ```angular-ts
-import { NgtPortal, NgtPortalContent } from 'angular-three';
+import { NgtPortal } from 'angular-three';
 
 @Component({
     template: `
@@ -33,7 +33,7 @@ import { NgtPortal, NgtPortalContent } from 'angular-three';
             </ng-template>
         </ngt-portal>
     `,
-    imports: [NgtPortal, NgtPortalContent]
+    imports: [NgtPortal]
 })
 export class MyCmp {}
 ```
@@ -45,7 +45,7 @@ By default, `NgtPortal` does not automatically render the portal content and lea
 To automatically render the portal content, you can use `NgtPortalAutoRender` directive that attaches on the `<ngt-portal>` component.
 
 ```angular-ts
-import { NgtPortal, NgtPortalContent, NgtPortalAutoRender } from 'angular-three';
+import { NgtPortal, NgtPortalAutoRender } from 'angular-three';
 
 @Component({
     template: `
@@ -55,7 +55,7 @@ import { NgtPortal, NgtPortalContent, NgtPortalAutoRender } from 'angular-three'
             </ng-template>
         </ngt-portal>
     `,
-    imports: [NgtPortal, NgtPortalContent, NgtPortalAutoRender]
+    imports: [NgtPortal, NgtPortalAutoRender]
 })
 export class MyCmp {}
 ```

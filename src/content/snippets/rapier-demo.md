@@ -1,6 +1,6 @@
 ```angular-ts
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from '../hud/scene-graph';
 
 @Component({
@@ -10,7 +10,7 @@ import { SceneGraph } from '../hud/scene-graph';
             <app-scene-graph *canvasContent />
         </ngt-canvas>
     `,
-    imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+    imports: [NgtCanvas, SceneGraph],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RapierDemo {}

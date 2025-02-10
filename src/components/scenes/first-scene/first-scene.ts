@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { StepEight } from './step-eight';
 import { StepFive } from './step-five';
 import { StepNine } from './step-nine';
@@ -35,18 +35,7 @@ import { StepTwo } from './step-two';
 			</ng-template>
 		</ngt-canvas>
 	`,
-	imports: [
-		NgtCanvas,
-		NgtCanvasContent,
-		StepOne,
-		StepTwo,
-		StepThree,
-		StepFive,
-		StepSix,
-		StepSeven,
-		StepEight,
-		StepNine,
-	],
+	imports: [NgtCanvas, StepOne, StepTwo, StepThree, StepFive, StepSix, StepSeven, StepEight, StepNine],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FirstScene {

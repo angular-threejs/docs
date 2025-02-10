@@ -17,7 +17,7 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
     <TabItem label="canvas.ts">
     ```angular-ts
     import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal } from "@angular/core";
-    import { NgtCanvas, NgtCanvasContent, } from "angular-three/dom";
+    import { NgtCanvas, } from "angular-three/dom";
     import { NgtsStats } from "angular-three-soba/stats";
     import { SceneGraph } from "./scene-graph";
 
@@ -30,7 +30,7 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
                 on-demand renderering
             </button>
         `,
-        imports: [NgtCanvas, NgtCanvasContent, SceneGraph, ToggleButton],
+        imports: [NgtCanvas, SceneGraph, ToggleButton],
     })
     export default class ColorGradingDemo {
         protected onDemand = signal(true);

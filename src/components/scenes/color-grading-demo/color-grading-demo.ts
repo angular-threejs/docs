@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal } from '@angular/core';
 import { NgtsStats } from 'angular-three-soba/stats';
-import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { ToggleButton } from '../toggle-button';
 import { SceneGraph } from './scene-graph';
 
@@ -15,7 +15,7 @@ import { SceneGraph } from './scene-graph';
 		</ngt-canvas>
 		<button [(toggleButton)]="onDemand" class="absolute right-4 top-4">on-demand renderering</button>
 	`,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph, NgtsStats, ToggleButton],
+	imports: [NgtCanvas, SceneGraph, NgtsStats, ToggleButton],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'color-grading-demo relative block h-full !mt-0' },
 	styles: `

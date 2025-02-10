@@ -14,7 +14,7 @@
             </ng-template>
         </ngt-portal>
     `,
-    imports: [Box, NgtPortal, NgtPortalContent, NgtsPerspectiveCamera, NgtPortalAutoRender],
+    imports: [Box, NgtPortal, NgtsPerspectiveCamera, NgtPortalAutoRender],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

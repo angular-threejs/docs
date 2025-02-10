@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject } from '@angular/core';
 import { NgtsLoader } from 'angular-three-soba/loaders';
 import { NgtsStats } from 'angular-three-soba/stats';
-import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
@@ -15,7 +15,7 @@ import { SceneGraph } from './scene-graph';
 		</ngt-canvas>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtsLoader, NgtsStats, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, NgtsLoader, NgtsStats, SceneGraph],
 	host: { class: 'lod-demo relative block h-full !mt-0' },
 	styles: `
 		:host {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import type { NgtFrameloop, NgtGLOptions } from 'angular-three';
-import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
+import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import * as THREE from 'three/webgpu';
 import { SceneGraph } from './scene-graph';
 
@@ -11,7 +11,7 @@ import { SceneGraph } from './scene-graph';
 		</ngt-canvas>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 	host: { class: 'webgpu-renderer' },
 })
 export default class WebGPURendererDemo {

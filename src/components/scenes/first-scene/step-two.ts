@@ -7,7 +7,7 @@ extend(THREE);
 @Component({
 	selector: 'app-step-two-scene-graph',
 	template: `
-		<ngt-mesh [position]="[0, 1, 0]">
+		<ngt-mesh [position.y]="1">
 			<ngt-box-geometry />
 			<ngt-mesh-basic-material color="mediumpurple" />
 		</ngt-mesh>
