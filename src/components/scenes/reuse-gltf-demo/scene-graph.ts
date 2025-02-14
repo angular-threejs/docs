@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { extend } from 'angular-three';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
 import { NgtsAccumulativeShadows, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
+import { NgtTweakColor, NgtTweakPane } from 'angular-three-tweakpane';
 import * as THREE from 'three';
 import { Shoe } from './shoe';
 
@@ -10,9 +11,9 @@ import { Shoe } from './shoe';
 	template: `
 		<ngt-ambient-light [intensity]="Math.PI" />
 
-		<app-shoe [color]="leftShoe()" [options]="{ position: [0, 0, 0.85] }" />
+		<app-shoe [color]="leftShoeColor()" [options]="{ position: [0, 0, 0.85] }" />
 		<app-shoe
-			[color]="rightShoe()"
+			[color]="rightShoeColor()"
 			[options]="{
 				position: [0, 0, -0.85],
 				rotation: [0, 0.5, Math.PI],
@@ -34,16 +35,29 @@ import { Shoe } from './shoe';
 
 		<ngts-camera-controls [options]="{ maxPolarAngle: Math.PI / 2 }" />
 		<ngts-environment [options]="{ preset: 'city' }" />
+
+		<ngt-tweak-pane title="Reuse GLTF">
+			<ngt-tweak-color [(value)]="leftShoeColor" label="Left-shoe" />
+			<ngt-tweak-color [(value)]="rightShoeColor" label="Right-shoe" />
+		</ngt-tweak-pane>
 	`,
-	imports: [Shoe, NgtsAccumulativeShadows, NgtsRandomizedLights, NgtsCameraControls, NgtsEnvironment],
+	imports: [
+		Shoe,
+		NgtsAccumulativeShadows,
+		NgtsRandomizedLights,
+		NgtsCameraControls,
+		NgtsEnvironment,
+		NgtTweakPane,
+		NgtTweakColor,
+	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {
 	protected readonly Math = Math;
 
-	leftShoe = input.required<string>();
-	rightShoe = input.required<string>();
+	leftShoeColor = signal('#ff0000');
+	rightShoeColor = signal('#0000ff');
 
 	constructor() {
 		extend(THREE);

@@ -74,6 +74,7 @@ export default defineConfig({
 				'angular-three-rapier/**',
 				'angular-three-postprocessing',
 				'angular-three-postprocessing/**',
+				'angular-three-tweakpane',
 				'@pmndrs/vanilla',
 				'@pmndrs/cannon-worker-api',
 				'three-custom-shader-material',

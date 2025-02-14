@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtHexify } from 'angular-three';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
@@ -6,12 +6,8 @@ import { SceneGraph } from './scene-graph';
 @Component({
 	template: `
 		<ngt-canvas shadows [camera]="{ position: [5, 0, 5], fov: 35 }">
-			<app-scene-graph *canvasContent [leftShoe]="leftShoeColor()" [rightShoe]="rightShoeColor()" />
+			<app-scene-graph *canvasContent />
 		</ngt-canvas>
-		<div class="absolute right-4 top-4 flex flex-col gap-4">
-			<input type="color" [value]="leftShoeColor()" (input)="leftShoeColor.set($any($event).target.value)" />
-			<input type="color" [value]="rightShoeColor()" (input)="rightShoeColor.set($any($event).target.value)" />
-		</div>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtCanvas, SceneGraph, NgtHexify],
@@ -19,7 +15,4 @@ import { SceneGraph } from './scene-graph';
 })
 export default class ReuseGLTFDemo {
 	static clientProviders = [provideNgtRenderer()];
-
-	leftShoeColor = signal('#ff0000');
-	rightShoeColor = signal('#0000ff');
 }

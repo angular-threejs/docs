@@ -18,7 +18,7 @@ export default class WebGPURendererDemo {
 	static clientProviders = [provideNgtRenderer()];
 
 	protected frameloop = signal<NgtFrameloop>('never');
-	protected glFactory: NgtGLOptions = (canvas) => {
+	protected glFactory: NgtGLOptions = ({ canvas }) => {
 		const renderer = new THREE.WebGPURenderer({
 			canvas: canvas as HTMLCanvasElement,
 			antialias: true,

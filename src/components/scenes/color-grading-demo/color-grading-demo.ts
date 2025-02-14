@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal } from '@angular/core';
 import { NgtsStats } from 'angular-three-soba/stats';
+import { NgtTweakCheckbox, NgtTweakPane } from 'angular-three-tweakpane';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
-import { ToggleButton } from '../toggle-button';
 import { SceneGraph } from './scene-graph';
 
 @Component({
@@ -11,11 +11,16 @@ import { SceneGraph } from './scene-graph';
 			[frameloop]="frameloop()"
 			[camera]="{ position: [0, 0, 3], fov: 45 }"
 		>
-			<app-scene-graph *canvasContent />
+			<ng-template canvasContent>
+				<app-scene-graph />
+
+				<ngt-tweak-pane title="On-demand Rendering">
+					<ngt-tweak-checkbox [(value)]="onDemand" label="Enabled" />
+				</ngt-tweak-pane>
+			</ng-template>
 		</ngt-canvas>
-		<button [(toggleButton)]="onDemand" class="absolute right-4 top-4">on-demand renderering</button>
 	`,
-	imports: [NgtCanvas, SceneGraph, NgtsStats, ToggleButton],
+	imports: [NgtCanvas, SceneGraph, NgtsStats, NgtTweakPane, NgtTweakCheckbox],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'color-grading-demo relative block h-full !mt-0' },
 	styles: `

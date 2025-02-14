@@ -99,3 +99,16 @@ div.sidebar-pane ul ul li:has(> a:not([aria-current='page']):is(:hover, :focus-v
 div.sidebar-pane .top-level > li + li {
 	margin-top: 1.25rem;
 }
+
+div.tp-dfwv {
+	margin-top: 0 !important;
+
+	& div[class^='tp']:not(.tp-lblv):not(.tp-rotv_m),
+	button[class^='tp'] {
+		margin-top: 0;
+	}
+
+	& div.tp-rotv_m {
+		margin: auto;
+	}
+}
