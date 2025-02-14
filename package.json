@@ -7,7 +7,8 @@
 		"start": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"astro": "astro"
+		"astro": "astro",
+		"update-ngt": "npm update angular-three angular-three-cannon angular-three-postprocessing angular-three-rapier angular-three-soba angular-three-tweakpane angular-three-plugin"
 	},
 	"dependencies": {
 		"@analogjs/astro-angular": "^1.12.2",
@@ -32,7 +33,8 @@
 		"angular-three-cannon": "next",
 		"angular-three-postprocessing": "next",
 		"angular-three-rapier": "next",
-		"angular-three-soba": "^4.0.0-next.3",
+		"angular-three-soba": "next",
+		"angular-three-tweakpane": "next",
 		"astro": "^5.1.9",
 		"camera-controls": "^2.9.0",
 		"maath": "^0.10.8",
@@ -54,6 +56,7 @@
 	"devDependencies": {
 		"@expressive-code/plugin-line-numbers": "^0.40.1",
 		"@types/three": "^0.172.0",
+		"angular-three-plugin": "next",
 		"prettier": "^3.4.2",
 		"prettier-plugin-astro": "^0.14.1",
 		"prettier-plugin-organize-imports": "^4.1.0",
