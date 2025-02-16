@@ -176,6 +176,10 @@ export function ngtSidebar() {
 							slug: 'reference/core/dom/introduction',
 						},
 						{
+							label: 'provideNgtRenderer',
+							slug: 'reference/core/dom/provide-renderer',
+						},
+						{
 							label: 'NgtCanvas',
 							slug: 'reference/core/dom/canvas',
 						},

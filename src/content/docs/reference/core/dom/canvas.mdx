@@ -2,3 +2,68 @@
 title: NgtCanvas
 description: NgtCanvas component API
 ---
+
+`NgtCanvas` from `angular-three/dom` provides the DOM-based implementation of THREE.js rendering using [`HTMLCanvasElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement). This is the standard way to integrate THREE.js into your Angular applications.
+
+## Usage
+
+```angular-ts
+import { NgtCanvas } from 'angular-three/dom';
+
+@Component({
+    selector: 'app-root',
+    template: `
+        <ngt-canvas>
+            <app-scene-graph *canvasContent />
+        </ngt-canvas>
+    `,
+    imports: [NgtCanvas]
+})
+export class AppComponent {}
+```
+
+The canvas content must be wrapped with the structural directive `*canvasContent`. This directive ensures the THREE.js scene graph is only rendered after the `HTMLCanvasElement` is properly initialized with its WebGL context.
+
+## Features
+
+- DOM-based Rendering: Uses the standard `HTMLCanvasElement` for WebGL rendering
+- Automatic Resize Handling: The canvas automatically responds to size changes of its container, maintaining the correct aspect ratio and dimensions
+- Zone Management: All rendering is performed outside of `NgZone` (noop if your application is **zoneless**) for optimal performance
+- Event Management: Pointer events are handled efficiently with configurable event sources and prefixes
+
+## Inputs
+
+| input        | type                                     | description                                                                                                                                                    |
+| ------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| gl           | `NgtGLOptions`                           | WebGL renderer options. Can also be different renderer instance or a factory that returns a renderer instance. i.e: [`WebGPURenderer`](/learn/advanced/webgpu) |
+| size         | `NgtSize`                                | Canvas size configuration                                                                                                                                      |
+| shadows      | `boolean \| NgtShadows`                  | Enable/configure shadows (`false`)                                                                                                                             |
+| legacy       | `boolean`                                | Enable legacy color mode (`false`)                                                                                                                             |
+| linear       | `boolean`                                | Enable linear color space (`false`)                                                                                                                            |
+| flat         | `boolean`                                | Enable flat shading (`false`)                                                                                                                                  |
+| orthographic | `boolean`                                | Use orthographic camera (`false`)                                                                                                                              |
+| frameloop    | `NgtFrameloop`                           | Frame loop mode (`'always'`). Check out [On-demand rendering](/learn/advanced/performance/on-demand-rendering)                                                 |
+| performance  | `Partial<NgtPerformance>`                | Performance configuration                                                                                                                                      |
+| dpr          | `NgtDpr`                                 | Device pixel ratio range (`[1, 2]`)                                                                                                                            |
+| raycaster    | `Partial<THREE.Raycaster>`               | Raycaster configuration                                                                                                                                        |
+| scene        | `THREE.Scene \| Partial<THREE.Scene>`    | Scene configuration                                                                                                                                            |
+| camera       | `NgtCamera \| NgtCameraParameters`       | Camera configuration                                                                                                                                           |
+| events       | `Function`                               | Event system factory                                                                                                                                           |
+| eventSource  | `HTMLElement \| ElementRef<HTMLElement>` | Custom event source element                                                                                                                                    |
+| eventPrefix  | `NgtEventPrefix`                         | Event coordinate prefix (`offset`)                                                                                                                             |
+| lookAt       | `NgtVector3`                             | Camera **initial** lookAt position                                                                                                                             |
+
+## Outputs
+
+| output        | type               | description                                   |
+| ------------- | ------------------ | --------------------------------------------- |
+| created       | `NgtState`         | Emits when the canvas is initialized          |
+| pointerMissed | `Observable<void>` | Emits when a pointer event misses all objects |
+
+:::note
+
+- `NgtCanvas` is exported as an array containing both `NgtCanvasImpl` and `NgtCanvasContent` for convenience, as they are always used together.
+- The canvas container maintains a 100% width and height of its parent container.
+- The canvas automatically handles resize events through `ngxtension/resize`, ensuring proper aspect ratio and dimensions.
+
+:::

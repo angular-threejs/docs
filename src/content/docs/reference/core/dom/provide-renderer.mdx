@@ -1,0 +1,43 @@
+---
+title: provideNgtRenderer
+description: angular-three/dom provideNgtRenderer API
+---
+
+## Usage
+
+Provide `angular-three` custom renderer during `bootstrapApplication` with `provideNgtRenderer`
+
+```angular-ts
+import { provideNgtRenderer } from 'angular-three/dom';
+
+bootstrapApplication(AppComponent, {
+    providers: [provideNgtRenderer()]
+})
+```
+
+### Route provider
+
+If your 3D scene graph is only on some specific route, you can provide the renderer only on that route.
+
+```angular-ts
+import { provideNgtRenderer } from 'angular-three/dom';
+
+export const routes: Routes = [
+    {
+        path: 'home',
+        loadComponent: () => import('./home')
+    },
+    {
+        path: 'scene',
+        providers: [provideNgtRenderer()],
+        loadComponent: () => import('./scene'),
+    }
+];
+```
+
+Now only `/scene` route will be handled by the custom `angular-three` renderer.
+
+## How it works
+
+`provideNgtRenderer` overrides the [`RendererFactory2`](https://angular.dev/api/core/RendererFactory2) so that it can take over the template.
+However, it also references the default DOM renderer that Angular provides for the browser platform via `bootstrapApplication`.
