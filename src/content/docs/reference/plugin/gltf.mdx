@@ -2,3 +2,116 @@
 title: GLTF
 description: angular-three-plugin:gltf API
 ---
+
+`angular-three-plugin:gltf` generates Angular components from [gLTF](https://en.wikipedia.org/wiki/GlTF) 3D models; optimizing and transforming the models in the process.
+
+:::note
+
+Check out [Reusing Resources guide](/learn/advanced/performance/reusing-resources) for practical use-cases.
+
+:::
+
+## Usage
+
+```bash
+ng generate angular-three-plugin:gltf [model-path] [options]
+```
+
+### Arguments
+
+| Argument   | Description                            |
+| ---------- | -------------------------------------- |
+| model-path | Path to the GLTF model file (required) |
+
+### Options
+
+#### Component Generation
+
+| Option                   | Description                                | Default |
+| ------------------------ | ------------------------------------------ | ------- |
+| --class-name, -C         | Name for the generated component class     | "Model" |
+| --selector-prefix, --pre | Prefix for the component selector          | "app"   |
+| --header, -H             | Custom header to add to the generated file | ""      |
+
+#### Model Optimization
+
+| Option          | Description                 | Default |
+| --------------- | --------------------------- | ------- |
+| --simplify, -S  | Enable mesh simplification  | false   |
+| --ratio, -r     | Simplification ratio (0-1)  | 0       |
+| --error, -e     | Simplifier error threshold  | 0.0001  |
+| --precision, -p | Number of fractional digits | 3       |
+
+#### Materials & Meshes
+
+| Option               | Description                          | Default |
+| -------------------- | ------------------------------------ | ------- |
+| --keep-materials, -M | Prevent material palette joining     | false   |
+| --keep-meshes, -j    | Prevent joining of compatible meshes | false   |
+
+#### Textures & Format
+
+| Option           | Description                            | Default |
+| ---------------- | -------------------------------------- | ------- |
+| --format, -f     | Texture format (jpeg\|png\|webp\|avif) | "webp"  |
+| --resolution, -R | Resolution for texture resizing        | 1024    |
+| --draco, -D      | Enable DracoLoader for compression     | false   |
+
+#### Model Structure
+
+| Option                | Description                               | Default |
+| --------------------- | ----------------------------------------- | ------- |
+| --bones, -b           | Layout bones declaratively                | false   |
+| --keep-groups, -g     | Preserve groups in the model              | false   |
+| --keep-names, -n      | Preserve object names                     | false   |
+| --keep-attributes, -a | Keep unused vertex attributes             | false   |
+| --shadows, -s         | Enable mesh casting and receiving shadows | false   |
+
+#### Transform & Degrade
+
+| Option                   | Description                                     | Default |
+| ------------------------ | ----------------------------------------------- | ------- |
+| --transform, -t          | Transform meshes via @gltf-transform/extensions | false   |
+| --degrade, -q            | Degrade meshes (specify method)                 | ""      |
+| --degrade-resolution, -Q | Resolution for mesh degradation                 | 512     |
+
+#### Output & Debug
+
+| Option             | Description               | Default |
+| ------------------ | ------------------------- | ------- |
+| --output, -o       | Custom output path        | -       |
+| --console, -c      | Print output to console   | false   |
+| --verbose, --debug | Enable verbose logging    | false   |
+| --meta, -m         | Include meta information  | false   |
+| --dry-run, -d      | Run without writing files | false   |
+| --force            | Overwrite existing files  | false   |
+
+## Examples
+
+Basic usage:
+
+```bash
+ng g angular-three-plugin:gltf models/character.gltf
+```
+
+Optimize model with simplification:
+
+```bash
+ng g angular-three-plugin:gltf models/scene.gltf --simplify --ratio 0.5
+```
+
+Generate optimized component with custom name and compression:
+
+```bash
+ng g angular-three-plugin:gltf models/asset.gltf --class-name="Character"
+--draco
+```
+
+:::note
+
+- The plugin leverages `@gltf-transform/extensions` for various optimizations
+- For best compression results, `webp` is the recommended texture format
+- Use --verbose flag to get detailed processing information
+- The --dry-run option allows testing transformations without generating
+
+:::

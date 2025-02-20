@@ -159,6 +159,10 @@ export function ngtSidebar() {
 							slug: 'reference/core/object-events',
 						},
 						{
+							label: 'is',
+							slug: 'reference/core/is',
+						},
+						{
 							label: 'omit',
 							slug: 'reference/core/omit',
 						},
@@ -191,6 +195,22 @@ export function ngtSidebar() {
 						{
 							label: 'Introduction',
 							slug: 'reference/core/testing/introduction',
+						},
+						{
+							label: 'NgtTestBed',
+							slug: 'reference/core/testing/test-bed',
+						},
+						{
+							label: 'fireEvent',
+							slug: 'reference/core/testing/fire-event',
+						},
+						{
+							label: 'advance',
+							slug: 'reference/core/testing/advance',
+						},
+						{
+							label: 'toGraph',
+							slug: 'reference/core/testing/to-graph',
 						},
 					],
 				},

@@ -1,0 +1,74 @@
+---
+title: fireEvent
+description: angular-three/testing fireEvent API
+---
+
+`fireEvent` is a method on `NgtTestBed` that allows you to fire events on any element in the scene graph.
+
+## `fireEvent(element, eventName, eventData)`
+
+`fireEvent` accepts three arguments:
+
+- `element` is the element to fire the event on
+- `eventName` is the name of the event to fire. Must be events that are supported by Angular Three events system.
+- `eventData` is an optional object that contains the event data
+
+```angular-ts
+const { fireEvent } = NgtTestBed.create(SceneGraph);
+
+await fireEvent(mesh, 'click');
+await fireEvent(mesh, 'pointerover');
+```
+
+### `fireEvent.setAutoDetectChanges(auto: boolean)`
+
+After firing an event, synchronization (i.e: change detection) is needed with `fixture.detectChanges()` to synchronize any state changes that may have occurred.
+
+`fireEvent` does this automatically, but you can disable it by calling `fireEvent.setAutoDetectChanges(false)`.
+
+```angular-ts
+const { fixture, fireEvent } = NgtTestBed.create(SceneGraph);
+fireEvent.setAutoDetectChanges(false);
+
+await fireEvent(mesh, 'click');
+fixture.detectChanges();
+
+await fireEvent(mesh, 'pointerover');
+fixture.detectChanges();
+```
+
+## Example Scenario
+
+For the example scenario, you can use `fireEvent` to fire `click`, `pointerover`, and `pointerout` events on `ngt-mesh` and assert the cube's state after each event.
+
+```angular-ts {12-21}
+import { is } from 'angular-three';
+import { NgtTestBed } from 'angular-three/testing';
+
+describe('SceneGraph', () => {
+  it('should render', async () => {
+    const { scene, fireEvent, advance } = NgtTestBed.create(SceneGraph);
+
+    expect(scene.children.length).toEqual(1);
+    const mesh = scene.children[0];
+    expect(is.three<THREE.Mesh>(mesh, 'isMesh')).toEqual(true);
+
+    expect(material.color.getHexString()).toEqual('ffa500');
+
+    await fireEvent(mesh, 'pointerover');
+    expect(material.color.getHexString()).toEqual('a47bd5');
+
+    await fireEvent(mesh, 'pointerout');
+    expect(material.color.getHexString()).toEqual('ffa500');
+
+    await fireEvent(mesh, 'click');
+    expect(mesh.scale.toArray()).toEqual([1.5, 1.5, 1.5]);
+  });
+});
+```
+
+:::note
+
+`color.getHexString()` is used to compare the color because `material.color` is a `THREE.Color` instance, even though CSS color names are used in the template.
+
+:::

@@ -1,0 +1,27 @@
+---
+title: toGraph
+description: angular-three/testing toGraph API
+---
+
+`toGraph` is a function that allows you to convert a THREE.js object into a simple `NgtTestGraphObject`.
+
+This is useful for snapshot testing as it at least provides the scene graph structure.
+
+```angular-ts
+const { fixture, toGraph } = NgtTestBed.create(SceneGraph);
+fixture.detectChanges();
+
+expect(toGraph()).toMatchSnapshot();
+
+/**
+ * For a scene with a single mesh
+ *
+ * [
+ *     {
+ *         "type": "Mesh",
+ *         "name": "",
+ *         "children": []
+ *     }
+ * ]
+ */
+```

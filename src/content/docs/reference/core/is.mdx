@@ -1,0 +1,104 @@
+---
+title: is
+description: angular-three is API
+---
+
+The `is` utility provides type guards and comparison functions for THREE.js and Angular Three objects.
+
+## `is.material(obj)`
+
+Checks if `obj` is a `THREE.Material`.
+
+```angular-ts
+is.material(new THREE.MeshBasicMaterial()); // true
+is.material({}); // false
+```
+
+## `is.geometry(obj)`
+
+Checks if `obj` is a `THREE.BufferGeometry`.
+
+```angular-ts
+is.geometry(new THREE.BoxGeometry()); // true
+is.geometry({}); // false
+```
+
+## `is.camera(obj)`
+
+Checks if `obj` is a `THREE.Camera`.
+
+```angular-ts
+is.camera(new THREE.PerspectiveCamera()); // true
+is.camera(new THREE.OrthographicCamera()); // true
+is.camera({}); // false
+```
+
+### `is.orthographicCamera(obj)`
+
+Checks if `obj` is a `THREE.OrthographicCamera`.
+
+```angular-ts
+is.orthographicCamera(new THREE.OrthographicCamera()); // true
+is.orthographicCamera(new THREE.PerspectiveCamera()); // false
+```
+
+### `is.perspectiveCamera(obj)`
+
+Checks if `obj` is a `THREE.PerspectiveCamera`.
+
+```angular-ts
+is.perspectiveCamera(new THREE.PerspectiveCamera()); // true
+is.perspectiveCamera(new THREE.OrthographicCamera()); // false
+```
+
+## `is.renderer(obj)`
+
+Checks if `obj` is a valid renderer with a `render()` function
+
+```angular-ts
+is.renderer(new THREE.WebGLRenderer()); // true
+is.renderer({}); // false
+is.renderer({ render() {} }); // true
+```
+
+## `is.scene(obj)`
+
+Checks is `obj` is a `THREE.Scene`.
+
+```angular-ts
+is.scene(new THREE.Scene()); // true
+is.scene({}); // false
+```
+
+## `is.object3D(obj)`
+
+Checks if `obj` is a `THREE.Object3D`.
+
+```angular-ts
+is.object3D(new THREE.Mesh()); // true
+is.object3D({}); // false
+```
+
+## `is.three(value, isKey)`
+
+Generic type guard for THREE.js objects using their `is*` property. This avoids `instanceof` check
+
+```angular-ts
+is.three<THREE.Color>(maybeColor, 'isColor');
+is.three<THREE.Mesh>(maybeMesh, 'isMesh');
+```
+
+## `is.equ(a, b, config)`
+
+Deep equality comparison with configurable behavior.
+
+- `arrays`: how to compare arrays (`'shallow' | 'reference'`, default: `'shallow'`)
+- `objects`: how to compare objects (`'shallow' | 'reference'`, default: `'reference'`)
+- `strict`: whether to do strict comparison (`boolean`, default: `true`)
+
+```angular-ts
+is.equ([1,2,3], [1,2,3]) // true
+is.equ({a:1}, {a:1}) // false
+is.equ({a:1}, {a:1}, { objects: 'shallow' }) // true
+is.equ([1,2,3], [1,2,3], { arrays: 'reference' }) // false
+```

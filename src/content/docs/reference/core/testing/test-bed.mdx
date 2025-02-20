@@ -1,0 +1,87 @@
+---
+title: NgtTestBed
+description: angular-three/testing NgtTestBed API
+---
+
+`NgtTestBed` is a utility from `angular-three/testing` that abstracts [`TestBed`](https://angular.dev/api/core/testing/TestBed) and provides a set of utilities to help you write unit tests for scene graphs built with Angular Three.
+
+## `create()`
+
+`NgtTestBed` exposes a single static method `create()` that accepts a `Component` class for the scene graph you want to test and returns an object with the following properties:
+
+```angular-ts
+const ngtTestBed = NgtTestBed.create(SceneGraph);
+ngtTestBed.fixture; // ComponentFixture<NgtTestCanvas>
+ngtTestBed.store; // SignalState<NgtState>
+ngtTestBed.scene; // root THREE.Scene
+ngtTestBed.sceneInstanceNode; // root Scene instance state
+ngtTestBed.canvas; // the mocked HTMLCanvasElement
+ngtTestBed.destroy; // method to destroy the fixture
+ngtTestBed.fireEvent; // method to fire events on an element in the scene graph
+ngtTestBed.advance; // method to advance the animation loop manually per frame
+ngtTestBed.toGraph; // method to convert the scene graph to a simple object
+```
+
+### `mockCanvasOptions`
+
+You can customize the mocked `HTMLCanvasElement` with `mockCanvasOptions`. It accepts `width` and `height` as well as a `beforeReturn` callback which allows you to return a mocked `HTMLCanvasElement` before the `TestBed` is created.
+
+```angular-ts
+NgtTestBed.create(SceneGraph, {
+    mockCanvasOptions: { width: 1280, height: 720 }
+});
+```
+
+### `canvasConfiguration`
+
+You can customize the [`ngt-canvas`](/reference/core/dom/canvas) via `canvasConfiguration`. It accepts everything that `ngt-canvas` accepts.
+
+```angular-ts
+NgtTestBed.create(SceneGraph, {
+    canvasConfiguration: {
+        camera: { position: [0, 0, 5] },
+        shadows: true,
+    },
+});
+```
+
+:::note
+
+Options that alter THREE.js color management like `linear`, `flat`, and `legacy` can affect the assertions in the test for THREE.js objects that are affected by THREE.js color management (e.g: `THREE.Color`)
+
+:::
+
+## Example Scenario
+
+For the example scenario, `scene`, `fireEvent`, and `advance` will allow you to test the `SceneGraph` component.
+
+- `scene` allows you to assert the state of the scene graph
+- `fireEvent` allows you to fire events on the cube
+- `advance` allows you to advance the animation loop manually per frame
+
+```angular-ts
+import { NgtTestBed } from 'angular-three/testing';
+
+describe('SceneGraph', () => {
+    it('should render', async () => {
+        const { scene, fireEvent, advance } = NgtTestBed.create(SceneGraph);
+    });
+});
+```
+
+With `scene`, you can assert the state of the scene graph and you can do so however you want to. To keep things simple, you can try asserting that the root `THREE.Scene` has a child which is a `THREE.Mesh`
+
+```angular-ts {8-10}
+import { is } from 'angular-three';
+import { NgtTestBed } from 'angular-three/testing';
+
+describe('SceneGraph', () => {
+    it('should render', async () => {
+        const { scene, fireEvent, advance } = NgtTestBed.create(SceneGraph);
+
+        expect(scene.children.length).toEqual(1);
+        const mesh = scene.children[0];
+        expect(is.three<THREE.Mesh>(mesh, 'isMesh')).toEqual(true);
+    });
+});
+```
