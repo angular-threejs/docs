@@ -159,6 +159,10 @@ export function ngtSidebar() {
 							slug: 'reference/core/object-events',
 						},
 						{
+							label: 'NgtSelection',
+							slug: 'reference/core/selection',
+						},
+						{
 							label: 'is',
 							slug: 'reference/core/is',
 						},

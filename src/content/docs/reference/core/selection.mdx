@@ -1,0 +1,160 @@
+---
+title: NgtSelection
+description: angular-three NgtSelection API
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import SelectionDemo from '@scenes/selection-demo/selection-demo';
+
+`NgtSelection` provides a declarative way to manage selections of objects in your scene graph. It's commonly used with postprocessing effects like `NgtpOutline` and `NgtpSelectiveBloom` to specify which objects should be affected declaratively.
+
+## Usage
+
+`NgtSelection` is an array with `NgtSelectionApi` and `NgtSelect` so you only need to add `NgtSelection` in your `imports` array since these two directives are always used together.
+
+There are two ways to use `NgtSelectionApi`
+
+### `hostDirectives`
+
+This enables `NgtSelection` on the entire component; or in the case of `SceneGraph`, the entire scene graph.
+
+```angular-ts
+import { NgtSelectionApi, NgtSelection } from 'angular-three';
+
+@Component({
+    hostDirectives: [NgtSelectionApi],
+    imports: [NgtSelection] // for `NgtSelect`
+})
+export class SceneGraph {}
+```
+
+### `[selection]`
+
+You can _selectively_ declare which part on the scene graph is subject to `NgtSelection` by wrapping that part with `[selection]` directive.
+
+```angular-ts
+import { NgtSelection } from 'angular-three';
+
+@Component({
+    template: `
+        <ng-container selection>
+            <!-- only objects in this container will be subject to NgtSelection -->
+        </ng-container>
+    `,
+    imports: [NgtSelection]
+})
+export class SceneGraph {}
+```
+
+`[selection]` accepts a `boolean` input which you can use to enable/disable selection.
+
+### `NgtSelect`
+
+With `NgtSelectionApi` enabled, you now can attach `NgtSelect` on any `ngt-mesh` or `ngt-group` on your scene graph; or part of the scene graph.
+
+```angular-ts
+import { NgtSelection } from 'angular-three';
+
+@Component({
+    template: `
+        <ng-container selection>
+            <ngt-group [select]="hovered()" (pointerover)="hovered.set(true)" (pointerout)="hovered.set(false)">
+                <ngt-mesh> </ngt-mesh>
+                <ngt-mesh> </ngt-mesh>
+            </ngt-group>
+        </ng-container>
+    `,
+    imports: [NgtSelection]
+})
+export class SceneGraph {
+    protected hovered = signal(false);
+}
+```
+
+The `NgtSelect` directive can be used on:
+
+- `ngt-group`: Selects all mesh children
+- `ngt-mesh`: Selects only the individual mesh
+
+<div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
+ <SelectionDemo client:only />
+</div>
+
+<Tabs>
+    <TabItem label="scene-graph.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+    import { NgtArgs, NgtSelectionApi, type NgtThreeElements } from 'angular-three';
+    import { NgtpEffectComposer, NgtpSelectiveBloom } from 'angular-three-postprocessing';
+    import * as THREE from 'three';
+
+    @Component({
+        selector: 'app-scene-graph',
+        template: `
+            <ngt-color *args="['#0c0c0c']" attach="background" />
+
+            <ngt-ambient-light #light [intensity]="Math.PI * 0.5" />
+            <ngt-spot-light #light2 [position]="10" [angle]="0.15" [penumbra]="1" [decay]="0" [intensity]="Math.PI" />
+            <ngt-point-light #light3 [position]="-10" [decay]="0" />
+
+            <app-box [(selected)]="selected" [positionX]="1.5" />
+            <app-box [(selected)]="selected" [positionX]="-1.5" />
+
+            <ngtp-effect-composer>
+                <ngtp-selective-bloom
+                    [lights]="[light, light2, light3]"
+                    [options]="{ intensity: 5, luminanceThreshold: 0.01, luminanceSmoothing: 0.025 }"
+                />
+            </ngtp-effect-composer>
+        `,
+        hostDirectives: [NgtSelectionApi],
+        imports: [Box, NgtpEffectComposer, NgtpSelectiveBloom, NgtArgs],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export class SceneGraph {
+        protected readonly Math = Math;
+        protected selected = signal<NgtThreeElements['ngt-mesh'] | null>(null);
+    }
+    ```
+    </TabItem>
+    <TabItem label="box.ts">
+    ```angular-ts
+    import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, input, model, viewChild } from '@angular/core';
+    import { injectBeforeRender, NgtSelection, type NgtThreeElements } from 'angular-three';
+    import * as THREE from 'three';
+
+    @Component({
+        selector: 'app-box',
+        template: `
+            <ngt-mesh
+                #mesh
+                [select]="selected() === mesh"
+                (pointerover)="selected.set(mesh)"
+                (pointerout)="selected.set(null)"
+                [position.x]="positionX()"
+            >
+                <ngt-box-geometry />
+                <ngt-mesh-standard-material color="mediumpurple" />
+            </ngt-mesh>
+        `,
+        imports: [NgtSelection],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export class Box {
+        selected = model.required<NgtThreeElements['ngt-mesh'] | null>();
+        positionX = input.required<number>();
+
+        private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
+        constructor() {
+            injectBeforeRender(() => {
+                this.meshRef().nativeElement.rotation.x += 0.01;
+            });
+        }
+    }
+    ```
+    </TabItem>
+
+</Tabs>
