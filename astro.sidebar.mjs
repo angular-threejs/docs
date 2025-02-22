@@ -326,7 +326,7 @@ export function ngtSidebar() {
 		// },
 		{
 			label: 'Examples',
-			link: 'https://angularthree-soba-next.netlify.app',
+			link: 'https://angularthree-demo-next.netlify.app',
 			icon: 'rocket',
 		},
 	]);
