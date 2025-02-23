@@ -236,6 +236,10 @@ export function ngtSidebar() {
 							label: 'GLTF',
 							slug: 'reference/plugin/gltf',
 						},
+						{
+							label: 'aux',
+							slug: 'reference/plugin/aux',
+						},
 					],
 				},
 			],

@@ -66,39 +66,90 @@ We'll always need: `angular-three` core package and the `three` itself.
   </TabItem>
 </Tabs>
 
-## Auxiliary packages
-
-Once you have `angular-three-plugin` installed, you can invoke the respective schematics/generators
-to set up the auxiliary packages.
+## Code editor setup
 
 <Tabs>
+ <TabItem label="Jetbrains IDE">
+  `angular-three` comes with a [`web-types.json`](https://github.com/JetBrains/web-types) that allows Jetbrains
+  IDEs to recognize elements from `angular-three`. You don't have to do anything to get this setup.
+ </TabItem>
+ <TabItem label="VS Code">
+  `angular-three` comes with a `metadata.json` that you can use to setup
+  [`html.customData`](https://code.visualstudio.com/api/extension-guides/custom-data-extension) to allow VS Code
+  to recognize `angular-three` elements.
 
-    <TabItem label="soba">
-    ```shell
-    ng generate angular-three-plugin:soba
-    # nx generate angular-three-plugin:soba
-    ```
-    </TabItem>
-    <TabItem label="postprocessing">
-    ```shell
-    ng generate angular-three-plugin:postprocessing
-    # nx generate angular-three-plugin:postprocessing
-    ```
-    </TabItem>
-    <TabItem label="cannon">
-    ```shell
-    ng generate angular-three-plugin:cannon
-    # nx generate angular-three-plugin:cannon
-    ```
-    </TabItem>
-    <TabItem label="rapier">
-    ```shell
-    ng generate angular-three-plugin:rapier
-    # nx generate angular-three-plugin:rapier
-    ```
-    </TabItem>
+```json
+// .vscode/settings.json
+{
+ "html.customData": ["node_modules/angular-three/metadata.json"]
+}
+```
 
+:::note
+`angular-three-plugin:init` should set this up for you.
+:::
+
+ </TabItem>
+ <TabItem label="Neovim">
+ Neovim can set up `metadata.json` via [html lsp](https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#html) with the following options:
+    - `init_options.dataPaths`
+    - `handlers['html/customDataContent']`
+
+Specific setup depends on your neovim configuration. Here's an example of [LazyVim](https://lazyvim.org)
+
+```lua
+# lua/plugins/lsp.lua
+return {
+  "neovim/nvim-lspconfig",
+  opts = {
+    setup = {
+      html = function(_, opts)
+        local util = require("lspconfig.util")
+        local root_dir = util.root_pattern("package.json", "node_modules")(vim.fn.getcwd())
+
+        if root_dir then
+          local metadata_path = vim.fs.normalize(root_dir .. "/node_modules/angular-three/metadata.json")
+
+          if vim.fn.filereadable(metadata_path) == 1 then
+            opts.init_options = vim.tbl_deep_extend("force", opts.init_options or {}, {
+              dataPaths = opts.init_options and opts.init_options.dataPaths or {},
+            })
+
+            table.insert(opts.init_options.dataPaths, metadata_path)
+
+            opts.handlers = vim.tbl_deep_extend("force", opts.handlers or {}, {
+              ["html/customDataContent"] = function(_, result)
+                local function exists(name)
+                  return type(name) == "string" and vim.loop.fs_stat(name) ~= nil
+                end
+
+                if result and result[1] and exists(result[1]) then
+                  local ok, content = pcall(vim.fn.readfile, result[1])
+                  return ok and table.concat(content, "\n") or ""
+                end
+                return ""
+              end,
+            })
+          end
+        end
+
+        return false
+      end,
+    },
+  },
+}
+```
+
+ </TabItem>
 </Tabs>
+
+## Auxiliary packages
+
+Once you have `angular-three-plugin` installed, you can invoke the [`angular-three-plugin:aux`](/reference/plugin/aux) generator to add the auxiliary packages.
+
+```bash
+npx ng g angular-three-plugin:aux
+```
 
 ## Compatibility Matrix
 
