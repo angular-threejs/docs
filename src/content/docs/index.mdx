@@ -25,11 +25,12 @@ import RapierDemo from '@scenes/rapier-demo/rapier-demo';
 import PointerDemo from '@scenes/pointer-demo/pointer-demo';
 import GLTFDemoHome from '@scenes/gltf-demo-home/gltf-demo-home';
 
-<section class="flex min-h-screen w-full items-center justify-center">
- <div class="grid h-full w-full grid-cols-8 gap-4">
-  <div class="col-span-3">
+<section class="flex min-h-screen w-full items-center justify-center py-12 md:py-0">
+ <div class="grid h-full w-full grid-cols-1 gap-8 md:grid-cols-8 md:gap-4">
+  <div class="order-1 col-span-1 md:order-1 md:col-span-3">
    <h1>
-    <span class="text-accent-600 dark:text-accent-200">Declarative</span> scene graphs
+    <span class="text-accent-600 dark:text-accent-200">Declarative</span>
+    scene graphs
    </h1>
    <p>
     Angular Three allows users to use every feature of THREE.js in a declarative way via Angular{' '}
@@ -41,7 +42,7 @@ import GLTFDemoHome from '@scenes/gltf-demo-home/gltf-demo-home';
    </div>
   </div>
   <FloatingCodeBlock
-   class="col-span-5 max-h-[800px]"
+   class="order-2 col-span-1 max-h-[500px] md:order-2 md:col-span-5 md:max-h-[800px]"
    snippets={[
     { title: 'canvas.ts', name: 'simple-scene-canvas' },
     { title: 'scene-graph.ts', name: 'simple-scene' },
@@ -50,24 +51,24 @@ import GLTFDemoHome from '@scenes/gltf-demo-home/gltf-demo-home';
  </div>
 </section>
 
-<section class="flex min-h-screen w-full items-center justify-center">
- <div class="grid h-full w-full grid-cols-8 gap-4">
+<section class="flex min-h-screen w-full items-center justify-center py-12 md:py-0">
+ <div class="grid h-full w-full grid-cols-1 gap-8 md:grid-cols-8 md:gap-4">
   <FloatingCodeBlock
-   class="col-span-5 max-h-[800px]"
+   class="order-2 col-span-1 max-h-[500px] md:order-1 md:col-span-5 md:max-h-[800px]"
    snippets={[
     { title: 'canvas.ts', name: 'rapier-demo' },
     { title: 'scene-graph.ts', name: 'rapier-demo-scene-graph' },
    ]}
   />
-  <div class="col-span-3">
+  <div class="order-1 col-span-1 md:order-2 md:col-span-3">
    <h1>
     Powerful <span class="text-accent-600 dark:text-accent-200">utilities</span>
    </h1>
    <p>
-    Angular Three comes with integrations for physics engines like <strong>Rapier</strong> and{' '}
-    <strong>Cannon</strong>; as well as postprocessing library like <strong>Postprocessing</strong>. On top
-    of that, <code>angular-three-soba</code> provides a collection of utilities to help you focus on
-    building your ideas.
+    Angular Three comes with integrations for physics engines like
+    <strong>Rapier</strong> and <strong>Cannon</strong>; as well as postprocessing library like
+    <strong>Postprocessing</strong>. On top of that, <code>angular-three-soba</code> provides a collection
+    of utilities to help you focus on building your ideas.
    </p>
    <div class="h-[300px] w-full">
     <RapierDemo client:only />
@@ -76,16 +77,16 @@ import GLTFDemoHome from '@scenes/gltf-demo-home/gltf-demo-home';
  </div>
 </section>
 
-<section class="flex min-h-screen w-full items-center justify-center">
- <div class="grid h-full w-full grid-cols-8 gap-4">
-  <div class="col-span-3">
+<section class="flex min-h-screen w-full items-center justify-center py-12 md:py-0">
+ <div class="grid h-full w-full grid-cols-1 gap-8 md:grid-cols-8 md:gap-4">
+  <div class="order-1 col-span-1 md:order-1 md:col-span-3">
    <h1>
     Apply <span class="text-accent-600 dark:text-accent-200">familiar</span>
     workflow
    </h1>
    <p>
     Angular Three, as a custom Angular renderer, allows you to apply your Angular knowledge to THREE.js
-    elements. Extend Angular Three with <strong>Components</strong> or provide THREE.js elements custom
+    elements. Extend Angular Three with <strong>Components</strong> or provi THREE.js elements custom
     behaviors with custom <strong>Directives</strong>. Everything Angular provides is at your fingertips.
    </p>
    <div class="h-[300px] w-full">
@@ -93,7 +94,7 @@ import GLTFDemoHome from '@scenes/gltf-demo-home/gltf-demo-home';
    </div>
   </div>
   <FloatingCodeBlock
-   class="col-span-5 max-h-[800px]"
+   class="order-2 col-span-1 max-h-[500px] md:order-2 md:col-span-5 md:max-h-[800px]"
    snippets={[
     { title: 'canvas.ts', name: 'pointer-demo' },
     { title: 'scene-graph.ts', name: 'pointer-demo-scene-graph' },
@@ -102,17 +103,17 @@ import GLTFDemoHome from '@scenes/gltf-demo-home/gltf-demo-home';
  </div>
 </section>
 
-<section class="flex min-h-screen w-full items-center justify-center">
- <div class="grid h-full w-full grid-cols-8 gap-4">
+<section class="flex min-h-screen w-full items-center justify-center py-12 md:py-0">
+ <div class="grid h-full w-full grid-cols-1 gap-8 md:grid-cols-8 md:gap-4">
   <FloatingCodeBlock
-   class="col-span-5 max-h-[800px]"
+   class="order-2 col-span-1 max-h-[500px] md:order-1 md:col-span-5 md:max-h-[800px]"
    snippets={[
     { title: 'canvas.ts', name: 'gltf-demo-home' },
     { title: 'scene-graph.ts', name: 'gltf-demo-home-scene-graph' },
     { title: 'bot.ts', name: 'gltf-demo-home-bot' },
    ]}
   />
-  <div class="col-span-3">
+  <div class="order-1 col-span-1 md:order-2 md:col-span-3">
    <h1>
     Seamless <span class="text-accent-600 dark:text-accent-200">integrations</span> of 3D assets
    </h1>
