@@ -23,6 +23,7 @@ import FloatingCodeBlock from '@ui/floating-code-block.astro';
 import SimpleScene from '@scenes/simple-scene/simple-scene';
 import RapierDemo from '@scenes/rapier-demo/rapier-demo';
 import PointerDemo from '@scenes/pointer-demo/pointer-demo';
+import GLTFDemoHome from '@scenes/gltf-demo-home/gltf-demo-home';
 
 <section class="flex min-h-screen w-full items-center justify-center">
  <div class="grid h-full w-full grid-cols-8 gap-4">
@@ -98,5 +99,30 @@ import PointerDemo from '@scenes/pointer-demo/pointer-demo';
     { title: 'scene-graph.ts', name: 'pointer-demo-scene-graph' },
    ]}
   />
+ </div>
+</section>
+
+<section class="flex min-h-screen w-full items-center justify-center">
+ <div class="grid h-full w-full grid-cols-8 gap-4">
+  <FloatingCodeBlock
+   class="col-span-5 max-h-[800px]"
+   snippets={[
+    { title: 'canvas.ts', name: 'gltf-demo-home' },
+    { title: 'scene-graph.ts', name: 'gltf-demo-home-scene-graph' },
+    { title: 'bot.ts', name: 'gltf-demo-home-bot' },
+   ]}
+  />
+  <div class="col-span-3">
+   <h1>
+    Seamless <span class="text-accent-600 dark:text-accent-200">integrations</span> of 3D assets
+   </h1>
+   <p>
+    Angular Three makes working with external 3D assets effortless. Import, load, animate, and clone/reuse
+    GLTF models with just a few lines of code.
+   </p>
+   <div class="h-[300px] w-full">
+    <GLTFDemoHome client:only />
+   </div>
+  </div>
  </div>
 </section>
