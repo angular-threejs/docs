@@ -178,10 +178,10 @@ Play with the example below to see the effect of this technique.
 </Tabs>
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
- <MovementRegressionDemo client:only />
+	<MovementRegressionDemo client:only />
 </div>
 <Credit link="https://codesandbox.io/p/sandbox/pz0q6?file=/src/App.js:1,1-115,1">
- Credits: R3F Movement Regression
+	Credits: R3F Movement Regression
 </Credit>
 
 ## Performance State
@@ -190,11 +190,11 @@ Angular Three's **store** provides a performance object accessible through `inje
 
 ```ts
 interface NgtPerformance {
- current: number; // Alternates between min and max
- min: number; // Lower bound (< 1)
- max: number; // Upper bound (≤ 1)
- debounce: number; // Milliseconds until returning to max
- regress(): void; // Trigger temporary regression
+	current: number; // Alternates between min and max
+	min: number; // Lower bound (< 1)
+	max: number; // Upper bound (≤ 1)
+	debounce: number; // Milliseconds until returning to max
+	regress(): void; // Trigger temporary regression
 }
 ```
 

@@ -8,7 +8,7 @@ import { SceneGraph } from './scene-graph';
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
 
-		<span class="absolute bottom-0 right-0 font-mono text-sm"> * click/hover the cube </span>
+		<span class="absolute bottom-0 right-0 font-mono text-sm">* click/hover the cube</span>
 	`,
 	host: {
 		class: 'relative flex h-full !mt-0',

@@ -4,9 +4,11 @@ import tailwind from '@astrojs/tailwind';
 import { defineConfig } from 'astro/config';
 import glob from 'fast-glob';
 import { readFileSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { format } from 'prettier';
+import starlightBlog from 'starlight-blog';
+import prettierConfig from './.prettierrc.mjs';
 import { ngtSidebar } from './astro.sidebar.mjs';
-
-// import starlightBlog from "starlight-blog";
 
 function devServerFileWatcher(paths) {
 	return {
@@ -37,20 +39,58 @@ function includeContentPlugin() {
 
 				if (map.has(filePath)) return;
 				map.set(filePath, fileContent.replace(/\t/g, '  '));
+
+				// check if file imports `./scene-graph`
+				const sceneGraphImportMatch = fileContent.match(/import.*from\s+['"]\.\/scene-graph['"]/);
+				if (sceneGraphImportMatch) {
+					// Get the directory of the current file
+					const dirPath = dirname(filePath);
+					const sceneGraphPath = `${dirPath}/scene-graph.ts`;
+
+					try {
+						const sceneGraphContent = readFileSync(sceneGraphPath, 'utf-8');
+						map.set(`${filePath}:scene-graph`, sceneGraphContent.replace(/\t/g, ' '));
+					} catch (error) {
+						// Scene graph file doesn't exist or can't be read, just continue
+						console.warn(`Could not read scene-graph file for ${filePath}:
+ ${error.message}`);
+					}
+				}
 			},
 		},
 		{
 			name: 'post-include-content',
 			enforce: 'post',
-			transform(code, id) {
+			async transform(code, id) {
 				if (!id.includes('?includeContent') || id.includes('astro-entry')) return;
 				const [filePath] = id.split('?');
 				const fileContent = map.get(filePath);
+				const sceneGraphContent = map.get(`${filePath}:scene-graph`);
+
+				let formattedContent = fileContent;
+
+				try {
+					formattedContent = await format(fileContent, {
+						...prettierConfig,
+						parser: 'typescript',
+					});
+				} catch (err) {}
+
+				let formattedSceneGraphContent = sceneGraphContent;
+				if (formattedSceneGraphContent) {
+					try {
+						formattedSceneGraphContent = await format(sceneGraphContent, {
+							...prettierConfig,
+							parser: 'typescript',
+						});
+					} catch (err) {}
+				}
 
 				return {
 					code: `
             ${code}
-            export const content = ${JSON.stringify(fileContent)};
+            export const content = ${JSON.stringify(formattedContent)};
+            ${formattedSceneGraphContent ? `export const sceneGraphContent = ${JSON.stringify(formattedSceneGraphContent)};` : ''}
           `,
 				};
 			},
@@ -98,16 +138,15 @@ export default defineConfig({
 			title: 'Angular Three',
 			plugins: [
 				ngtSidebar(),
-				// TODO: reenable blog
-				// starlightBlog({
-				//   authors: {
-				//     chau: {
-				//       name: "Chau Tran",
-				//       url: "https://nartc.me",
-				//       picture: "https://avatars.githubusercontent.com/u/25516557?v=4",
-				//     },
-				//   },
-				// }),
+				starlightBlog({
+					authors: {
+						chau: {
+							name: 'Chau Tran',
+							url: 'https://nartc.me',
+							picture: 'https://avatars.githubusercontent.com/u/25516557?v=4',
+						},
+					},
+				}),
 			],
 			favicon: './src/assets/angular-three-dark.svg',
 			tableOfContents: {

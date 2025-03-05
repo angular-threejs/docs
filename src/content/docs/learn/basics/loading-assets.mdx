@@ -26,18 +26,18 @@ loader.setDRACOLoader(dracoLoader);
 
 // Load a glTF resource
 loader.load(
- // resource URL
- 'models/gltf/duck/duck.gltf',
- // called when the resource is loaded
- function (gltf) {
-  scene.add(gltf.scene);
+	// resource URL
+	'models/gltf/duck/duck.gltf',
+	// called when the resource is loaded
+	function (gltf) {
+		scene.add(gltf.scene);
 
-  gltf.animations; // Array<THREE.AnimationClip>
-  gltf.scene; // THREE.Group
-  gltf.scenes; // Array<THREE.Group>
-  gltf.cameras; // Array<THREE.Camera>
-  gltf.asset; // Object
- },
+		gltf.animations; // Array<THREE.AnimationClip>
+		gltf.scene; // THREE.Group
+		gltf.scenes; // Array<THREE.Group>
+		gltf.cameras; // Array<THREE.Camera>
+		gltf.asset; // Object
+	},
 );
 ```
 
@@ -119,10 +119,10 @@ export class SceneGraph {
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
- <GLTFDemo client:only />
+	<GLTFDemo client:only />
 </div>
 <Credit link="https://threejs.org/examples/#webgl_animation_keyframes">
- Credits: THREE.js Animation Keyframes; Model Littlest Tokyo by Glen Fox
+	Credits: THREE.js Animation Keyframes; Model Littlest Tokyo by Glen Fox
 </Credit>
 
 ### Animations
@@ -188,10 +188,10 @@ export class SceneGraph {
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
- <GLTFDemoAnimation client:only />
+	<GLTFDemoAnimation client:only />
 </div>
 <Credit link="https://threejs.org/examples/#webgl_animation_keyframes">
- Credits: THREE.js Animation Keyframes; Model Littlest Tokyo by Glen Fox
+	Credits: THREE.js Animation Keyframes; Model Littlest Tokyo by Glen Fox
 </Credit>
 
 :::note
@@ -285,10 +285,10 @@ export class SceneGraph {
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
- <TextureDemo client:only />
+	<TextureDemo client:only />
 </div>
 <Credit link="https://franky-arkon-digital.medium.com/make-your-own-earth-in-three-js-8b875e281b1e">
- Credits: Make your own Earth in Three.js by Franky Hung
+	Credits: Make your own Earth in Three.js by Franky Hung
 </Credit>
 
 The main difference between `injectLoader` and `injectTexture` is the ease of loading multiple textures; both with `Array` and `Record` types.

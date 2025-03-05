@@ -14,7 +14,7 @@ import { SceneGraph } from './scene-graph';
 			<ng-template canvasContent>
 				<app-scene-graph />
 
-				<ngt-tweak-pane title="On-demand Rendering">
+				<ngt-tweak-pane title="On-demand Rendering" [container]="host">
 					<ngt-tweak-checkbox [(value)]="onDemand" label="Enabled" />
 				</ngt-tweak-pane>
 			</ng-template>

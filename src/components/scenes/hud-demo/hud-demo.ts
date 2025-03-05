@@ -7,7 +7,7 @@ import { SceneGraph } from './scene-graph';
 		<ngt-canvas>
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
-		<span class="absolute bottom-4 right-4 font-mono text-xs"> * click/hover the cube </span>
+		<span class="absolute bottom-4 right-4 font-mono text-xs">* click/hover the cube</span>
 	`,
 	imports: [NgtCanvas, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,

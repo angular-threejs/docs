@@ -3,12 +3,14 @@ import {
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
+	inject,
 	signal,
 	viewChild,
 } from '@angular/core';
 import { extend, injectBeforeRender, NgtArgs, type NgtThreeElements } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtTweakCheckbox, NgtTweakPane } from 'angular-three-tweakpane';
+import { NgtCanvasContent } from 'angular-three/dom';
 import * as THREE from 'three';
 
 @Component({
@@ -38,7 +40,7 @@ import * as THREE from 'three';
 
 		<ngts-orbit-controls />
 
-		<ngt-tweak-pane title="Stop Propagation">
+		<ngt-tweak-pane title="Stop Propagation" [container]="canvasContent.host">
 			<ngt-tweak-checkbox [(value)]="stopPropagation" label="Enabled" />
 		</ngt-tweak-pane>
 	`,
@@ -52,6 +54,8 @@ export class SceneGraph {
 	stopPropagation = signal(true);
 
 	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+
+	protected canvasContent = inject(NgtCanvasContent);
 
 	protected readonly positions = [-2.5, 0, 2.5];
 

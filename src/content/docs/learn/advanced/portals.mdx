@@ -14,7 +14,7 @@ the hierarchy of the template. Pseudo-code looks something like this:
 
 ```html
 <ngt-group>
- <!-- render ngt-mesh here -->
+	<!-- render ngt-mesh here -->
 </ngt-group>
 
 <!-- outside of the hierarchy -->
@@ -82,10 +82,10 @@ export class SceneGraph {
 ```
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
- <TemplateOutletDemo client:only step={1} />
+	<TemplateOutletDemo client:only step={1} />
 </div>
 <Credit link="https://threlte.xyz/docs/reference/extras/portal#render-to-a-portaltarget">
- Credits: Threlte's PortalTarget Demo
+	Credits: Threlte's PortalTarget Demo
 </Credit>
 
 What you're seeing here is:
@@ -186,17 +186,17 @@ over `THREE.PerspectiveCamera` that has the ability to make itself the default c
 :::
 
 <FloatingCodeBlock
- class="h-[600px] max-h-[600px] w-full"
- snippets={[
-  { title: 'scene-graph.ts', name: 'hud-demo-scene-graph' },
-  { title: 'view-cube.ts', name: 'hud-demo-view-cube' },
-  { title: 'box.ts', name: 'hud-demo-box' },
-  { title: 'face-material.ts', name: 'hud-demo-face-material' },
-  { title: 'torus.ts', name: 'hud-demo-torus' },
- ]}
+	class="h-[600px] max-h-[600px] w-full"
+	snippets={[
+		{ title: 'scene-graph.ts', name: 'hud-demo-scene-graph' },
+		{ title: 'view-cube.ts', name: 'hud-demo-view-cube' },
+		{ title: 'box.ts', name: 'hud-demo-box' },
+		{ title: 'face-material.ts', name: 'hud-demo-face-material' },
+		{ title: 'torus.ts', name: 'hud-demo-torus' },
+	]}
 />
 
 <div class="h-[600px] w-full rounded border border-dashed border-accent-600 dark:border-accent-200">
- <HudDemo client:only step={1} />
+	<HudDemo client:only step={1} />
 </div>
 <Credit link="https://drei.docs.pmnd.rs/portals/hud">Credits: R3F Drei's HUD</Credit>
