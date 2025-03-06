@@ -270,6 +270,10 @@ export function ngtSidebar() {
 								label: 'NgtsPerspectiveCamera',
 								slug: 'reference/soba/cameras/perspective-camera',
 							},
+							{
+								label: 'NgtsOrthographicCamera',
+								slug: 'reference/soba/cameras/orthographic-camera',
+							},
 						],
 					},
 					{

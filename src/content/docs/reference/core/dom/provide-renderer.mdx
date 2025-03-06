@@ -15,6 +15,22 @@ bootstrapApplication(AppComponent, {
 })
 ```
 
+### Options
+
+You can pass options to the renderer via `provideNgtRenderer`
+
+```angular-ts
+import { provideNgtRenderer } from 'angular-three/dom';
+
+bootstrapApplication(AppComponent, {
+    providers: [provideNgtRenderer({ verbose: true )]
+})
+```
+
+Available options:
+
+- `verbose`: Enable verbose logging in the renderer. Default: `false`
+
 ### Route provider
 
 If your 3D scene graph is only on some specific route, you can provide the renderer only on that route.

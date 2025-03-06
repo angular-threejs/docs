@@ -32,7 +32,7 @@ export class Floor {
 	selector: 'app-box',
 	template: `
 		<ngt-object3D rigidBody [position]="position()" [rotation]="[0.4, 0.2, 0.5]">
-			<ngt-mesh #mesh castShadow receiveShadow>
+			<ngt-mesh castShadow receiveShadow>
 				<ngt-box-geometry />
 				<ngt-mesh-standard-material [roughness]="0.5" color="#E3B6ED" />
 			</ngt-mesh>

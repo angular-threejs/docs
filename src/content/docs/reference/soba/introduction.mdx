@@ -2,3 +2,40 @@
 title: Introduction
 description: angular-three-soba introduction
 ---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+A collection of utilities that are built on top of `angular-three` to provide additional functionalities out of the box.
+
+## Installation
+
+<Tabs>
+	<TabItem label="ng">
+```shell
+ng generate angular-three-plugin:aux
+```
+    </TabItem>
+	<TabItem label="nx">
+```shell
+nx generate angular-three-plugin:aux
+```
+    </TabItem>
+</Tabs>
+
+then select `angular-three-soba` from the list.
+
+## Compatibility table
+
+`angular-three-soba` is comprised of many entry points and each entry point has different peer dependencies; some of them might share peer dependencies as well.
+
+| peer dependency                | version range      | entry points / must have                                                                        |
+| ------------------------------ | ------------------ | ----------------------------------------------------------------------------------------------- |
+| `three-stdlib`                 | `^2.0.0`           | `must have`                                                                                     |
+| `@monogrid/gainmap-js`         | `^3.0.0`           | `angular-three-soba/staging`                                                                    |
+| `@pmndrs/vanilla`              | `^1.19.0`          | `angular-three-soba/vanilla-exports`                                                            |
+| `camera-controls`              | `^2.8.0`           | `angular-three-soba/controls`                                                                   |
+| `maath`                        | `>=0.10.0 <0.11.0` | `angular-three-soba/controls`                                                                   |
+| `stats-gl`                     | `>=2.0.0`          | `angular-three-soba/stats`                                                                      |
+| `three-custom-shader-material` | `~6.3.0`           | `angular-three-soba/materials`                                                                  |
+| `three-mesh-bvh`               | `~0.9.0`           | `angular-three-soba/materials`, `angular-three-soba/performances`, `angular-three-soba/shaders` |
+| `troika-three-text`            | `^0.52.0`          | `angular-three-soba/abstractions`                                                               |
