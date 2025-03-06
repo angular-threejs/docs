@@ -274,6 +274,10 @@ export function ngtSidebar() {
 								label: 'NgtsOrthographicCamera',
 								slug: 'reference/soba/cameras/orthographic-camera',
 							},
+							{
+								label: 'NgtsCubeCamera',
+								slug: 'reference/soba/cameras/cube-camera',
+							},
 						],
 					},
 					{

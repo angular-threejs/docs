@@ -109,7 +109,7 @@ export default defineConfig({
 			vite: {
 				transformFilter: (_, id) => {
 					// we only transform files in components/scenes
-					return id.includes('components/scenes');
+					return id.includes('components/scenes') || id.includes('components/soba');
 				},
 			},
 		}),

@@ -1,0 +1,685 @@
+{
+  "version": "6.0",
+  "nxVersion": "20.3.3",
+  "pathMappings": {
+    "@ui/*": [
+      "./src/components/ui/*"
+    ],
+    "@scenes/*": [
+      "./src/components/scenes/*"
+    ],
+    "@soba/*": [
+      "./src/components/soba/*"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {},
+    "nonProjectFiles": [
+      {
+        "file": ".gitignore",
+        "hash": "13876148663409719545"
+      },
+      {
+        "file": ".idea/.gitignore",
+        "hash": "10286036308014790964"
+      },
+      {
+        "file": ".idea/docs.iml",
+        "hash": "7210100432694438571"
+      },
+      {
+        "file": ".idea/misc.xml",
+        "hash": "13405124921560277013"
+      },
+      {
+        "file": ".idea/modules.xml",
+        "hash": "16885155890972667709"
+      },
+      {
+        "file": ".idea/prettier.xml",
+        "hash": "11752554429646194300"
+      },
+      {
+        "file": ".idea/vcs.xml",
+        "hash": "14600148892634157659"
+      },
+      {
+        "file": ".prettierrc.mjs",
+        "hash": "2037858834380623093"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "2751571684447562079"
+      },
+      {
+        "file": ".vscode/launch.json",
+        "hash": "790687624723845883"
+      },
+      {
+        "file": "README.md",
+        "hash": "1799758449296103743"
+      },
+      {
+        "file": "astro.config.mjs",
+        "hash": "12340148215195460644"
+      },
+      {
+        "file": "astro.sidebar.mjs",
+        "hash": "6123829795992825802"
+      },
+      {
+        "file": "ec.config.mjs",
+        "hash": "5351975618847933026"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "3846067698615521817"
+      },
+      {
+        "file": "package.json",
+        "hash": "6950963892597928593"
+      },
+      {
+        "file": "public/favicon.svg",
+        "hash": "4088241992915627650"
+      },
+      {
+        "file": "src/assets/angular-three-dark.svg",
+        "hash": "11100280785775395996"
+      },
+      {
+        "file": "src/assets/angular-three.svg",
+        "hash": "5088992729231732594"
+      },
+      {
+        "file": "src/assets/houston.webp",
+        "hash": "17403492182263883673"
+      },
+      {
+        "file": "src/components/scenes/color-grading-demo/color-grading-demo.ts",
+        "hash": "8641550004016789287"
+      },
+      {
+        "file": "src/components/scenes/color-grading-demo/cubicle-99.CUBE",
+        "hash": "4452347189276602099"
+      },
+      {
+        "file": "src/components/scenes/color-grading-demo/scene-graph.ts",
+        "hash": "17245261464249969153"
+      },
+      {
+        "file": "src/components/scenes/color-grading-demo/terrazo.png",
+        "hash": "13357221045040059381"
+      },
+      {
+        "file": "src/components/scenes/event-propagation-demo/event-propagation-demo.ts",
+        "hash": "16590625005526825588"
+      },
+      {
+        "file": "src/components/scenes/event-propagation-demo/scene-graph.ts",
+        "hash": "17490919536483961086"
+      },
+      {
+        "file": "src/components/scenes/first-scene/first-scene.ts",
+        "hash": "9685029578778919999"
+      },
+      {
+        "file": "src/components/scenes/first-scene/step-eight.ts",
+        "hash": "1117692683998486265"
+      },
+      {
+        "file": "src/components/scenes/first-scene/step-five.ts",
+        "hash": "10898103063886571804"
+      },
+      {
+        "file": "src/components/scenes/first-scene/step-nine.ts",
+        "hash": "5903595189714853805"
+      },
+      {
+        "file": "src/components/scenes/first-scene/step-one.ts",
+        "hash": "3454342200643060373"
+      },
+      {
+        "file": "src/components/scenes/first-scene/step-seven.ts",
+        "hash": "2702079152103711717"
+      },
+      {
+        "file": "src/components/scenes/first-scene/step-six.ts",
+        "hash": "12559791688244084269"
+      },
+      {
+        "file": "src/components/scenes/first-scene/step-three.ts",
+        "hash": "752668934949807410"
+      },
+      {
+        "file": "src/components/scenes/first-scene/step-two.ts",
+        "hash": "10705944492596425856"
+      },
+      {
+        "file": "src/components/scenes/gltf-demo-animation/gltf-demo-animation.ts",
+        "hash": "4477481733278113135"
+      },
+      {
+        "file": "src/components/scenes/gltf-demo-animation/scene-graph.ts",
+        "hash": "13583264686339534353"
+      },
+      {
+        "file": "src/components/scenes/gltf-demo-home/gltf-demo-home.ts",
+        "hash": "1802971232690543598"
+      },
+      {
+        "file": "src/components/scenes/gltf-demo-home/scene-graph.ts",
+        "hash": "15006549225888876270"
+      },
+      {
+        "file": "src/components/scenes/gltf-demo-home/ybot.glb",
+        "hash": "13656369802506547250"
+      },
+      {
+        "file": "src/components/scenes/gltf-demo/LittlestTokyo-transformed.glb",
+        "hash": "7991844415836361655"
+      },
+      {
+        "file": "src/components/scenes/gltf-demo/gltf-demo.ts",
+        "hash": "5166688700057231752"
+      },
+      {
+        "file": "src/components/scenes/gltf-demo/scene-graph.ts",
+        "hash": "6482641318282067880"
+      },
+      {
+        "file": "src/components/scenes/hud-demo/hud-demo.ts",
+        "hash": "8625870500874590046"
+      },
+      {
+        "file": "src/components/scenes/hud-demo/scene-graph.ts",
+        "hash": "4973057937214621186"
+      },
+      {
+        "file": "src/components/scenes/instance-scatter-demo/Flower.glb",
+        "hash": "8640527252896109689"
+      },
+      {
+        "file": "src/components/scenes/instance-scatter-demo/instance-scatter-demo.ts",
+        "hash": "9391149577813180603"
+      },
+      {
+        "file": "src/components/scenes/instance-scatter-demo/scene-graph.ts",
+        "hash": "7905772960818408214"
+      },
+      {
+        "file": "src/components/scenes/lightformer-demo/lightformer-demo.ts",
+        "hash": "4884425463281757786"
+      },
+      {
+        "file": "src/components/scenes/lightformer-demo/scene-graph.ts",
+        "hash": "3883491607560331838"
+      },
+      {
+        "file": "src/components/scenes/lod-demo/bust-1-d.glb",
+        "hash": "10587657691112733464"
+      },
+      {
+        "file": "src/components/scenes/lod-demo/bust-2-d.glb",
+        "hash": "5283290999573200135"
+      },
+      {
+        "file": "src/components/scenes/lod-demo/bust-3-d.glb",
+        "hash": "10869771785330567899"
+      },
+      {
+        "file": "src/components/scenes/lod-demo/bust-4-d.glb",
+        "hash": "15026809316024332175"
+      },
+      {
+        "file": "src/components/scenes/lod-demo/bust-5-d.glb",
+        "hash": "14948477265320595928"
+      },
+      {
+        "file": "src/components/scenes/lod-demo/lod-demo.ts",
+        "hash": "1599799630010898513"
+      },
+      {
+        "file": "src/components/scenes/lod-demo/scene-graph.ts",
+        "hash": "16553473807488111570"
+      },
+      {
+        "file": "src/components/scenes/movement-regression-demo/movement-regression-demo.ts",
+        "hash": "13061016590852255356"
+      },
+      {
+        "file": "src/components/scenes/movement-regression-demo/scene-graph.ts",
+        "hash": "8378535709812773205"
+      },
+      {
+        "file": "src/components/scenes/movement-regression-demo/untitled-draco2.glb",
+        "hash": "5322795440255038895"
+      },
+      {
+        "file": "src/components/scenes/pointer-demo/pointer-demo.ts",
+        "hash": "735484898276338753"
+      },
+      {
+        "file": "src/components/scenes/pointer-demo/scene-graph.ts",
+        "hash": "5057387989316135773"
+      },
+      {
+        "file": "src/components/scenes/rapier-demo/rapier-demo.ts",
+        "hash": "4474143858756272244"
+      },
+      {
+        "file": "src/components/scenes/rapier-demo/scene-graph.ts",
+        "hash": "2925599067300722607"
+      },
+      {
+        "file": "src/components/scenes/reuse-gltf-demo/reuse-gltf-demo.ts",
+        "hash": "6552208531904066354"
+      },
+      {
+        "file": "src/components/scenes/reuse-gltf-demo/scene-graph.ts",
+        "hash": "13958209503890901062"
+      },
+      {
+        "file": "src/components/scenes/reuse-gltf-demo/shoe.gltf",
+        "hash": "12801885302187528758"
+      },
+      {
+        "file": "src/components/scenes/reuse-gltf-demo/shoe.ts",
+        "hash": "12362412951844614419"
+      },
+      {
+        "file": "src/components/scenes/selection-demo/scene-graph.ts",
+        "hash": "11355214595492633598"
+      },
+      {
+        "file": "src/components/scenes/selection-demo/selection-demo.ts",
+        "hash": "8455931537094609876"
+      },
+      {
+        "file": "src/components/scenes/simple-scene/scene-graph.ts",
+        "hash": "13905832748453265393"
+      },
+      {
+        "file": "src/components/scenes/simple-scene/simple-scene.ts",
+        "hash": "1466323570262976747"
+      },
+      {
+        "file": "src/components/scenes/simple-testing-scene/scene-graph.ts",
+        "hash": "1516022468768924251"
+      },
+      {
+        "file": "src/components/scenes/simple-testing-scene/simple-testing-scene.ts",
+        "hash": "12053581609317957191"
+      },
+      {
+        "file": "src/components/scenes/template-outlet/scene-graph.ts",
+        "hash": "5853300367610948988"
+      },
+      {
+        "file": "src/components/scenes/template-outlet/template-outlet.ts",
+        "hash": "9045900878599872379"
+      },
+      {
+        "file": "src/components/scenes/texture-demo/scene-graph.ts",
+        "hash": "15752826117660445113"
+      },
+      {
+        "file": "src/components/scenes/texture-demo/texture-demo.ts",
+        "hash": "2984344390909968392"
+      },
+      {
+        "file": "src/components/scenes/toggle-button.ts",
+        "hash": "11576916435612511849"
+      },
+      {
+        "file": "src/components/scenes/webgpu-demo/scene-graph.ts",
+        "hash": "12074694332784547266"
+      },
+      {
+        "file": "src/components/scenes/webgpu-demo/webgpu-demo.ts",
+        "hash": "8280921339041369651"
+      },
+      {
+        "file": "src/components/soba/cameras/cube-camera/cube-camera.ts",
+        "hash": "1227645872781050140"
+      },
+      {
+        "file": "src/components/soba/cameras/cube-camera/scene-graph.ts",
+        "hash": "12531952567996015944"
+      },
+      {
+        "file": "src/components/ui/credit.astro",
+        "hash": "1732427302271535171"
+      },
+      {
+        "file": "src/components/ui/demo-wrapper.astro",
+        "hash": "6437950912987602492"
+      },
+      {
+        "file": "src/components/ui/floating-code-block.astro",
+        "hash": "10014352698983661150"
+      },
+      {
+        "file": "src/content.config.ts",
+        "hash": "13245125367218151104"
+      },
+      {
+        "file": "src/content/docs/blog/v2.mdx",
+        "hash": "18195079199855644955"
+      },
+      {
+        "file": "src/content/docs/blog/v3.mdx",
+        "hash": "16348814927773955953"
+      },
+      {
+        "file": "src/content/docs/index.mdx",
+        "hash": "11777018972231479167"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/abstractions.mdx",
+        "hash": "13192252776913623162"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/performance/instancing.mdx",
+        "hash": "17164823458617045179"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/performance/lod.mdx",
+        "hash": "5328879335059200499"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/performance/movement-regression.mdx",
+        "hash": "4877436558751653166"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/performance/on-demand-rendering.mdx",
+        "hash": "5150563352655929804"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/performance/overview.mdx",
+        "hash": "1549918364750613942"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/performance/reusing-resources.mdx",
+        "hash": "15955415557948982466"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/portals.mdx",
+        "hash": "953419903988266792"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/routed-scene.mdx",
+        "hash": "1584766247251818536"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/using-directives.mdx",
+        "hash": "2351949311569932536"
+      },
+      {
+        "file": "src/content/docs/learn/advanced/webgpu.mdx",
+        "hash": "10702439932149168754"
+      },
+      {
+        "file": "src/content/docs/learn/basics/app-structure.mdx",
+        "hash": "14325568380527561000"
+      },
+      {
+        "file": "src/content/docs/learn/basics/disposing-objects.mdx",
+        "hash": "13011969895776412945"
+      },
+      {
+        "file": "src/content/docs/learn/basics/handling-events.mdx",
+        "hash": "16056862137566987396"
+      },
+      {
+        "file": "src/content/docs/learn/basics/loading-assets.mdx",
+        "hash": "9417994613170521554"
+      },
+      {
+        "file": "src/content/docs/learn/getting-started/first-scene.mdx",
+        "hash": "8948955687145983706"
+      },
+      {
+        "file": "src/content/docs/learn/getting-started/installation.mdx",
+        "hash": "3066679602709938615"
+      },
+      {
+        "file": "src/content/docs/learn/getting-started/introduction.mdx",
+        "hash": "18305171799199278682"
+      },
+      {
+        "file": "src/content/docs/reference/core/args.mdx",
+        "hash": "8265803071911002625"
+      },
+      {
+        "file": "src/content/docs/reference/core/before-render.mdx",
+        "hash": "9967702142011324937"
+      },
+      {
+        "file": "src/content/docs/reference/core/dom/canvas.mdx",
+        "hash": "13064951437226597381"
+      },
+      {
+        "file": "src/content/docs/reference/core/dom/introduction.mdx",
+        "hash": "5127914262151364763"
+      },
+      {
+        "file": "src/content/docs/reference/core/dom/provide-renderer.mdx",
+        "hash": "13012938745536659040"
+      },
+      {
+        "file": "src/content/docs/reference/core/introduction.mdx",
+        "hash": "3056504652066878939"
+      },
+      {
+        "file": "src/content/docs/reference/core/is.mdx",
+        "hash": "9040504494823335706"
+      },
+      {
+        "file": "src/content/docs/reference/core/loader.mdx",
+        "hash": "569365413252075082"
+      },
+      {
+        "file": "src/content/docs/reference/core/object-events.mdx",
+        "hash": "12737371711576908445"
+      },
+      {
+        "file": "src/content/docs/reference/core/omit.mdx",
+        "hash": "6471599109178657932"
+      },
+      {
+        "file": "src/content/docs/reference/core/parent.mdx",
+        "hash": "14305024273431126506"
+      },
+      {
+        "file": "src/content/docs/reference/core/pick.mdx",
+        "hash": "17317992334271601689"
+      },
+      {
+        "file": "src/content/docs/reference/core/portal.mdx",
+        "hash": "10035569990523204510"
+      },
+      {
+        "file": "src/content/docs/reference/core/primitive.mdx",
+        "hash": "2095227798482942240"
+      },
+      {
+        "file": "src/content/docs/reference/core/raw-value.mdx",
+        "hash": "10583405822398276673"
+      },
+      {
+        "file": "src/content/docs/reference/core/renderer.mdx",
+        "hash": "5812715230839925008"
+      },
+      {
+        "file": "src/content/docs/reference/core/routed-scene.mdx",
+        "hash": "13505903394556183520"
+      },
+      {
+        "file": "src/content/docs/reference/core/selection.mdx",
+        "hash": "247311432350693282"
+      },
+      {
+        "file": "src/content/docs/reference/core/store.mdx",
+        "hash": "121576775392782431"
+      },
+      {
+        "file": "src/content/docs/reference/core/testing/advance.mdx",
+        "hash": "8517090633420644148"
+      },
+      {
+        "file": "src/content/docs/reference/core/testing/fire-event.mdx",
+        "hash": "12370689320827803196"
+      },
+      {
+        "file": "src/content/docs/reference/core/testing/introduction.mdx",
+        "hash": "17229979848068481325"
+      },
+      {
+        "file": "src/content/docs/reference/core/testing/test-bed.mdx",
+        "hash": "5416403268891224421"
+      },
+      {
+        "file": "src/content/docs/reference/core/testing/to-graph.mdx",
+        "hash": "17381274960714731390"
+      },
+      {
+        "file": "src/content/docs/reference/plugin/aux.mdx",
+        "hash": "9728590883362816001"
+      },
+      {
+        "file": "src/content/docs/reference/plugin/gltf.mdx",
+        "hash": "12750475939434019717"
+      },
+      {
+        "file": "src/content/docs/reference/plugin/introduction.mdx",
+        "hash": "15567526342020893323"
+      },
+      {
+        "file": "src/content/docs/reference/soba/cameras/cube-camera.mdx",
+        "hash": "8833684692172426553"
+      },
+      {
+        "file": "src/content/docs/reference/soba/cameras/introduction.mdx",
+        "hash": "14439207784374141956"
+      },
+      {
+        "file": "src/content/docs/reference/soba/cameras/orthographic-camera.mdx",
+        "hash": "3671253529465990581"
+      },
+      {
+        "file": "src/content/docs/reference/soba/cameras/perspective-camera.mdx",
+        "hash": "1189869898092829832"
+      },
+      {
+        "file": "src/content/docs/reference/soba/introduction.mdx",
+        "hash": "5914801087260874475"
+      },
+      {
+        "file": "src/content/docs/reference/soba/loaders/gltf.mdx",
+        "hash": "8689838964432883647"
+      },
+      {
+        "file": "src/content/docs/reference/soba/loaders/introduction.mdx",
+        "hash": "14894800576891929592"
+      },
+      {
+        "file": "src/content/docs/reference/soba/misc/animations.mdx",
+        "hash": "11723069088155593908"
+      },
+      {
+        "file": "src/content/docs/reference/soba/misc/introduction.mdx",
+        "hash": "17362100138443288107"
+      },
+      {
+        "file": "src/content/docs/reference/soba/performances/adaptive-dpr.mdx",
+        "hash": "18209017892393383289"
+      },
+      {
+        "file": "src/content/docs/reference/soba/performances/detailed.mdx",
+        "hash": "11444199246703587059"
+      },
+      {
+        "file": "src/content/docs/reference/soba/performances/introduction.mdx",
+        "hash": "2836642118498614504"
+      },
+      {
+        "file": "src/content/snippets/gltf-demo-home-bot.md",
+        "hash": "13718978202739964867"
+      },
+      {
+        "file": "src/content/snippets/gltf-demo-home-scene-graph.md",
+        "hash": "12704186798188906203"
+      },
+      {
+        "file": "src/content/snippets/gltf-demo-home.md",
+        "hash": "8420801426083410569"
+      },
+      {
+        "file": "src/content/snippets/hud-demo-box.md",
+        "hash": "3880932951239860185"
+      },
+      {
+        "file": "src/content/snippets/hud-demo-face-material.md",
+        "hash": "15840601419781076437"
+      },
+      {
+        "file": "src/content/snippets/hud-demo-scene-graph.md",
+        "hash": "15557461319037845938"
+      },
+      {
+        "file": "src/content/snippets/hud-demo-torus.md",
+        "hash": "12581292480456148609"
+      },
+      {
+        "file": "src/content/snippets/hud-demo-view-cube.md",
+        "hash": "17552424127763522051"
+      },
+      {
+        "file": "src/content/snippets/pointer-demo-scene-graph.md",
+        "hash": "7063108447767892881"
+      },
+      {
+        "file": "src/content/snippets/pointer-demo.md",
+        "hash": "15722786345959084320"
+      },
+      {
+        "file": "src/content/snippets/rapier-demo-scene-graph.md",
+        "hash": "14570250148357947207"
+      },
+      {
+        "file": "src/content/snippets/rapier-demo.md",
+        "hash": "15902672141051334180"
+      },
+      {
+        "file": "src/content/snippets/simple-scene-canvas.md",
+        "hash": "13538306316706897508"
+      },
+      {
+        "file": "src/content/snippets/simple-scene.md",
+        "hash": "793620356733046860"
+      },
+      {
+        "file": "src/tailwind.css",
+        "hash": "429210679136771075"
+      },
+      {
+        "file": "src/types.d.ts",
+        "hash": "5463682288604750633"
+      },
+      {
+        "file": "tailwind.config.mjs",
+        "hash": "11441566472192285524"
+      },
+      {
+        "file": "tsconfig.app.json",
+        "hash": "8924287862719392069"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "2459277949199280173"
+      }
+    ]
+  }
+}
