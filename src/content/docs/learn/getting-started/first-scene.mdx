@@ -32,14 +32,14 @@ import { NgtCanvas } from "angular-three/dom";
 export class AppComponent {}
 ```
 
-`NgtCanvas` is the entry-point to Angular Three. It creates a [`WebGLRenderer`](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), a default [`Scene`](https://threejs.org/docs/#api/en/scenes/Scene), and a default [`PerspectiveCamera`](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera); the 3 main building blocks
-for a **THREE.js** application.
+:::note
 
-:::tip[Did you know?]
-
-Notice that `NgtCanvas` is imported from [`angular-three/dom`](/reference/core/dom/introduction). This allows `angular-three` to target the appropriate platform that your application is running on.
+`angular-three` aims to provide different renderer implementations for different platforms. Throughout this example, we'll be using [`angular-three/dom`](/reference/core/dom/introduction) which provides the DOM-based implementation.
 
 :::
+
+`NgtCanvas` is the entry-point to Angular Three. It creates a [`WebGLRenderer`](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), a default [`Scene`](https://threejs.org/docs/#api/en/scenes/Scene), and a default [`PerspectiveCamera`](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera); the 3 main building blocks
+for a **THREE.js** application.
 
 We'll also need to adjust the `NgtCanvas` dimensions by adjusting the parent's dimensions.
 
@@ -593,6 +593,14 @@ export class SceneGraph {
 -    }
 }
 ```
+
+:::tip[Did you know?]
+
+`CUSTOM_ELEMENTS_SCHEMA` is **only required** if you are using Angular Three elements in your template.
+At this moment, you can remove it from the `SceneGraph` component and things will still work as expected. However, we're going to
+add more Angular Three elements to `SceneGraph` template so we'll keep it for the tutorial.
+
+:::
 
 ## Add state to the Cube
 

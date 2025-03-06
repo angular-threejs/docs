@@ -5,9 +5,7 @@ import { defineConfig } from 'astro/config';
 import glob from 'fast-glob';
 import { readFileSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { format } from 'prettier';
 import starlightBlog from 'starlight-blog';
-import prettierConfig from './.prettierrc.mjs';
 import { ngtSidebar } from './astro.sidebar.mjs';
 
 function devServerFileWatcher(paths) {
@@ -38,7 +36,7 @@ function includeContentPlugin() {
 				const fileContent = readFileSync(filePath, 'utf-8');
 
 				if (map.has(filePath)) return;
-				map.set(filePath, fileContent.replace(/\t/g, '  '));
+				map.set(filePath, fileContent.replace(/\t/g, '    '));
 
 				// check if file imports `./scene-graph`
 				const sceneGraphImportMatch = fileContent.match(/import.*from\s+['"]\.\/scene-graph['"]/);
@@ -49,7 +47,7 @@ function includeContentPlugin() {
 
 					try {
 						const sceneGraphContent = readFileSync(sceneGraphPath, 'utf-8');
-						map.set(`${filePath}:scene-graph`, sceneGraphContent.replace(/\t/g, ' '));
+						map.set(`${filePath}:scene-graph`, sceneGraphContent.replace(/\t/g, '    '));
 					} catch (error) {
 						// Scene graph file doesn't exist or can't be read, just continue
 						console.warn(`Could not read scene-graph file for ${filePath}:
@@ -67,31 +65,12 @@ function includeContentPlugin() {
 				const fileContent = map.get(filePath);
 				const sceneGraphContent = map.get(`${filePath}:scene-graph`);
 
-				let formattedContent = fileContent;
-
-				try {
-					formattedContent = await format(fileContent, {
-						...prettierConfig,
-						parser: 'typescript',
-					});
-				} catch (err) {}
-
-				let formattedSceneGraphContent = sceneGraphContent;
-				if (formattedSceneGraphContent) {
-					try {
-						formattedSceneGraphContent = await format(sceneGraphContent, {
-							...prettierConfig,
-							parser: 'typescript',
-						});
-					} catch (err) {}
-				}
-
 				return {
 					code: `
-            ${code}
-            export const content = ${JSON.stringify(formattedContent)};
-            ${formattedSceneGraphContent ? `export const sceneGraphContent = ${JSON.stringify(formattedSceneGraphContent)};` : ''}
-          `,
+					${code}
+					export const content = ${JSON.stringify(fileContent)};
+					${sceneGraphContent ? `export const sceneGraphContent = ${JSON.stringify(sceneGraphContent)};` : ''}
+				`,
 				};
 			},
 		},

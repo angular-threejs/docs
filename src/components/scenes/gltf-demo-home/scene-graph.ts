@@ -13,6 +13,11 @@ type BotGLTF = GLTF & {
 	animations: NgtsAnimationClips<'Dance'>[];
 };
 
+const bodies = {
+	1: '312D20_80675C_8B8C8B_85848C',
+	2: '5B4CBC_B59AF2_9B84EB_8F78E4',
+};
+
 @Component({
 	selector: 'app-bot',
 	template: `
@@ -27,14 +32,15 @@ export class Bot {
 
 	positionX = input(0);
 	rotationY = input(0);
+	bodyTexture = input.required<1 | 2>();
 
 	private gltf = injectGLTF<BotGLTF>(() => botGLB);
-	private matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7', {
+	private matcapBody = injectMatcapTexture(() => bodies[this.bodyTexture()], {
 		onLoad: (textures) => {
 			textures[0].colorSpace = THREE.SRGBColorSpace;
 		},
 	});
-	private matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47', {
+	private matcapJoints = injectMatcapTexture(() => '394641_B1A67E_75BEBE_7D7256', {
 		onLoad: (textures) => {
 			textures[0].colorSpace = THREE.SRGBColorSpace;
 		},
@@ -72,15 +78,12 @@ export class Bot {
 	selector: 'app-scene-graph',
 	template: `
 		<ngt-color *args="['#303030']" attach="background" />
-		<ngt-ambient-light [intensity]="0.8" />
-		<ngt-point-light [intensity]="Math.PI" [decay]="0" [position]="[0, 6, 0]" />
-
 		<ngt-grid-helper *args="[10, 20]" />
 
-		<app-bot [positionX]="0.75" [rotationY]="-Math.PI / 2" />
-		<app-bot [positionX]="-0.75" [rotationY]="Math.PI / 2" />
+		<app-bot [positionX]="0.75" [rotationY]="-Math.PI / 2" [bodyTexture]="1" />
+		<app-bot [positionX]="-0.75" [rotationY]="Math.PI / 2" [bodyTexture]="2" />
 
-		<ngts-orbit-controls />
+		<ngts-orbit-controls [options]="{ enableZoom: false, enablePan: false }" />
 	`,
 	imports: [NgtArgs, Bot, NgtsOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

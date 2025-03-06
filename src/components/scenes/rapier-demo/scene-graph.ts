@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { extend, NgtArgs, type NgtVector3 } from 'angular-three';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, input, viewChild } from '@angular/core';
+import { extend, NgtArgs, type NgtVector3, vector3 } from 'angular-three';
 import { NgtrCuboidCollider, NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
-import { start } from './start';
 
 @Component({
 	selector: 'app-floor',
@@ -45,6 +44,25 @@ export class Floor {
 })
 export class Box {
 	position = input<NgtVector3>([0, 5, 0]);
+
+	private positionV3 = vector3(this.position);
+	private rigidBodyRef = viewChild.required(NgtrRigidBody);
+
+	constructor() {
+		effect((onCleanup) => {
+			const rigidBody = this.rigidBodyRef().rigidBody();
+			if (!rigidBody) return;
+
+			const originalPosition = this.positionV3();
+
+			const id = setInterval(() => {
+				rigidBody.setTranslation(originalPosition, true);
+				rigidBody.setRotation(new THREE.Quaternion().setFromEuler(new THREE.Euler(0.4, 0.2, 0.5)), true);
+			}, 5_000);
+
+			onCleanup(() => clearInterval(id));
+		});
+	}
 }
 
 @Component({
@@ -60,9 +78,7 @@ export class Box {
 			castShadow
 		/>
 
-		@let startPhysics = start();
-
-		<ngtr-physics [options]="{ debug: startPhysics, paused: !startPhysics }">
+		<ngtr-physics [options]="{ debug: true }">
 			<ng-template>
 				<app-floor />
 				@for (position of positions; track $index) {
@@ -71,7 +87,7 @@ export class Box {
 			</ng-template>
 		</ngtr-physics>
 	`,
-	imports: [NgtArgs, NgtrPhysics, Floor, Box],
+	imports: [NgtrPhysics, Floor, Box],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -82,8 +98,6 @@ export class SceneGraph {
 		[0, 10, -1],
 		[0, 20, -2],
 	];
-
-	protected readonly start = start;
 
 	constructor() {
 		extend(THREE);

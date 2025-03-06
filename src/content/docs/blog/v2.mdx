@@ -16,6 +16,10 @@ import HudScene, {
 	content as hudContent,
 	sceneGraphContent as hudSceneGraphContent,
 } from '@scenes/hud-demo/hud-demo?includeContent';
+import LightformerDemo, {
+    content as lightformerContent,
+    sceneGraphContent as lightformerSceneGraphContent,
+}   from '@scenes/lightformer-demo/lightformer-demo?includeContent';
 
 After almost a year of development, we're thrilled to announce the release of Angular Three v2! 🎉 Through countless examples and tutorials from other [THREE.js](https://threejs.org) ecosystems, we've identified the shortcomings of the previous version of Angular Three. Since then, we've been working tirelessly to enhance the library, making it more stable, performant, and predictable when working with THREE.js scene graphs.
 
@@ -356,6 +360,20 @@ You can check out the code here: [HudScene](https://github.com/angular-threejs/a
 #### Environment with Lightformers
 
 `NgtsEnvironment` with content projection has never worked correctly. Now with v2 `NgtPortal`, we can finally have proper `NgtsEnvironment` content with `NgtsLightformer` to control the lighting of the environment.
+
+<Tabs>
+    <TabItem label="Preview">
+        <div class="border-accent-500 h-96 w-full rounded border border-dashed">
+            <LightformerDemo client:only />
+        </div>
+    </TabItem>
+    <TabItem label="canvas.ts">
+        <Code code={lightformerContent} lang="angular-ts" />
+    </TabItem>
+    <TabItem label="scene-graph.ts">
+        <Code code={lightformerSceneGraphContent} lang="angular-ts" />
+    </TabItem>
+</Tabs>
 
 ### Improved documentation 📖
 

@@ -1,20 +1,17 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
-	selector: 'rapier-demo',
 	template: `
-		<ngt-canvas [camera]="{ position: [-1, 5, 5], fov: 45 }" shadows>
+		<ngt-canvas [camera]="{ position: [-3, 3, 3] }">
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
 	`,
-	host: {
-		class: 'flex items-center justify-center h-full',
-	},
-	imports: [NgtCanvas, SceneGraph],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtCanvas, SceneGraph],
 })
-export default class RapierDemo {
+export default class LightformerDemo {
 	static clientProviders = [provideNgtRenderer()];
 }
