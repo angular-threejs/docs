@@ -47,10 +47,8 @@ You can use the `NgtsPerspectiveCamera` to project content onto an FBO, similar 
 
 ```angular-html
 <ngts-perspective-camera>
-    <ng-template cameraContent let-texture>
-        <ngt-mesh>
-            <ngt-mesh-basic-material [map]="texture()" />
-        </ngt-mesh>
-    </ng-template>
+    <ngt-mesh *cameraContent="let texture">
+        <ngt-mesh-basic-material [map]="texture()" />
+    </ngt-mesh>
 </ngts-perspective-camera>
 ```
