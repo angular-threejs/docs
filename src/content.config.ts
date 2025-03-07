@@ -18,7 +18,6 @@ export const collections = {
 	references: defineCollection({
 		loader: glob({ pattern: '**/*.md', base: './src/content/references' }),
 		schema: z.object({
-			demo: z.string().optional(),
 			options: z.object({
 				extends: z.string().optional(),
 				extendsLink: z.string().optional(),

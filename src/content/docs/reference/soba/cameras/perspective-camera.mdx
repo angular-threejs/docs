@@ -4,9 +4,15 @@ description: angular-three-soba/cameras NgtsPerspectiveCamera API
 ---
 
 import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
-import PerspectiveCamera from '@soba/cameras/perspective-camera/perspective-camera';
+import PerspectiveCamera, {
+	content,
+	sceneGraphContent,
+} from '@soba/cameras/perspective-camera/perspective-camera?includeContent';
 
-<ReferenceWrapper path="soba/cameras/perspective-camera">
-    <PerspectiveCamera client:only />
+<ReferenceWrapper
+	path="soba/cameras/perspective-camera"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<PerspectiveCamera client:only />
 </ReferenceWrapper>
-

@@ -4,8 +4,8 @@ description: angular-three-soba/cameras NgtsCubeCamera API
 ---
 
 import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
-import CubeCamera from '@soba/cameras/cube-camera/cube-camera';
+import CubeCamera, { content, sceneGraphContent } from '@soba/cameras/cube-camera/cube-camera?includeContent';
 
-<ReferenceWrapper path="soba/cameras/cube-camera">
-    <CubeCamera client:only />
+<ReferenceWrapper path="soba/cameras/cube-camera" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<CubeCamera client:only />
 </ReferenceWrapper>

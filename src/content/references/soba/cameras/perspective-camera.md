@@ -1,5 +1,4 @@
 ---
-demo: 'cameras/perspective-camera/perspective-camera'
 options:
   extends: 'THREE.PerspectiveCamera'
   extendsLink: 'https://threejs.org/docs/index.html#api/en/cameras/PerspectiveCamera'

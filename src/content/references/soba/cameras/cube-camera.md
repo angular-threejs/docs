@@ -1,5 +1,4 @@
 ---
-demo: 'cameras/cube-camera/cube-camera'
 options:
   extends: 'THREE.CubeCamera'
   extendsLink: 'https://threejs.org/docs/index.html#api/en/cameras/CubeCamera'

@@ -4,8 +4,15 @@ description: angular-three-soba/cameras NgtsOrthographicCamera API
 ---
 
 import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
-import OrthographicCamera from '@soba/cameras/orthographic-camera/orthographic-camera';
+import OrthographicCamera, {
+	content,
+	sceneGraphContent,
+} from '@soba/cameras/orthographic-camera/orthographic-camera?includeContent';
 
-<ReferenceWrapper path="soba/cameras/orthographic-camera">
-    <OrthographicCamera client:only />
+<ReferenceWrapper
+	path="soba/cameras/orthographic-camera"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<OrthographicCamera client:only />
 </ReferenceWrapper>

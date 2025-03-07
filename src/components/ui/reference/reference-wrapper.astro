@@ -8,9 +8,11 @@ import ReferenceIO from './reference-io.astro';
 
 interface Props {
 	path: string;
+	demoContent?: string;
+	demoSceneGraphContent?: string;
 }
 
-const { path } = Astro.props;
+const { path, demoContent, demoSceneGraphContent } = Astro.props;
 
 const entry = await getEntry('references', path);
 
@@ -18,17 +20,8 @@ if (!entry) {
 	throw new Error(`Reference ${path} not found`);
 }
 
-const { demo, options, outputs, inputs } = entry.data;
+const { options, outputs, inputs } = entry.data;
 const { Content } = await render(entry);
-
-let demoContent: string | undefined;
-let demoSceneGraphContent: string | undefined;
-
-if (demo) {
-	const { content, sceneGraphContent } = await import(`../../soba/${demo}?includeContent`);
-	demoContent = content;
-	demoSceneGraphContent = sceneGraphContent;
-}
 ---
 
 {

@@ -1,5 +1,4 @@
 ---
-demo: 'cameras/orthographic-camera/orthographic-camera'
 options:
   extends: 'THREE.OrthographicCamera'
   extendsLink: 'https://threejs.org/docs/index.html#api/en/cameras/OrthographicCamera'
