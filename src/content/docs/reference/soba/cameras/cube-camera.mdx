@@ -3,54 +3,9 @@ title: NgtsCubeCamera
 description: angular-three-soba/cameras NgtsCubeCamera API
 ---
 
-import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
-import DemoWrapper from '@ui/demo-wrapper.astro';
-import CubeCamera, { content, sceneGraphContent } from '@soba/cameras/cube-camera/cube-camera?includeContent';
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import CubeCamera from '@soba/cameras/cube-camera/cube-camera';
 
-An abstraction around [`THREE.CubeCamera`](https://threejs.org/docs/index.html#api/en/cameras/CubeCamera) that exposes its texture (render target) via `NgtsCameraContent` directive. Before rendering to the render target, `NgtsCameraContent` will be set to invisible to exclude from reflections.
-
-<Tabs>
-	<TabItem label="Preview">
-		<DemoWrapper>
-			<CubeCamera client:only />
-		</DemoWrapper>
-	</TabItem>
-	<TabItem label="canvas.ts">
-		<Code code={content} lang="angular-ts" />
-	</TabItem>
-	<TabItem label="scene-graph.ts">
-		<Code code={sceneGraphContent} lang="angular-ts" />
-	</TabItem>
-</Tabs>
-
-```angular-ts
-import { NgtsCubeCamera, NgtsCameraContent } from 'angular-three-soba/cameras';
-```
-
-```angular-html
-<ngts-cube-camera>
-    <ngt-mesh *cameraContent="let texture">
-        <ngt-sphere-geometry />
-        <ngt-mesh-standard-material [envMap]="texture" />
-    </ngt-mesh>
-</ngts-cube-camera>
-```
-
-### Options
-
-`NgtsCubeCamera` accepts a single `options` input that accepts anything that a `THREE.Group` accepts in addition to the following:
-
-| name       | type                     | description                                                      |
-| ---------- | ------------------------ | ---------------------------------------------------------------- |
-| resolution | number                   | resolution of the FBO, default to 256                            |
-| near       | number                   | camera's near, default to 0.1                                    |
-| far        | number                   | camera's far, default to 1000                                    |
-| envMap     | THREE.Texture            | custom environment map that is temporarily set as the background |
-| fog        | THREE.Fog, THREE.FogExp2 | custom fog that is temporarily set as the fog                    |
-| frames     | number                   | how many frames to render the FBO, default to Infinity           |
-
-### Controlling updates
-
-By default, `frames` is set to `Infinity`, which means that the FBO will be rendered on every frame. This is sometimes unnecessary if you have static scenes. You can control the number of frames to render by passing a number to `frames` option via `[options]="{ frames: 10 }"`.
-
-For moving objects, you can keep `frames` as `Infinity` but use a smaller `resolution` instead. For static scenes, a good default is to set `frames` to the same number of `NgtsCubeCamera` instances. This allows each camera to render and then be picked up in each other's reflection.
+<ReferenceWrapper path="soba/cameras/cube-camera">
+    <CubeCamera client:only />
+</ReferenceWrapper>

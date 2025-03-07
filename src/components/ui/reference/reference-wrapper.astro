@@ -1,0 +1,58 @@
+---
+import { getEntry, render } from 'astro:content';
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+
+import ReferenceOptions from './reference-options.astro';
+import ReferenceIO from './reference-io.astro';
+
+interface Props {
+	path: string;
+}
+
+const { path } = Astro.props;
+
+const entry = await getEntry('references', path);
+
+if (!entry) {
+	throw new Error(`Reference ${path} not found`);
+}
+
+const { demo, options, outputs, inputs } = entry.data;
+const { Content } = await render(entry);
+
+let demoContent: string | undefined;
+let demoSceneGraphContent: string | undefined;
+
+if (demo) {
+	const { content, sceneGraphContent } = await import(`../../soba/${demo}?includeContent`);
+	demoContent = content;
+	demoSceneGraphContent = sceneGraphContent;
+}
+---
+
+{
+	demoContent ? (
+		<Tabs>
+			<TabItem label="Preview">
+				<DemoWrapper>
+					<slot />
+				</DemoWrapper>
+			</TabItem>
+			<TabItem label="canvas.ts">
+				<Code code={demoContent} lang="angular-ts" />
+			</TabItem>
+			{demoSceneGraphContent ? (
+				<TabItem label="scene-graph.ts">
+					<Code code={demoSceneGraphContent} lang="angular-ts" />
+				</TabItem>
+			) : null}
+		</Tabs>
+	) : null
+}
+
+<Content />
+
+{options ? <ReferenceOptions options={options} /> : null}
+{inputs ? <ReferenceIO title="Inputs" items={inputs} /> : null}
+{outputs ? <ReferenceIO title="Outputs" items={outputs} /> : null}

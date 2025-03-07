@@ -1,0 +1,36 @@
+---
+interface Props {
+	title?: string;
+	subtitle?: string;
+	items: Array<{ name: string; type: string; description: string; required?: boolean }>;
+	withRequired?: boolean;
+}
+
+const { title, subtitle, items, withRequired = false } = Astro.props;
+---
+
+{title ? <h2>{title}</h2> : null}
+{subtitle ? <h3>{subtitle}</h3> : null}
+
+<table>
+	<thead>
+		<tr>
+			<th>name</th>
+			<th>type</th>
+			<th>description</th>
+			{withRequired ? <th>required</th> : null}
+		</tr>
+	</thead>
+	<tbody>
+		{
+			items.map((item) => (
+				<tr>
+					<td>{item.name}</td>
+					<td>{item.type}</td>
+					<td>{item.description}</td>
+					{withRequired ? <td>{item.required ? 'yes' : 'no'}</td> : null}
+				</tr>
+			))
+		}
+	</tbody>
+</table>

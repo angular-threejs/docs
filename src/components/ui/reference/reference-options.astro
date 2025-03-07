@@ -1,0 +1,37 @@
+---
+import ReferenceIO from './reference-io.astro';
+
+interface Props {
+	options: {
+		extends?: string;
+		extendsLink?: string;
+		properties?: {
+			name: string;
+			type: string;
+			description: string;
+		}[];
+	};
+}
+
+const { options } = Astro.props;
+---
+
+<h2>Options</h2>
+
+{
+	options.extends ? (
+		<p>
+			<code>options</code> input accepts any properties from{' '}
+			{options.extendsLink ? (
+				<a href={options.extendsLink} target="_blank" rel="noreferrer">
+					<code>{options.extends}</code>
+				</a>
+			) : (
+				<code>{options.extends}</code>
+			)}{' '}
+			{options.properties?.length ? <span>in addition to the following:</span> : null}
+		</p>
+	) : null
+}
+
+{options.properties ? <ReferenceIO subtitle="Properties" items={options.properties} /> : null}
