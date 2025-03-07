@@ -69,7 +69,7 @@ function includeContentPlugin() {
 					code: `
 					${code}
 					export const content = ${JSON.stringify(fileContent)};
-					${sceneGraphContent ? `export const sceneGraphContent = ${JSON.stringify(sceneGraphContent)};` : ''}
+					export const sceneGraphContent = ${sceneGraphContent ? JSON.stringify(sceneGraphContent) : 'undefined'};
 				`,
 				};
 			},
