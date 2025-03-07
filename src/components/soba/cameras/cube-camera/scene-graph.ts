@@ -6,9 +6,8 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs, type NgtVector3 } from 'angular-three';
+import { injectBeforeRender, NgtArgs, type NgtVector3 } from 'angular-three';
 import { NgtsCameraContent, NgtsCubeCamera } from 'angular-three-soba/cameras';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import * as THREE from 'three';
 
 @Component({
@@ -43,7 +42,6 @@ export class CubeCameraSphere {
 @Component({
 	selector: 'app-scene-graph',
 	template: `
-		<ngt-color *args="['#000000']" attach="background" />
 		<ngt-fog *args="['#f0f0f0', 100, 200]" attach="fog" />
 
 		<app-cube-camera-sphere [position]="[-10, 10, 0]" />
@@ -55,15 +53,9 @@ export class CubeCameraSphere {
 		</ngt-mesh>
 
 		<ngt-grid-helper *args="[100, 10]" />
-
-		<ngts-orbit-controls [options]="{ enableZoom: false }" />
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, CubeCameraSphere, NgtsOrbitControls],
+	imports: [NgtArgs, CubeCameraSphere],
 })
-export class SceneGraph {
-	constructor() {
-		extend(THREE);
-	}
-}
+export class SceneGraph {}

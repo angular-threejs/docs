@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { extend, NgtArgs } from 'angular-three';
+import { SobaWrapper } from '@soba/wrapper.ts';
+import { NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
-import * as THREE from 'three';
 
 import { positions } from '../positions';
 
@@ -11,9 +10,7 @@ import { positions } from '../positions';
 	selector: 'app-perspective-camera-demo',
 	template: `
 		<ngt-canvas>
-			<ng-template canvasContent>
-				<ngt-color attach="background" *args="['black']" />
-
+			<app-soba-wrapper *canvasContent>
 				<ngts-perspective-camera [options]="{ makeDefault: true, position: [0, 0, 10] }" />
 
 				<ngt-group [position]="[0, 0, -10]">
@@ -24,21 +21,15 @@ import { positions } from '../positions';
 						</ngt-mesh>
 					}
 				</ngt-group>
-
-				<ngts-orbit-controls />
-			</ng-template>
+			</app-soba-wrapper>
 		</ngt-canvas>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtsPerspectiveCamera, NgtArgs, NgtsOrbitControls],
+	imports: [NgtCanvas, NgtsPerspectiveCamera, NgtArgs, SobaWrapper],
 })
 export default class PerspectiveCamera {
 	static clientProviders = [provideNgtRenderer()];
 
 	protected readonly positions = positions;
-
-	constructor() {
-		extend(THREE);
-	}
 }
