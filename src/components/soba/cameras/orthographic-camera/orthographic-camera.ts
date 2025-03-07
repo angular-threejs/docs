@@ -12,6 +12,8 @@ import { positions } from '../positions';
 	template: `
 		<ngt-canvas>
 			<ng-template canvasContent>
+				<ngt-color attach="background" *args="['black']" />
+
 				<ngts-orthographic-camera [options]="{ makeDefault: true, zoom: 40, position: [0, 0, 10] }" />
 
 				<ngt-group [position]="[0, 0, -10]">
