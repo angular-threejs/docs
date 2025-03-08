@@ -11,7 +11,7 @@ import { SceneGraph } from './scene-graph';
 	`,
 	imports: [NgtCanvas, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'hud-demo-docs block h-full relative !mt-0' },
+	host: { class: 'hud-demo-docs block h-full relative' },
 })
 export default class HudDemo {
 	static clientProviders = [provideNgtRenderer()];

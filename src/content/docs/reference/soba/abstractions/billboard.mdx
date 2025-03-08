@@ -1,0 +1,11 @@
+---
+title: NgtsBillboard
+description: angular-three-soba/abstractions NgtsBillboard API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Billboard, { content, sceneGraphContent } from '@soba/abstractions/billboard/billboard?includeContent';
+
+<ReferenceWrapper path="soba/abstractions/billboard" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Billboard client:only />
+</ReferenceWrapper>

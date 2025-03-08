@@ -15,7 +15,7 @@ import { SceneGraph } from './scene-graph';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtCanvas, SceneGraph],
-	host: { class: 'movement-regression-demo relative block h-full !mt-0' },
+	host: { class: 'movement-regression-demo relative block h-full' },
 })
 export default class MovementRegressionDemo {
 	static clientProviders = [provideNgtRenderer()];

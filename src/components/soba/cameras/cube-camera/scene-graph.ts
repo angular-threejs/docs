@@ -51,8 +51,6 @@ export class CubeCameraSphere {
 			<ngt-box-geometry *args="[5, 5, 5]" />
 			<ngt-mesh-basic-material color="hotpink" />
 		</ngt-mesh>
-
-		<ngt-grid-helper *args="[100, 10]" />
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,

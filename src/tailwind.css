@@ -112,3 +112,8 @@ div.tp-dfwv {
 		margin: auto;
 	}
 }
+
+/*demo*/
+.sl-markdown-content astro-island[ng-version] {
+	margin-top: 0;
+}

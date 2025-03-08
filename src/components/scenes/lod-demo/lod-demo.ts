@@ -16,7 +16,7 @@ import { SceneGraph } from './scene-graph';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtCanvas, NgtsLoader, NgtsStats, SceneGraph],
-	host: { class: 'lod-demo relative block h-full !mt-0' },
+	host: { class: 'lod-demo relative block h-full' },
 	styles: `
 		:host {
 			& .stats {

@@ -7,7 +7,7 @@ import { SceneGraph } from './scene-graph';
 @Component({
 	selector: 'app-soba-cube-camera',
 	template: `
-		<ngt-canvas [camera]="{ position: [0, 10, 40] }">
+		<ngt-canvas [camera]="{ position: [0, 5, 20] }">
 			<app-soba-wrapper *canvasContent>
 				<app-scene-graph />
 			</app-soba-wrapper>

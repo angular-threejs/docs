@@ -2,6 +2,7 @@
 import { getEntry, render } from 'astro:content';
 import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
 import DemoWrapper from '@ui/demo-wrapper.astro';
+import Credit from '@ui/credit.astro';
 
 import ReferenceOptions from './reference-options.astro';
 import ReferenceIO from './reference-io.astro';
@@ -20,7 +21,7 @@ if (!entry) {
 	throw new Error(`Reference ${path} not found`);
 }
 
-const { options, outputs, inputs } = entry.data;
+const { options, outputs, inputs, credits } = entry.data;
 const { Content } = await render(entry);
 ---
 
@@ -31,6 +32,7 @@ const { Content } = await render(entry);
 				<DemoWrapper>
 					<slot />
 				</DemoWrapper>
+				{credits ? <Credit link={credits.link}>{credits.text}</Credit> : null}
 			</TabItem>
 			<TabItem label="canvas.ts">
 				<Code code={demoContent} lang="angular-ts" />
@@ -46,6 +48,6 @@ const { Content } = await render(entry);
 
 <Content />
 
+{inputs ? <ReferenceIO title="Inputs" items={inputs} withRequired /> : null}
 {options ? <ReferenceOptions options={options} /> : null}
-{inputs ? <ReferenceIO title="Inputs" items={inputs} /> : null}
 {outputs ? <ReferenceIO title="Outputs" items={outputs} /> : null}

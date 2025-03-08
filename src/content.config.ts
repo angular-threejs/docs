@@ -18,6 +18,12 @@ export const collections = {
 	references: defineCollection({
 		loader: glob({ pattern: '**/*.md', base: './src/content/references' }),
 		schema: z.object({
+			credits: z
+				.object({
+					text: z.string(),
+					link: z.string(),
+				})
+				.optional(),
 			options: z.object({
 				extends: z.string().optional(),
 				extendsLink: z.string().optional(),

@@ -11,7 +11,7 @@ import { SceneGraph } from './scene-graph';
 		<span class="absolute bottom-0 right-0 font-mono text-sm">* click/hover the cube</span>
 	`,
 	host: {
-		class: 'relative flex h-full !mt-0',
+		class: 'relative flex h-full',
 	},
 	imports: [NgtCanvas, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,

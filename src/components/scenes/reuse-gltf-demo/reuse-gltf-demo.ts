@@ -11,7 +11,7 @@ import { SceneGraph } from './scene-graph';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtCanvas, SceneGraph, NgtHexify],
-	host: { class: 'reuse-gltf-demo block relative h-full !mt-0' },
+	host: { class: 'reuse-gltf-demo block relative h-full' },
 })
 export default class ReuseGLTFDemo {
 	static clientProviders = [provideNgtRenderer()];

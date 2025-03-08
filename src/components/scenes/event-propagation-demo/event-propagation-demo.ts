@@ -9,7 +9,7 @@ import { SceneGraph } from './scene-graph';
 		</ngt-canvas>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'pointer-events relative block !mt-0 h-full w-full' },
+	host: { class: 'pointer-events relative block h-full w-full' },
 	imports: [NgtCanvas, SceneGraph],
 })
 export default class EventPropagationDemo {

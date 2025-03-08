@@ -260,6 +260,23 @@ export function ngtSidebar() {
 						],
 					},
 					{
+						label: 'angular-three-soba/abstractions',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/soba/abstractions/introduction',
+							},
+							{
+								label: 'NgtsBillboard',
+								slug: 'reference/soba/abstractions/billboard',
+							},
+							{
+								label: 'NgtsText',
+								slug: 'reference/soba/abstractions/text',
+							},
+						],
+					},
+					{
 						label: 'angular-three-soba/cameras',
 						items: [
 							{

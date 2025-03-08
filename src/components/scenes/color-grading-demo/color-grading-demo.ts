@@ -22,7 +22,7 @@ import { SceneGraph } from './scene-graph';
 	`,
 	imports: [NgtCanvas, SceneGraph, NgtsStats, NgtTweakPane, NgtTweakCheckbox],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'color-grading-demo relative block h-full !mt-0' },
+	host: { class: 'color-grading-demo relative block h-full' },
 	styles: `
 		:host {
 			& .stats {

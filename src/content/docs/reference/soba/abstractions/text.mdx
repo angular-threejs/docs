@@ -1,0 +1,11 @@
+---
+title: NgtsText
+description: angular-three-soba/abstractions NgtsText API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Text, { content, sceneGraphContent } from '@soba/abstractions/text/text?includeContent';
+
+<ReferenceWrapper path="soba/abstractions/text" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Text client:only />
+</ReferenceWrapper>
