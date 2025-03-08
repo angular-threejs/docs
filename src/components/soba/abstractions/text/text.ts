@@ -9,7 +9,7 @@ import { SceneGraph } from './scene-graph';
 	template: `
 		<ngt-canvas [camera]="{ position: [0, 2, 35], fov: 90 }">
 			<app-soba-wrapper *canvasContent [grid]="false" [controls]="null">
-				<app-scene-graph />
+				<app-scene-graph [count]="count()" [radius]="radius()" />
 			</app-soba-wrapper>
 		</ngt-canvas>
 
