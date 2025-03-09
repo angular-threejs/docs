@@ -79,19 +79,19 @@ export class Cloud {
 	protected words = computed(() => {
 		const [count, radius] = [this.count(), this.radius()];
 
-		const temp: { position: NgtVector3; text: string }[] = [];
+		const words: { position: NgtVector3; text: string }[] = [];
 		const spherical = new THREE.Spherical();
 		const phiSpan = Math.PI / (count + 1);
 		const thetaSpan = (Math.PI * 2) / count;
 		for (let i = 1; i < count + 1; i++) {
 			for (let j = 0; j < count; j++) {
-				temp.push({
+				words.push({
 					position: new THREE.Vector3().setFromSpherical(spherical.set(radius, phiSpan * i, thetaSpan * j)),
 					text: generateWord(),
 				});
 			}
 		}
-		return temp;
+		return words;
 	});
 }
 

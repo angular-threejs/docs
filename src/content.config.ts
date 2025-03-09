@@ -24,19 +24,51 @@ export const collections = {
 					link: z.string(),
 				})
 				.optional(),
-			options: z.object({
-				extends: z.string().optional(),
-				extendsLink: z.string().optional(),
-				properties: z
-					.array(
-						z.object({
-							name: z.string(),
-							type: z.string(),
-							description: z.string(),
-						}),
-					)
-					.optional(),
-			}),
+			options: z
+				.object({
+					extends: z.string().optional(),
+					extendsLink: z.string().optional(),
+					properties: z
+						.array(
+							z.object({
+								name: z.string(),
+								type: z.string(),
+								description: z.string(),
+							}),
+						)
+						.optional(),
+				})
+				.optional(),
+			arguments: z
+				.array(
+					z.object({
+						name: z.string(),
+						type: z.string(),
+						description: z.string(),
+						required: z.boolean().default(false),
+					}),
+				)
+				.optional(),
+			returns: z
+				.array(
+					z.object({
+						type: z.string(),
+						description: z.string(),
+						properties: z
+							.union([
+								z.array(
+									z.object({
+										name: z.string(),
+										type: z.string(),
+										description: z.string(),
+									}),
+								),
+								z.string(),
+							])
+							.optional(),
+					}),
+				)
+				.optional(),
 			// required inputs and inputs that are not part of the options
 			inputs: z
 				.array(

@@ -6,6 +6,7 @@ import Credit from '@ui/credit.astro';
 
 import ReferenceOptions from './reference-options.astro';
 import ReferenceIO from './reference-io.astro';
+import ReferenceReturns from './reference-returns.astro';
 
 interface Props {
 	path: string;
@@ -21,7 +22,7 @@ if (!entry) {
 	throw new Error(`Reference ${path} not found`);
 }
 
-const { options, outputs, inputs, credits } = entry.data;
+const { options, outputs, inputs, credits, arguments: args, returns } = entry.data;
 const { Content } = await render(entry);
 ---
 
@@ -51,3 +52,5 @@ const { Content } = await render(entry);
 {inputs ? <ReferenceIO title="Inputs" items={inputs} withRequired /> : null}
 {options ? <ReferenceOptions options={options} /> : null}
 {outputs ? <ReferenceIO title="Outputs" items={outputs} /> : null}
+{args ? <ReferenceIO title="Arguments" items={args} withRequired /> : null}
+{returns ? <ReferenceReturns title="Returns" items={returns} /> : null}

@@ -27,6 +27,6 @@ export default class Text {
 
 	protected host = inject(ElementRef);
 
-	count = signal(8);
-	radius = signal(20);
+	protected count = signal(8);
+	protected radius = signal(20);
 }

@@ -2,3 +2,10 @@
 title: injectAnimations
 description: angular-three-soba/misc injectAnimations API
 ---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Animations, { content, sceneGraphContent } from '@soba/misc/animations/animations?includeContent';
+
+<ReferenceWrapper path="soba/misc/animations" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Animations client:only />
+</ReferenceWrapper>

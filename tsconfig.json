@@ -8,6 +8,7 @@
 			"@ui/*": ["./src/components/ui/*"],
 			"@scenes/*": ["./src/components/scenes/*"],
 			"@soba/*": ["./src/components/soba/*"],
+			"@common-assets/*": ["./src/components/common-assets/*"],
 		}
 	}
 }

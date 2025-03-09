@@ -2,3 +2,10 @@
 title: NgtsAdaptiveDpr
 description: angular-three-soba/performances NgtsAdaptiveDpr introduction
 ---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import AdaptiveDpr, { content, sceneGraphContent } from '@soba/performances/adaptive/adaptive?includeContent';
+
+<ReferenceWrapper path="soba/performances/adaptive-dpr" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<AdaptiveDpr client:only />
+</ReferenceWrapper>

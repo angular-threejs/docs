@@ -3,18 +3,9 @@ title: NgtsDetailed
 description: angular-three-soba/performances NgtsDetailed introduction
 ---
 
-An abstraction for [`THREE.LOD`](https://threejs.org/docs/#api/en/objects/LOD) that allows you to render a level of details hierarchy and automatically updates the camera in the animation loop.
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Detailed, { content, sceneGraphContent } from '@soba/performances/detailed/detailed?includeContent';
 
-```angular-ts
-import { NgtsDetailed } from 'angular-three-soba/performances';
-```
-
-```angular-html
-<ngts-detailed [distances]="[0, 50, 150]">
-    <ngt-mesh [geometry]="highDetail" />
-    <ngt-mesh [geometry]="mediumDetail" />
-    <ngt-mesh [geometry]="lowDetail" />
-</ngts-detailed>
-```
-
-`NgtsDetailed` accepts a required `distances` input which is an array of distances in world units. The distances should match the amount and the order of the children.
+<ReferenceWrapper path="soba/performances/detailed" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Detailed client:only />
+</ReferenceWrapper>

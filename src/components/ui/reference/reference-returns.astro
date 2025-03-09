@@ -1,0 +1,61 @@
+---
+interface Props {
+	title?: string;
+	subtitle?: string;
+	items: Array<{
+		type: string;
+		description: string;
+		properties?: Array<{ name: string; type: string; description: string }> | string;
+	}>;
+}
+
+const { title, subtitle, items } = Astro.props;
+---
+
+{title ? <h2>{title}</h2> : null}
+{subtitle ? <h3>{subtitle}</h3> : null}
+
+{
+	items.map((item) => (
+		<>
+			<table>
+				<thead>
+					<tr>
+						<th>type</th>
+						<th>description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{item.type}</td>
+						<td>{item.description}</td>
+					</tr>
+				</tbody>
+			</table>
+
+			{item.properties && typeof item.properties !== 'string' && (
+				<>
+					<h4>Properties</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>name</th>
+								<th>type</th>
+								<th>description</th>
+							</tr>
+						</thead>
+						<tbody>
+							{item.properties.map((prop) => (
+								<tr>
+									<td>{prop.name}</td>
+									<td>{prop.type}</td>
+									<td>{prop.description}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</>
+			)}
+		</>
+	))
+}

@@ -7,7 +7,7 @@ import { injectMatcapTexture } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { SkeletonUtils, type GLTF } from 'three-stdlib';
 
-import botGLB from './ybot.glb' with { loader: 'file' };
+import botGLB from '@common-assets/ybot.glb' with { loader: 'file' };
 
 type BotGLTF = GLTF & {
 	animations: NgtsAnimationClips<'Dance'>[];
