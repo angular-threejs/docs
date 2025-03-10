@@ -115,6 +115,7 @@ export default defineConfig({
 		}),
 		starlight({
 			title: 'Angular Three',
+			routeMiddleware: ['./src/route-data.ts'],
 			plugins: [
 				ngtSidebar(),
 				starlightBlog({
@@ -127,7 +128,7 @@ export default defineConfig({
 					},
 				}),
 			],
-			favicon: './src/assets/angular-three-dark.svg',
+			favicon: '/angular-three-dark.svg',
 			tableOfContents: {
 				minHeadingLevel: 2,
 				maxHeadingLevel: 4,

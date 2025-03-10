@@ -10,10 +10,12 @@ interface Props {
 }
 
 const { title, subtitle, items } = Astro.props;
+const titleId = title?.toLowerCase().replaceAll(' ', '-');
+const subtitleId = subtitle?.toLowerCase().replaceAll(' ', '-');
 ---
 
-{title ? <h2>{title}</h2> : null}
-{subtitle ? <h3>{subtitle}</h3> : null}
+{title ? <h2 id={titleId}>{title}</h2> : null}
+{subtitle ? <h3 id={subtitleId}>{subtitle}</h3> : null}
 
 {
 	items.map((item) => (
