@@ -1,0 +1,18 @@
+---
+title: NgtsMeshTransmissionMaterial
+description: angular-three-soba/materials NgtsMeshTransmissionMaterial API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import MeshTransmissionMaterial, {
+	content,
+	sceneGraphContent,
+} from '@soba/materials/mesh-transmission-material/mesh-transmission-material?includeContent';
+
+<ReferenceWrapper
+	path="soba/materials/mesh-transmission-material"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<MeshTransmissionMaterial client:only />
+</ReferenceWrapper>

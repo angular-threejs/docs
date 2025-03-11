@@ -1,0 +1,11 @@
+---
+title: NgtsText3D
+description: angular-three-soba/abstractions NgtsText3D API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Text3D, { content, sceneGraphContent } from '@soba/abstractions/text-3d/text-3d?includeContent';
+
+<ReferenceWrapper path="soba/abstractions/text-3d" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Text3D client:only />
+</ReferenceWrapper>

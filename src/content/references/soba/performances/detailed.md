@@ -1,11 +1,12 @@
 ---
 options:
-  extends: 'THREE.LOD'
-  extendsLink: 'https://threejs.org/docs/index.html#api/en/objects/LOD'
-  properties:
-    - name: 'hysteresis'
-      type: 'number'
-      description: 'hysteresis for LOD, default to 0'
+    extends:
+        - name: THREE.LOD
+          link: 'https://threejs.org/docs/index.html#api/en/objects/LOD'
+    properties:
+        - name: 'hysteresis'
+          type: 'number'
+          description: 'hysteresis for LOD, default to 0'
 inputs:
     - name: 'distances'
       type: 'number[]'

@@ -1,26 +1,27 @@
 ---
 options:
-  extends: 'THREE.CubeCamera'
-  extendsLink: 'https://threejs.org/docs/index.html#api/en/cameras/CubeCamera'
-  properties:
-    - name: 'frames'
-      type: 'number'
-      description: 'how many frames to render the FBO, default to Infinity'
-    - name: 'resolution'
-      type: 'number'
-      description: 'the resolution of the FBO, default to 256'
-    - name: 'near'
-      type: 'number'
-      description: 'the near plane of the camera, default to 0.1'
-    - name: 'far'
-      type: 'number'
-      description: 'the far plane of the camera, default to 1000'
-    - name: 'envMap'
-      type: 'THREE.Texture'
-      description: 'custom environment map that is temporarily set as the scene background'
-    - name: 'fog'
-      type: 'THREE.Fog | THREE.FogExp2'
-      description: 'custom fog that is temporarily set as the scene fog'
+    extends:
+        - name: THREE.CubeCamera
+          link: 'https://threejs.org/docs/index.html#api/en/cameras/CubeCamera'
+    properties:
+        - name: 'frames'
+          type: 'number'
+          description: 'how many frames to render the FBO, default to Infinity'
+        - name: 'resolution'
+          type: 'number'
+          description: 'the resolution of the FBO, default to 256'
+        - name: 'near'
+          type: 'number'
+          description: 'the near plane of the camera, default to 0.1'
+        - name: 'far'
+          type: 'number'
+          description: 'the far plane of the camera, default to 1000'
+        - name: 'envMap'
+          type: 'THREE.Texture'
+          description: 'custom environment map that is temporarily set as the scene background'
+        - name: 'fog'
+          type: 'THREE.Fog | THREE.FogExp2'
+          description: 'custom fog that is temporarily set as the scene fog'
 ---
 
 An abstraction around [`THREE.CubeCamera`](https://threejs.org/docs/index.html#api/en/cameras/CubeCamera) that exposes its texture (render target) via `NgtsCameraContent` directive. Before rendering to the render target, `NgtsCameraContent` will be set to invisible to exclude from reflections.

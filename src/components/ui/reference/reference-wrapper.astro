@@ -50,7 +50,7 @@ const { Content } = await render(entry);
 <Content />
 
 {inputs ? <ReferenceIO title="Inputs" items={inputs} withRequired /> : null}
-{options ? <ReferenceOptions options={options} /> : null}
 {outputs ? <ReferenceIO title="Outputs" items={outputs} /> : null}
+{options ? <ReferenceOptions options={options} /> : null}
 {args ? <ReferenceIO title="Arguments" items={args} withRequired /> : null}
 {returns ? <ReferenceReturns title="Returns" items={returns} /> : null}

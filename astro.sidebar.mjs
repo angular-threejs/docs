@@ -274,6 +274,10 @@ export function ngtSidebar() {
 								label: 'NgtsText',
 								slug: 'reference/soba/abstractions/text',
 							},
+							{
+								label: 'NgtsText3D',
+								slug: 'reference/soba/abstractions/text-3d',
+							},
 						],
 					},
 					{
@@ -311,6 +315,19 @@ export function ngtSidebar() {
 						],
 					},
 					{
+						label: 'angular-three-soba/materials',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/soba/materials/introduction',
+							},
+							{
+								label: 'NgtsMeshTransmissionMaterial',
+								slug: 'reference/soba/materials/mesh-transmission-material',
+							},
+						],
+					},
+					{
 						label: 'angular-three-soba/misc',
 						items: [
 							{
@@ -340,20 +357,21 @@ export function ngtSidebar() {
 							},
 						],
 					},
+					{
+						label: 'angular-three-soba/staging',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/soba/staging/introduction',
+							},
+							{
+								label: 'NgtsCenter',
+								slug: 'reference/soba/staging/center',
+							},
+						],
+					},
 				],
 			},
-			// TODO: reenable blog
-			// {
-			//   label: "Blog",
-			//   link: "/blog/",
-			//   icon: "rss",
-			//   items: [
-			//     {
-			//       label: "Angular Three v2 is here!",
-			//       slug: "blog/v2",
-			//     },
-			//   ],
-			// },
 			{
 				label: 'Examples',
 				link: 'https://angularthree-demo-next.netlify.app',

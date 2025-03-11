@@ -7,7 +7,7 @@ import { SceneGraph } from './scene-graph';
 @Component({
 	selector: 'app-soba-text',
 	template: `
-		<ngt-canvas [camera]="{ position: [0, 2, 35], fov: 90 }">
+		<ngt-canvas [camera]="{ position: [0, 2, 50], fov: 90 }">
 			<app-soba-wrapper *canvasContent [grid]="false" [controls]="null">
 				<app-scene-graph [count]="count()" [radius]="radius()" />
 			</app-soba-wrapper>

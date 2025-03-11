@@ -26,8 +26,14 @@ export const collections = {
 				.optional(),
 			options: z
 				.object({
-					extends: z.string().optional(),
-					extendsLink: z.string().optional(),
+					extends: z
+						.array(
+							z.object({
+								name: z.string(),
+								link: z.string(),
+							}),
+						)
+						.optional(),
 					properties: z
 						.array(
 							z.object({

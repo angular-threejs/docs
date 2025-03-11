@@ -3,8 +3,7 @@ import ReferenceIO from './reference-io.astro';
 
 interface Props {
 	options: {
-		extends?: string;
-		extendsLink?: string;
+		extends?: Array<{ name: string; link: string }>;
 		properties?: {
 			name: string;
 			type: string;
@@ -14,6 +13,33 @@ interface Props {
 }
 
 const { options } = Astro.props;
+
+function getExtendsContent(extends_: Array<{ name: string; link: string }>) {
+	if (extends_.length === 1) {
+		return [extends_[0]] as Array<{ name?: string; link?: string; isComma?: boolean; isAnd?: boolean }>;
+	}
+
+	if (extends_.length === 2) {
+		return [extends_[0], { isAnd: true }, extends_[1]] as Array<{
+			name?: string;
+			link?: string;
+			isComma?: boolean;
+			isAnd?: boolean;
+		}>;
+	}
+
+	return extends_.reduce(
+		(acc, ext, index) => {
+			if (index === extends_.length - 1) {
+				acc.push({ isAnd: true }, ext);
+			} else {
+				acc.push(ext, { isComma: true });
+			}
+			return acc;
+		},
+		[] as Array<{ name?: string; link?: string; isComma?: boolean; isAnd?: boolean }>,
+	);
+}
 ---
 
 <h2 id="options">Options</h2>
@@ -22,13 +48,15 @@ const { options } = Astro.props;
 	options.extends ? (
 		<p>
 			<code>options</code> input accepts any properties from{' '}
-			{options.extendsLink ? (
-				<a href={options.extendsLink} target="_blank" rel="noreferrer">
-					<code>{options.extends}</code>
-				</a>
-			) : (
-				<code>{options.extends}</code>
-			)}{' '}
+			{getExtendsContent(options.extends).map((item) => {
+				if (item.isComma) return ', ';
+				if (item.isAnd) return ' and ';
+				return (
+					<a href={item.link} target="_blank" rel="noreferrer">
+						<code>{item.name}</code>
+					</a>
+				);
+			})}
 			{options.properties?.length ? <span>in addition to the following:</span> : null}
 		</p>
 	) : null
