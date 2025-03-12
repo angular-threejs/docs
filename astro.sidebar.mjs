@@ -302,6 +302,19 @@ export function ngtSidebar() {
 						],
 					},
 					{
+						label: 'angular-three-soba/controls',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/soba/controls/introduction',
+							},
+							{
+								label: 'NgtsCameraControls',
+								slug: 'reference/soba/controls/camera-controls',
+							},
+						],
+					},
+					{
 						label: 'angular-three-soba/loaders',
 						items: [
 							{

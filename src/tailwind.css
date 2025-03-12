@@ -103,12 +103,12 @@ div.sidebar-pane .top-level > li + li {
 div.tp-dfwv {
 	margin-top: 0 !important;
 
-	& div[class^='tp']:not(.tp-lblv):not(.tp-rotv_m),
+	& div[class^='tp']:not(.tp-lblv):not(.tp-rotv_m):not(.tp-fldv_m),
 	button[class^='tp'] {
 		margin-top: 0;
 	}
 
-	& div.tp-rotv_m {
+	& div.tp-rotv_m, div.tp-fldv_m {
 		margin: auto;
 	}
 }
