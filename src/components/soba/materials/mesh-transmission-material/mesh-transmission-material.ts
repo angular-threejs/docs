@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal } from '@angular/core';
 import { SobaWrapper } from '@soba/wrapper';
-import { NgtTweakCheckbox, NgtTweakColor, NgtTweakFolder, NgtTweakNumber, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneCheckbox, TweakpaneColor, TweakpaneFolder, TweakpaneNumber, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
@@ -13,47 +13,47 @@ import { SceneGraph } from './scene-graph';
 			</app-soba-wrapper>
 		</ngt-canvas>
 
-		<ngt-tweak-pane title="MeshTransmissionMaterial" [container]="host">
-			<ngt-tweak-number [(value)]="blur" label="blur" [params]="{ min: 0, max: 1, step: 0.1 }" />
-			<ngt-tweak-folder title="material">
-				<ngt-tweak-color [(value)]="background" label="background" />
-				<ngt-tweak-checkbox [(value)]="backside" label="backside" />
-				<ngt-tweak-number [(value)]="samples" label="samples" [params]="{ min: 1, max: 100, step: 1 }" />
-				<ngt-tweak-number [(value)]="resolution" label="resolution" [params]="{ min: 1, max: 1000, step: 1 }" />
-				<ngt-tweak-number
+		<tweakpane-pane title="MeshTransmissionMaterial" [container]="host">
+			<tweakpane-number [(value)]="blur" label="blur" [params]="{ min: 0, max: 1, step: 0.1 }" />
+			<tweakpane-folder title="material">
+				<tweakpane-color [(value)]="background" label="background" />
+				<tweakpane-checkbox [(value)]="backside" label="backside" />
+				<tweakpane-number [(value)]="samples" label="samples" [params]="{ min: 1, max: 100, step: 1 }" />
+				<tweakpane-number [(value)]="resolution" label="resolution" [params]="{ min: 1, max: 1000, step: 1 }" />
+				<tweakpane-number
 					[(value)]="transmission"
 					label="transmission"
 					[params]="{ min: 0, max: 10, step: 0.1 }"
 				/>
-				<ngt-tweak-number [(value)]="roughness" label="roughness" [params]="{ min: 0, max: 1, step: 0.1 }" />
-				<ngt-tweak-number [(value)]="thickness" label="thickness" [params]="{ min: 0, max: 10, step: 0.1 }" />
-				<ngt-tweak-number [(value)]="ior" label="ior" [params]="{ min: 0, max: 10, step: 0.1 }" />
-				<ngt-tweak-number
+				<tweakpane-number [(value)]="roughness" label="roughness" [params]="{ min: 0, max: 1, step: 0.1 }" />
+				<tweakpane-number [(value)]="thickness" label="thickness" [params]="{ min: 0, max: 10, step: 0.1 }" />
+				<tweakpane-number [(value)]="ior" label="ior" [params]="{ min: 0, max: 10, step: 0.1 }" />
+				<tweakpane-number
 					[(value)]="chromaticAberration"
 					label="chromaticAberration"
 					[params]="{ min: 0, max: 10, step: 0.1 }"
 				/>
-				<ngt-tweak-number [(value)]="anisotropy" label="anisotropy" [params]="{ min: 0, max: 10, step: 0.1 }" />
-				<ngt-tweak-number [(value)]="distortion" label="distortion" [params]="{ min: 0, max: 10, step: 0.1 }" />
-				<ngt-tweak-number
+				<tweakpane-number [(value)]="anisotropy" label="anisotropy" [params]="{ min: 0, max: 10, step: 0.1 }" />
+				<tweakpane-number [(value)]="distortion" label="distortion" [params]="{ min: 0, max: 10, step: 0.1 }" />
+				<tweakpane-number
 					[(value)]="distortionScale"
 					label="distortionScale"
 					[params]="{ min: 0, max: 10, step: 0.1 }"
 				/>
-				<ngt-tweak-number
+				<tweakpane-number
 					[(value)]="temporalDistortion"
 					label="temporalDistortion"
 					[params]="{ min: 0, max: 10, step: 0.1 }"
 				/>
-				<ngt-tweak-number [(value)]="clearcoat" label="clearcoat" [params]="{ min: 0, max: 10, step: 0.1 }" />
-				<ngt-tweak-number
+				<tweakpane-number [(value)]="clearcoat" label="clearcoat" [params]="{ min: 0, max: 10, step: 0.1 }" />
+				<tweakpane-number
 					[(value)]="attenuationDistance"
 					label="attenuationDistance"
 					[params]="{ min: 0, max: 10, step: 0.1 }"
 				/>
-				<ngt-tweak-color [(value)]="attenuationColor" label="attenuationColor" />
-			</ngt-tweak-folder>
-		</ngt-tweak-pane>
+				<tweakpane-color [(value)]="attenuationColor" label="attenuationColor" />
+			</tweakpane-folder>
+		</tweakpane-pane>
 	`,
 	host: { class: 'mesh-transmission-material-demo relative block h-full' },
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,11 +61,11 @@ import { SceneGraph } from './scene-graph';
 		NgtCanvas,
 		SceneGraph,
 		SobaWrapper,
-		NgtTweakPane,
-		NgtTweakNumber,
-		NgtTweakFolder,
-		NgtTweakCheckbox,
-		NgtTweakColor,
+		TweakpanePane,
+		TweakpaneNumber,
+		TweakpaneFolder,
+		TweakpaneCheckbox,
+		TweakpaneColor,
 	],
 })
 export default class MeshTransmissionMaterial {

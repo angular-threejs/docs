@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { extend, injectBeforeRender, NgtArgs, type NgtThreeElements } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtTweakCheckbox, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneCheckbox, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvasContent } from 'angular-three/dom';
 import * as THREE from 'three';
 
@@ -40,11 +40,11 @@ import * as THREE from 'three';
 
 		<ngts-orbit-controls />
 
-		<ngt-tweak-pane title="Stop Propagation" [container]="canvasContent.host">
-			<ngt-tweak-checkbox [(value)]="stopPropagation" label="Enabled" />
-		</ngt-tweak-pane>
+		<tweakpane-pane title="Stop Propagation" [container]="canvasContent.host">
+			<tweakpane-checkbox [(value)]="stopPropagation" label="Enabled" />
+		</tweakpane-pane>
 	`,
-	imports: [NgtsOrbitControls, NgtArgs, NgtTweakPane, NgtTweakCheckbox],
+	imports: [NgtsOrbitControls, NgtArgs, TweakpanePane, TweakpaneCheckbox],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

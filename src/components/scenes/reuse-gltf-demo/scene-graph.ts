@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject, sig
 import { extend } from 'angular-three';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
 import { NgtsAccumulativeShadows, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
-import { NgtTweakColor, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneColor, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvasContent } from 'angular-three/dom';
 import * as THREE from 'three';
 import { Shoe } from './shoe';
@@ -27,10 +27,10 @@ import { Shoe } from './shoe';
 		<ngts-camera-controls [options]="{ maxPolarAngle: Math.PI / 2 }" />
 		<ngts-environment [options]="{ preset: 'city' }" />
 
-		<ngt-tweak-pane title="Reuse GLTF" [container]="canvasContent.host">
-			<ngt-tweak-color [(value)]="leftShoeColor" label="Left-shoe" />
-			<ngt-tweak-color [(value)]="rightShoeColor" label="Right-shoe" />
-		</ngt-tweak-pane>
+		<tweakpane-pane title="Reuse GLTF" [container]="canvasContent.host">
+			<tweakpane-color [(value)]="leftShoeColor" label="Left-shoe" />
+			<tweakpane-color [(value)]="rightShoeColor" label="Right-shoe" />
+		</tweakpane-pane>
 	`,
 	imports: [
 		Shoe,
@@ -38,8 +38,8 @@ import { Shoe } from './shoe';
 		NgtsRandomizedLights,
 		NgtsCameraControls,
 		NgtsEnvironment,
-		NgtTweakPane,
-		NgtTweakColor,
+		TweakpanePane,
+		TweakpaneColor,
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,

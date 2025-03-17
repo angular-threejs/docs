@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, signal } from '@angular/core';
 import { SobaWrapper } from '@soba/wrapper.ts';
-import { NgtTweakNumber, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneNumber, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
@@ -13,13 +13,13 @@ import { SceneGraph } from './scene-graph';
 			</app-soba-wrapper>
 		</ngt-canvas>
 
-		<ngt-tweak-pane title="Text" [container]="host">
-			<ngt-tweak-number [(value)]="count" label="word count param" [params]="{ min: 1, max: 10, step: 1 }" />
-			<ngt-tweak-number [(value)]="radius" label="sphere radius" [params]="{ min: 10, max: 100, step: 1 }" />
-		</ngt-tweak-pane>
+		<tweakpane-pane title="Text" [container]="host">
+			<tweakpane-number [(value)]="count" label="word count param" [params]="{ min: 1, max: 10, step: 1 }" />
+			<tweakpane-number [(value)]="radius" label="sphere radius" [params]="{ min: 10, max: 100, step: 1 }" />
+		</tweakpane-pane>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, SobaWrapper, SceneGraph, NgtTweakPane, NgtTweakNumber],
+	imports: [NgtCanvas, SobaWrapper, SceneGraph, TweakpanePane, TweakpaneNumber],
 	host: { class: 'text-demo relative block h-full' },
 })
 export default class Text {

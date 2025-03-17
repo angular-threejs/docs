@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, signal } from '@angular/core';
 import { SobaWrapper } from '@soba/wrapper.ts';
-import { NgtTweakCheckbox, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneCheckbox, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
@@ -13,16 +13,16 @@ import { SceneGraph } from './scene-graph';
 			</app-soba-wrapper>
 		</ngt-canvas>
 
-		<ngt-tweak-pane title="Billboard" [container]="host">
-			<ngt-tweak-checkbox [(value)]="follow" label="Follow" />
-			<ngt-tweak-checkbox [(value)]="lockX" label="Lock X" />
-			<ngt-tweak-checkbox [(value)]="lockY" label="Lock Y" />
-			<ngt-tweak-checkbox [(value)]="lockZ" label="Lock Z" />
-		</ngt-tweak-pane>
+		<tweakpane-pane title="Billboard" [container]="host">
+			<tweakpane-checkbox [(value)]="follow" label="Follow" />
+			<tweakpane-checkbox [(value)]="lockX" label="Lock X" />
+			<tweakpane-checkbox [(value)]="lockY" label="Lock Y" />
+			<tweakpane-checkbox [(value)]="lockZ" label="Lock Z" />
+		</tweakpane-pane>
 	`,
 	host: { class: 'billboard-demo relative block h-full' },
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, SobaWrapper, SceneGraph, NgtTweakPane, NgtTweakCheckbox],
+	imports: [NgtCanvas, SobaWrapper, SceneGraph, TweakpanePane, TweakpaneCheckbox],
 })
 export default class Billboard {
 	static clientProviders = [provideNgtRenderer()];

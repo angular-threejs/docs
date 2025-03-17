@@ -13,12 +13,12 @@ import { NgtsCameraControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import {
-	NgtTweakButton,
-	NgtTweakCheckbox,
-	NgtTweakFolder,
-	NgtTweakNumber,
-	NgtTweakPane,
-	NgtTweakPoint,
+	TweakpaneButton,
+	TweakpaneCheckbox,
+	TweakpaneFolder,
+	TweakpaneNumber,
+	TweakpanePane,
+	TweakpanePoint,
 } from 'angular-three-tweakpane';
 import * as THREE from 'three';
 
@@ -116,61 +116,61 @@ export class Shadows {}
 		@let mesh = suzi.meshRef()?.nativeElement;
 		@let camera = store.camera();
 
-		<ngt-tweak-pane title="Camera Controls" [container]="host()">
-			<ngt-tweak-folder title="rotate theta">
-				<ngt-tweak-button title="+45º" (click)="controls.rotate(45 * DEG2RAD, 0, true)" />
-				<ngt-tweak-button title="-90º" (click)="controls.rotate(-90 * DEG2RAD, 0, true)" />
-				<ngt-tweak-button title="+360º" (click)="controls.rotate(360 * DEG2RAD, 0, true)" />
-			</ngt-tweak-folder>
-			<ngt-tweak-folder title="rotate phi">
-				<ngt-tweak-button title="+20º" (click)="controls.rotate(0, 20 * DEG2RAD, true)" />
-				<ngt-tweak-button title="-40º" (click)="controls.rotate(0, -40 * DEG2RAD, true)" />
-			</ngt-tweak-folder>
-			<ngt-tweak-folder title="truck">
-				<ngt-tweak-button title="(1,0)" (click)="controls.truck(1, 0, true)" />
-				<ngt-tweak-button title="(0,1)" (click)="controls.truck(0, 1, true)" />
-				<ngt-tweak-button title="(-1,-1)" (click)="controls.truck(-1, -1, true)" />
-			</ngt-tweak-folder>
-			<ngt-tweak-folder title="dolly">
-				<ngt-tweak-button title="1" (click)="controls.dolly(1, true)" />
-				<ngt-tweak-button title="-1" (click)="controls.dolly(-1, true)" />
-			</ngt-tweak-folder>
-			<ngt-tweak-folder title="zoom">
-				<ngt-tweak-button title="/2" (click)="controls.zoom(camera.zoom / 2, true)" />
-				<ngt-tweak-button title="/-2" (click)="controls.zoom(-camera.zoom / 2, true)" />
-			</ngt-tweak-folder>
-			<ngt-tweak-number [(value)]="minDistance" label="minDistance" />
-			<ngt-tweak-folder title="moveTo">
-				<ngt-tweak-point [(value)]="moveToVec" label="vec" />
+		<tweakpane-pane title="Camera Controls" [container]="host()">
+			<tweakpane-folder title="rotate theta">
+				<tweakpane-button title="+45º" (click)="controls.rotate(45 * DEG2RAD, 0, true)" />
+				<tweakpane-button title="-90º" (click)="controls.rotate(-90 * DEG2RAD, 0, true)" />
+				<tweakpane-button title="+360º" (click)="controls.rotate(360 * DEG2RAD, 0, true)" />
+			</tweakpane-folder>
+			<tweakpane-folder title="rotate phi">
+				<tweakpane-button title="+20º" (click)="controls.rotate(0, 20 * DEG2RAD, true)" />
+				<tweakpane-button title="-40º" (click)="controls.rotate(0, -40 * DEG2RAD, true)" />
+			</tweakpane-folder>
+			<tweakpane-folder title="truck">
+				<tweakpane-button title="(1,0)" (click)="controls.truck(1, 0, true)" />
+				<tweakpane-button title="(0,1)" (click)="controls.truck(0, 1, true)" />
+				<tweakpane-button title="(-1,-1)" (click)="controls.truck(-1, -1, true)" />
+			</tweakpane-folder>
+			<tweakpane-folder title="dolly">
+				<tweakpane-button title="1" (click)="controls.dolly(1, true)" />
+				<tweakpane-button title="-1" (click)="controls.dolly(-1, true)" />
+			</tweakpane-folder>
+			<tweakpane-folder title="zoom">
+				<tweakpane-button title="/2" (click)="controls.zoom(camera.zoom / 2, true)" />
+				<tweakpane-button title="/-2" (click)="controls.zoom(-camera.zoom / 2, true)" />
+			</tweakpane-folder>
+			<tweakpane-number [(value)]="minDistance" label="minDistance" />
+			<tweakpane-folder title="moveTo">
+				<tweakpane-point [(value)]="moveToVec" label="vec" />
 				@let moveTo = moveToVec();
-				<ngt-tweak-button
+				<tweakpane-button
 					title="moveTo(…vec)"
 					(click)="controls.moveTo(moveTo[0], moveTo[1], moveTo[2], true)"
 				/>
-			</ngt-tweak-folder>
-			<ngt-tweak-button title="fitToBox(mesh)" (click)="controls.fitToBox(mesh, true)" />
-			<ngt-tweak-folder title="setPosition">
-				<ngt-tweak-point [(value)]="setPositionVec" label="vec" />
+			</tweakpane-folder>
+			<tweakpane-button title="fitToBox(mesh)" (click)="controls.fitToBox(mesh, true)" />
+			<tweakpane-folder title="setPosition">
+				<tweakpane-point [(value)]="setPositionVec" label="vec" />
 				@let setPosition = setPositionVec();
-				<ngt-tweak-button
+				<tweakpane-button
 					title="setPosition(…vec)"
 					(click)="controls.setPosition(setPosition[0], setPosition[1], setPosition[2], true)"
 				/>
-			</ngt-tweak-folder>
-			<ngt-tweak-folder title="setTarget">
-				<ngt-tweak-point [(value)]="setTargetVec" label="vec" />
+			</tweakpane-folder>
+			<tweakpane-folder title="setTarget">
+				<tweakpane-point [(value)]="setTargetVec" label="vec" />
 				@let setTarget = setTargetVec();
-				<ngt-tweak-button
+				<tweakpane-button
 					title="setTarget(…vec)"
 					(click)="controls.setTarget(setTarget[0], setTarget[1], setTarget[2], true)"
 				/>
-			</ngt-tweak-folder>
-			<ngt-tweak-folder title="setLookAt">
-				<ngt-tweak-point [(value)]="setLookAtVec.position" label="position" />
-				<ngt-tweak-point [(value)]="setLookAtVec.target" label="target" />
+			</tweakpane-folder>
+			<tweakpane-folder title="setLookAt">
+				<tweakpane-point [(value)]="setLookAtVec.position" label="position" />
+				<tweakpane-point [(value)]="setLookAtVec.target" label="target" />
 				@let setLookAtPosition = setLookAtVec.position();
 				@let setLookAtTarget = setLookAtVec.target();
-				<ngt-tweak-button
+				<tweakpane-button
 					title="setLookAt(…position, …target)"
 					(click)="
 						controls.setLookAt(
@@ -184,20 +184,20 @@ export class Shadows {}
 						)
 					"
 				/>
-			</ngt-tweak-folder>
-			<ngt-tweak-folder title="lerpLookAt">
-				<ngt-tweak-point [(value)]="lerpLookAt.posA" label="posA" />
-				<ngt-tweak-point [(value)]="lerpLookAt.targetA" label="targetA" />
-				<ngt-tweak-point [(value)]="lerpLookAt.posB" label="posB" />
-				<ngt-tweak-point [(value)]="lerpLookAt.targetB" label="targetB" />
-				<ngt-tweak-number [(value)]="lerpLookAt.t" label="t" [params]="{ min: 0, max: 1 }" />
+			</tweakpane-folder>
+			<tweakpane-folder title="lerpLookAt">
+				<tweakpane-point [(value)]="lerpLookAt.posA" label="posA" />
+				<tweakpane-point [(value)]="lerpLookAt.targetA" label="targetA" />
+				<tweakpane-point [(value)]="lerpLookAt.posB" label="posB" />
+				<tweakpane-point [(value)]="lerpLookAt.targetB" label="targetB" />
+				<tweakpane-number [(value)]="lerpLookAt.t" label="t" [params]="{ min: 0, max: 1 }" />
 
 				@let posA = lerpLookAt.posA();
 				@let targetA = lerpLookAt.targetA();
 				@let posB = lerpLookAt.posB();
 				@let targetB = lerpLookAt.targetB();
 				@let t = lerpLookAt.t();
-				<ngt-tweak-button
+				<tweakpane-button
 					title="lerpLookAt(…posA,…targetA,…posB,…targetB,t)"
 					(click)="
 						controls.lerpLookAt(
@@ -218,13 +218,13 @@ export class Shadows {}
 						)
 					"
 				/>
-			</ngt-tweak-folder>
-			<ngt-tweak-button title="saveState()" (click)="controls.saveState()" />
-			<ngt-tweak-button title="reset()" (click)="controls.reset(true)" />
-			<ngt-tweak-checkbox [(value)]="verticalDragToForward" label="verticalDragToForward" />
-			<ngt-tweak-checkbox [(value)]="dollyToCursor" label="dollyToCursor" />
-			<ngt-tweak-checkbox [(value)]="infinityDolly" label="infinityDolly" />
-		</ngt-tweak-pane>
+			</tweakpane-folder>
+			<tweakpane-button title="saveState()" (click)="controls.saveState()" />
+			<tweakpane-button title="reset()" (click)="controls.reset(true)" />
+			<tweakpane-checkbox [(value)]="verticalDragToForward" label="verticalDragToForward" />
+			<tweakpane-checkbox [(value)]="dollyToCursor" label="dollyToCursor" />
+			<tweakpane-checkbox [(value)]="infinityDolly" label="infinityDolly" />
+		</tweakpane-pane>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -235,14 +235,14 @@ export class Shadows {}
 		Shadows,
 		NgtsCameraControls,
 		NgtsEnvironment,
-		NgtTweakPane,
-		NgtTweakNumber,
-		NgtTweakCheckbox,
-		NgtTweakFolder,
-		NgtTweakButton,
-		NgtTweakPoint,
-		// NgtTweakNumber,
-		// NgtTweakCheckbox,
+		TweakpanePane,
+		TweakpaneNumber,
+		TweakpaneCheckbox,
+		TweakpaneFolder,
+		TweakpaneButton,
+		TweakpanePoint,
+		// TweakpaneNumber,
+		// TweakpaneCheckbox,
 	],
 })
 export class SceneGraph {

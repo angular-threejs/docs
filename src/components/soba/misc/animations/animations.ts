@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, signal } from '@angular/core';
 import { SobaWrapper } from '@soba/wrapper.ts';
-import { NgtTweakList, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneList, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
@@ -13,11 +13,11 @@ import { SceneGraph } from './scene-graph';
 			</app-soba-wrapper>
 		</ngt-canvas>
 
-		<ngt-tweak-pane title="Animations" [container]="host">
-			<ngt-tweak-list [(value)]="animation" label="animation" [options]="['Dance', 'Idle', 'Strut']" />
-		</ngt-tweak-pane>
+		<tweakpane-pane title="Animations" [container]="host">
+			<tweakpane-list [(value)]="animation" label="animation" [options]="['Dance', 'Idle', 'Strut']" />
+		</tweakpane-pane>
 	`,
-	imports: [NgtCanvas, SobaWrapper, SceneGraph, NgtTweakList, NgtTweakPane],
+	imports: [NgtCanvas, SobaWrapper, SceneGraph, TweakpaneList, TweakpanePane],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'animations-demo relative block h-full' },
 })
