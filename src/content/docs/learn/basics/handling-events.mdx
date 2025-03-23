@@ -80,7 +80,7 @@ THREE.js objects that implement their own raycast method (meshes, lines, etc.) c
 
 :::note
 
-Additionally, there are two special events `(updated)` and `(attached)` that Angular Three has for all elements. [Events reference page](/reference/core/renderer) also mentions these two events.
+Additionally, there are special events `(created)`, `(updated)`, and `(attached)` that Angular Three has for all elements. [Events reference page](/reference/core/renderer) also mentions these events.
 
 :::
 
@@ -342,7 +342,7 @@ By default, raycasting only occurs during user interactions. To force a raycast 
 ```angular-ts
 export class MyCmp {
     constructor() {
-        injectBeforeRender(({ events }) => {
+        beforeRender(({ events }) => {
             // Trigger a raycast with the last known pointer position
             events.update?.();
         })

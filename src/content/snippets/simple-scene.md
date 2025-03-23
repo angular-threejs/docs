@@ -1,5 +1,5 @@
 ```angular-ts
-import { extend, injectBeforeRender } from 'angular-three';
+import { extend, beforeRender } from 'angular-three';
 import { Mesh, BoxGeometry, MeshNormalMaterial } from 'three';
 
 @Component({
@@ -24,7 +24,7 @@ export class SceneGraph {
     constructor() {
         extend({ Mesh, BoxGeometry, MeshNormalMaterial });
 
-        injectBeforeRender(() => {
+        beforeRender(() => {
             const mesh = this.meshRef().nativeElement;
             mesh.rotation.x += 0.01;
             mesh.rotation.y += 0.01;

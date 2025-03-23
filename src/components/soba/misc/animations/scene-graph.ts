@@ -8,9 +8,9 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectAnimations, type NgtsAnimationClips } from 'angular-three-soba/misc';
-import { injectMatcapTexture } from 'angular-three-soba/staging';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { animations, type NgtsAnimationClips } from 'angular-three-soba/misc';
+import { matcapTextureResource } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import type { GLTF } from 'three-stdlib';
 
@@ -31,18 +31,18 @@ type BotGLTF = GLTF & {
 @Component({
 	selector: 'app-scene-graph',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group #group [dispose]="null">
 				<ngt-group [rotation]="[Math.PI / 2, 0, 0]" [scale]="0.01">
 					<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
 					<ngt-skinned-mesh [geometry]="gltf.nodes.YB_Body.geometry" [skeleton]="gltf.nodes.YB_Body.skeleton">
-						<ngt-mesh-matcap-material [matcap]="matcapBody.texture()" />
+						<ngt-mesh-matcap-material [matcap]="matcapBody.resource.value()" />
 					</ngt-skinned-mesh>
 					<ngt-skinned-mesh
 						[geometry]="gltf.nodes.YB_Joints.geometry"
 						[skeleton]="gltf.nodes.YB_Joints.skeleton"
 					>
-						<ngt-mesh-matcap-material [matcap]="matcapJoints.texture()" />
+						<ngt-mesh-matcap-material [matcap]="matcapJoints.resource.value()" />
 					</ngt-skinned-mesh>
 				</ngt-group>
 			</ngt-group>
@@ -58,21 +58,21 @@ export class SceneGraph {
 	private boneRef = viewChild<ElementRef<THREE.Bone>>('bone');
 	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
-	protected gltf = injectGLTF<BotGLTF>(() => botGLB);
-	protected matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7', {
-		onLoad: (textures) => {
-			textures[0].colorSpace = THREE.SRGBColorSpace;
+	protected gltf = gltfResource<BotGLTF>(() => botGLB);
+	protected matcapBody = matcapTextureResource(() => '293534_B2BFC5_738289_8A9AA7', {
+		onLoad: (texture) => {
+			texture.colorSpace = THREE.SRGBColorSpace;
 		},
 	});
-	protected matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47', {
-		onLoad: (textures) => {
-			textures[0].colorSpace = THREE.SRGBColorSpace;
+	protected matcapJoints = matcapTextureResource(() => '3A2412_A78B5F_705434_836C47', {
+		onLoad: (texture) => {
+			texture.colorSpace = THREE.SRGBColorSpace;
 		},
 	});
 	protected readonly Math = Math;
 
 	private animationHost = computed(() => (this.boneRef() ? this.groupRef() : null));
-	private animations = injectAnimations(this.gltf, this.animationHost);
+	private animations = animations(this.gltf.value, this.animationHost);
 
 	constructor() {
 		effect((onCleanup) => {

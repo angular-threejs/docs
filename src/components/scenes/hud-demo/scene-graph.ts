@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, NgtArgs, NgtPortal, NgtPortalAutoRender } from 'angular-three';
+import { beforeRender, extend, injectStore, NgtArgs, NgtPortal, NgtPortalAutoRender } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrthographicCamera, NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -84,7 +84,7 @@ export class FaceMaterial {
 			[position]="position()"
 			[scale]="scale()"
 			(click)="clicked.set(!clicked())"
-			(pointermove)="$event.stopPropagation(); hovered.set($event.face.materialIndex)"
+			(pointermove)="$event.stopPropagation(); hovered.set($event.face?.materialIndex)"
 			(pointerout)="hovered.set(-1)"
 		>
 			<ngt-box-geometry />
@@ -156,7 +156,7 @@ export class ViewCube {
 
 	constructor() {
 		const matrix = new THREE.Matrix4();
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const box = this.box()?.mesh().nativeElement;
 			if (box) {
 				matrix.copy(this.store.snapshot.camera.matrix).invert();

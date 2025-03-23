@@ -148,11 +148,11 @@ export function ngtSidebar() {
 								slug: 'reference/core/raw-value',
 							},
 							{
-								label: 'injectBeforeRender',
+								label: 'beforeRender',
 								slug: 'reference/core/before-render',
 							},
 							{
-								label: 'injectLoader',
+								label: 'loaderResource',
 								slug: 'reference/core/loader',
 							},
 							{
@@ -322,7 +322,7 @@ export function ngtSidebar() {
 								slug: 'reference/soba/loaders/introduction',
 							},
 							{
-								label: 'injectGLTF',
+								label: 'gltfResource',
 								slug: 'reference/soba/loaders/gltf',
 							},
 						],
@@ -348,7 +348,7 @@ export function ngtSidebar() {
 								slug: 'reference/soba/misc/introduction',
 							},
 							{
-								label: 'injectAnimations',
+								label: 'animations',
 								slug: 'reference/soba/misc/animations',
 							},
 						],

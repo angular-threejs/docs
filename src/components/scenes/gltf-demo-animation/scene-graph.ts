@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect } from '@angular/core';
-import { injectLoader, NgtArgs } from 'angular-three';
+import { loaderResource, NgtArgs } from 'angular-three';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectAnimations, type NgtsAnimationClips } from 'angular-three-soba/misc';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { animations, type NgtsAnimationClips } from 'angular-three-soba/misc';
 import { NgtsCenter, NgtsEnvironment } from 'angular-three-soba/staging';
 import type { GLTF } from 'three-stdlib';
 
@@ -24,11 +24,11 @@ import littlestTokyo from '../gltf-demo/LittlestTokyo-transformed.glb' with { lo
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {
-	protected gltf = injectGLTF<GLTF & { animations: NgtsAnimationClips<'Take 001'>[] }>(() => littlestTokyo);
-	private animations = injectAnimations(this.gltf, this.gltf.scene);
+	protected gltf = gltfResource<GLTF & { animations: NgtsAnimationClips<'Take 001'>[] }>(() => littlestTokyo);
+	private animations = animations(this.gltf.value, this.gltf.scene);
 
 	constructor() {
-		injectLoader.clear(littlestTokyo);
+		loaderResource.clear(littlestTokyo);
 
 		effect((onCleanup) => {
 			if (!this.animations.isReady) return;

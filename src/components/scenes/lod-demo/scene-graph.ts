@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { extend, NgtArgs, type NgtEuler, type NgtVector3 } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsBakeShadows } from 'angular-three-soba/misc';
 import { NgtsDetailed } from 'angular-three-soba/performances';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
@@ -28,7 +28,7 @@ interface BustGLTF extends GLTF {
 	selector: 'app-bust',
 	template: `
 		<ngts-detailed [distances]="[0, 15, 25, 35, 100]" [options]="{ position: position(), rotation: rotation() }">
-			@for (level of gltfs() || []; track $index) {
+			@for (level of gltfs.value() || []; track $index) {
 				<ngt-mesh
 					castShadow
 					receiveShadow
@@ -48,7 +48,7 @@ export class LODBust {
 	position = input<NgtVector3>([0, 0, 0]);
 	rotation = input<NgtEuler>([0, 0, 0]);
 
-	protected gltfs = injectGLTF<BustGLTF[]>(() => [bust1GLB, bust2GLB, bust3GLB, bust4GLB, bust5GLB]);
+	protected gltfs = gltfResource<BustGLTF[]>(() => [bust1GLB, bust2GLB, bust3GLB, bust4GLB, bust5GLB]);
 }
 
 @Component({

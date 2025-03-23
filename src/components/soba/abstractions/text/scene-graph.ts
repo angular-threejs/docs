@@ -11,7 +11,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { generateWord } from '@soba/random-words.ts';
-import { injectBeforeRender, NgtArgs, type NgtVector3 } from 'angular-three';
+import { beforeRender, NgtArgs, type NgtVector3 } from 'angular-three';
 import { NgtsBillboard, NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsTrackballControls } from 'angular-three-soba/controls';
 import * as THREE from 'three';
@@ -54,7 +54,7 @@ export class Word {
 		});
 
 		const color = new THREE.Color();
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const textObject = this.textRef().troikaMesh;
 			textObject.material.color.lerp(color.set(this.hovered() ? 'mediumpurple' : 'white'), 0.1);
 		});

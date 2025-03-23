@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { extend, injectLoader, NgtArgs } from 'angular-three';
+import { extend, loaderResource, NgtArgs } from 'angular-three';
 import { NgtpEffectComposer, NgtpLUT } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectTexture } from 'angular-three-soba/loaders';
+import { textureResource } from 'angular-three-soba/loaders';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { LUTCubeLoader } from 'postprocessing';
 import * as THREE from 'three';
@@ -14,7 +14,7 @@ import terrazoUrl from './terrazo.png' with { loader: 'file' };
 	selector: 'app-grading',
 	template: `
 		<ngtp-effect-composer>
-			@if (result(); as lut) {
+			@if (result.value(); as lut) {
 				<ngtp-lut [options]="{ lut, tetrahedralInterpolation: true }" />
 			}
 		</ngtp-effect-composer>
@@ -23,7 +23,7 @@ import terrazoUrl from './terrazo.png' with { loader: 'file' };
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Grading {
-	protected result = injectLoader(
+	protected result = loaderResource(
 		() => LUTCubeLoader,
 		() => cubicleCube,
 	);
@@ -39,7 +39,7 @@ export class Grading {
 				[clearcoatRoughness]="0"
 				[roughness]="0"
 				[metalness]="0.5"
-				[map]="texture()"
+				[map]="texture.value()"
 			/>
 		</ngt-mesh>
 	`,
@@ -48,7 +48,7 @@ export class Grading {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Sphere {
-	protected texture = injectTexture(() => terrazoUrl.src);
+	protected texture = textureResource(() => terrazoUrl.src);
 }
 
 @Component({

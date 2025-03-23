@@ -1,13 +1,13 @@
 ---
-title: injectBeforeRender
-description: angular-three injectBeforeRender API
+title: beforeRender
+description: angular-three beforeRender API
 ---
 
-`injectBeforeRender` is a [Custom Inject Function](https://nartc.me/blog/inject-function-the-right-way/) that allows you to execute logic before each frame render. This is useful for animations, updates, or any computations that need to happen on every frame.
+`beforeRender` is a [Custom Inject Function](https://nartc.me/blog/inject-function-the-right-way/) that allows you to execute logic before each frame render. This is useful for animations, updates, or any computations that need to happen on every frame.
 
 ## Usage
 
-`injectBeforeRender` requires a before render callback. This callback is invoked on every frame with `NgtRenderState`
+`beforeRender` requires a before render callback. This callback is invoked on every frame with `NgtRenderState`
 
 ```angular-ts
 export interface NgtRenderState extends NgtState {
@@ -21,7 +21,7 @@ Check out [`Store section`](./store) for details on `NgtState`.
 ```angular-ts
 export class MyCmp {
     constructor() {
-        injectBeforeRender(({ camera, delta }) => {
+        beforeRender(({ camera, delta }) => {
             camera.position.x = Math.sin(Date.now() / 1000) * delta;
         });
     }
@@ -30,7 +30,7 @@ export class MyCmp {
 
 ### Optional `injector`
 
-Since `injectBeforeRender` is a CIF, it has to be invoked in an [**Injection Context**](https://angular.dev/guide/di/dependency-injection-context). In order to invoke `injectBeforeRender` outside of an **Injection Context**, you can provide an `Injector` to the `injector` property of the 2nd argument to `injectBeforeRender`
+Since `beforeRender` is a CIF, it has to be invoked in an [**Injection Context**](https://angular.dev/guide/di/dependency-injection-context). In order to invoke `beforeRender` outside of an **Injection Context**, you can provide an `Injector` to the `injector` property of the 2nd argument to `beforeRender`
 
 ```angular-ts
 export class MyCmp {
@@ -38,7 +38,7 @@ export class MyCmp {
         const injector = inject(Injector);
         afterNextRender(() => {
             // outside of Injection Context, provide Injector ✅
-            injectBeforeRender(() => {}, { injector })
+            beforeRender(() => {}, { injector })
         })
     }
 }
@@ -50,9 +50,9 @@ The `priority` parameter determines the order of execution when multiple before 
 
 ```angular-ts
 // executes first
-injectBeforeRender(cb1, { priority: 1 });
+beforeRender(cb1, { priority: 1 });
 // executes second
-injectBeforeRender(cb2, { priority: 2 });
+beforeRender(cb2, { priority: 2 });
 ```
 
 `priority` can also be dynamic using a `Signal<number>`
@@ -62,7 +62,7 @@ export class MyCmp {
     priority = input(0);
 
     constructor() {
-        injectBeforeRender(
+        beforeRender(
             ({ camera, delta }) => {
                 camera.position.x = Math.sin(Date.now() / 1000) * delta;
             },
@@ -76,7 +76,7 @@ export class MyCmp {
 
 ## How it works
 
-`injectBeforeRender` subscribes to the internal render loop of Angular Three.
+`beforeRender` subscribes to the internal render loop of Angular Three.
 
 When using a static `priority` number, it returns an unsubscribe function, but you typically don't need to use it as it's automatically handled by Angular's [`DestroyRef`](https://angular.dev/api/core/DestroyRef)
 

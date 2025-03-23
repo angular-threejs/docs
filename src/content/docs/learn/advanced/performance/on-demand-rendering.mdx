@@ -69,7 +69,7 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
     ```angular-ts
     import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
     import { NgtArgs } from "angular-three";
-    import { injectTexture } from "angular-three-soba/loaders";
+    import { textureResource } from "angular-three-soba/loaders";
 
     import terrazoUrl from "./terrazo.png" with { loader: "file" };
 
@@ -78,7 +78,7 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
         template: `
             <ngt-mesh>
                 <ngt-sphere-geometry *args="[1, 64, 64]" />
-                <ngt-mesh-physical-material [clearcoat]="1" [clearcoatRoughness]="0" [roughness]="0" [metalness]="0.5" [map]="texture()" />
+                <ngt-mesh-physical-material [clearcoat]="1" [clearcoatRoughness]="0" [roughness]="0" [metalness]="0.5" [map]="texture.value()" />
             </ngt-mesh>
         `,
         imports: [NgtArgs],
@@ -86,7 +86,7 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     export class Sphere {
-        protected texture = injectTexture(() => terrazoUrl.src);
+        protected texture = textureResource(() => terrazoUrl.src);
     }
     ```
     </TabItem>
@@ -95,7 +95,7 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
     import { ChangeDetectionStrategy, Component } from "@angular/core";
     import { NgtpEffectComposer, NgtpLUT } from "angular-three-postprocessing";
     import { LUTCubeLoader } from "postprocessing";
-    import { injectLoader } from "angular-three";
+    import { loaderResource } from "angular-three";
 
     import cubicleCube from "./cubicle-99.CUBE" with { loader: "file" };
 
@@ -103,7 +103,7 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
         selector: "app-grading",
         template: `
             <ngtp-effect-composer>
-                @if (result(); as lut) {
+                @if (result.value(); as lut) {
                     <ngtp-lut [options]="{ lut, tetrahedralInterpolation: true }" />
                 }
             </ngtp-effect-composer>
@@ -112,7 +112,7 @@ Angular Three allows you to opt-in to on-demand rendering, which triggers render
         changeDetection: ChangeDetectionStrategy.OnPush,
     })
     export class Grading {
-        protected result = injectLoader(
+        protected result = loaderResource(
             () => LUTCubeLoader,
             () => cubicleCube,
         );

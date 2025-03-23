@@ -1,9 +1,9 @@
 ```angular-ts
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input } from '@angular/core';
 import { NgtArgs } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectAnimations, type NgtsAnimationClips } from 'angular-three-soba/misc';
-import { injectMatcapTexture } from 'angular-three-soba/staging';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { animations, type NgtsAnimationClips } from 'angular-three-soba/misc';
+import { matcapTextureResource } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { SkeletonUtils, type GLTF } from 'three-stdlib';
 
@@ -34,22 +34,22 @@ export class Bot {
 	rotationY = input(0);
 	bodyTexture = input.required<1 | 2>();
 
-	private gltf = injectGLTF<BotGLTF>(() => botGLB);
-	private matcapBody = injectMatcapTexture(() => bodies[this.bodyTexture()], {
-		onLoad: (textures) => {
-			textures[0].colorSpace = THREE.SRGBColorSpace;
+	private gltf = gltfResource<BotGLTF>(() => botGLB);
+	private matcapBody = matcapTextureResource(() => bodies[this.bodyTexture()], {
+		onLoad: (texture) => {
+			texture.colorSpace = THREE.SRGBColorSpace;
 		},
 	});
-	private matcapJoints = injectMatcapTexture(() => '394641_B1A67E_75BEBE_7D7256', {
-		onLoad: (textures) => {
-			textures[0].colorSpace = THREE.SRGBColorSpace;
+	private matcapJoints = matcapTextureResource(() => '394641_B1A67E_75BEBE_7D7256', {
+		onLoad: (texture) => {
+			texture.colorSpace = THREE.SRGBColorSpace;
 		},
 	});
 
 	protected scene = computed(() => {
-		const gltf = this.gltf();
+		const gltf = this.gltf.value();
 		if (!gltf) return null;
-		const [matcapBody, matcapJoints] = [this.matcapBody.texture(), this.matcapJoints.texture()];
+		const [matcapBody, matcapJoints] = [this.matcapBody.resource.value(), this.matcapJoints.resource.value()];
 		if (!matcapBody || !matcapJoints) return null;
 
 		const scene = SkeletonUtils.clone(gltf.scene);
@@ -64,7 +64,7 @@ export class Bot {
 		return scene;
 	});
 
-	private animations = injectAnimations(this.gltf, this.scene);
+	private animations = animations(this.gltf.value, this.scene);
 
 	constructor() {
 		effect(() => {

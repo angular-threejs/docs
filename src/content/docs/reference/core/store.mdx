@@ -104,13 +104,13 @@ export class MyCmp {
 
 ## Accessing snapshot state
 
-In situations like inside of [`injectBeforeRender`](./before-render) body where whether tracking/reading a Signal does not matter, you can access the snapshot state instead via `store.snapshot`
+In situations like inside of [`beforeRender`](./before-render) body where whether tracking/reading a Signal does not matter, you can access the snapshot state instead via `store.snapshot`
 
 ```angular-ts
 export class MyCmp {
     constructor() {
         const store = injectStore();
-        injectBeforeRender(() => {
+        beforeRender(() => {
             // because beforeRender body runs on every frame, it does not matter whether we read signal value or not
 
             store.snapshot.camera; // NgtCamera

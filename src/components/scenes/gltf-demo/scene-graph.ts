@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { injectLoader, NgtArgs } from 'angular-three';
+import { loaderResource, NgtArgs } from 'angular-three';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsCenter, NgtsEnvironment } from 'angular-three-soba/staging';
 
 import littlestTokyo from './LittlestTokyo-transformed.glb' with { loader: 'file' };
@@ -22,9 +22,9 @@ import littlestTokyo from './LittlestTokyo-transformed.glb' with { loader: 'file
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {
-	protected gltf = injectGLTF(() => littlestTokyo);
+	protected gltf = gltfResource(() => littlestTokyo);
 
 	constructor() {
-		injectLoader.clear(littlestTokyo);
+		loaderResource.clear(littlestTokyo);
 	}
 }

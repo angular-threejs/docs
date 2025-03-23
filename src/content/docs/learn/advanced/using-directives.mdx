@@ -44,7 +44,7 @@ This only applies to the browser platform.
 
 :::
 
-You might have already seen this directive in action on the home page. Let's build it here together. The key is [`injectObjectEvents`](/reference/core/object-events) function from `angular-three`.
+You might have already seen this directive in action on the home page. Let's build it here together. The key is [`objectEvents`](/reference/core/object-events) function from `angular-three`.
 
 ```angular-ts {"1. Constraint the directive to ngt-mesh": 4-5} {"2. Inject from DI": 9-11} {"3. Cursor logic": 15-23}
 // cursor.ts
@@ -62,7 +62,7 @@ export class Cursor {
 
         if (nativeElement.isMesh) {
 
-            injectObjectEvents(() => nativeElement, {
+            objectEvents(() => nativeElement, {
                 pointerover: () => {
                     document.body.style.cursor = "pointer";
                 },
@@ -114,7 +114,7 @@ export class SceneGraph {
     constructor() {
         extend(THREE);
 
-        injectBeforeRender(({ delta }) => {
+        beforeRender(({ delta }) => {
             const mesh = this.meshRef().nativeElement;
             mesh.rotation.x += delta;
             mesh.rotation.y += delta;

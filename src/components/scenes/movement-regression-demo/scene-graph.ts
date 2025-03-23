@@ -8,10 +8,10 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, NgtArgs, type NgtVector3 } from 'angular-three';
+import { beforeRender, extend, injectStore, NgtArgs, type NgtVector3 } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
 import { NgtsText } from 'angular-three-soba/abstractions';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsAdaptiveDpr } from 'angular-three-soba/performances';
 import * as THREE from 'three';
 import { FlakesTexture, RectAreaLightUniformsLib } from 'three-stdlib';
@@ -38,7 +38,7 @@ export class LerpedMouse {
 	constructor() {
 		const previous = new THREE.Vector2();
 
-		injectBeforeRender(({ pointer, performance }) => {
+		beforeRender(({ pointer, performance }) => {
 			previous.copy(this.lerped);
 			this.lerped.lerp(pointer, 0.1);
 
@@ -52,8 +52,8 @@ export class LerpedMouse {
 	selector: 'app-ybot',
 	template: `
 		<ngt-group #group [position]="position()" [dispose]="null">
-			@if (gltf(); as gltf) {
-				<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.Alpha_Surface.geometry">
+			@if (gltf.value(); as gltf) {
+				<ngt-mesh castShadow receiveShadow [geometry]="gltf.meshes.Alpha_Surface.geometry">
 					<ngt-mesh-standard-material
 						[metalness]="0.4"
 						[roughness]="0.2"
@@ -64,7 +64,7 @@ export class LerpedMouse {
 						<ngt-vector2 *args="[35, 35]" attach="normalMap.repeat" />
 					</ngt-mesh-standard-material>
 				</ngt-mesh>
-				<ngt-mesh castShadow [geometry]="gltf.nodes.Alpha_Joints.geometry">
+				<ngt-mesh castShadow [geometry]="gltf.meshes.Alpha_Joints.geometry">
 					<ngt-mesh-standard-material
 						[metalness]="1"
 						[roughness]="0.1"
@@ -83,7 +83,7 @@ export class YBot {
 
 	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
-	protected gltf = injectGLTF(() => botGLB);
+	protected gltf = gltfResource(() => botGLB);
 	protected texture = new THREE.CanvasTexture(
 		new FlakesTexture() as HTMLCanvasElement,
 		THREE.UVMapping,
@@ -94,7 +94,7 @@ export class YBot {
 	constructor() {
 		const lerpedMouse = inject(LerpedMouse);
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			this.groupRef().nativeElement.rotation.y = (lerpedMouse.lerped.x * Math.PI) / 10;
 			this.groupRef().nativeElement.rotation.x = (lerpedMouse.lerped.y * Math.PI) / 200;
 		});
@@ -141,7 +141,7 @@ export class Lights {
 	constructor() {
 		const lerpedMouse = inject(LerpedMouse);
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			this.groupRef().nativeElement.rotation.x = (lerpedMouse.lerped.x * Math.PI) / 2;
 			this.groupRef().nativeElement.rotation.y = Math.PI * 0.25 - (lerpedMouse.lerped.y * Math.PI) / 2;
 		});

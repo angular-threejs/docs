@@ -73,7 +73,7 @@ export class SceneGraph {
     constructor() {
         extend(THREE);
 
-        injectBeforeRender(() => {
+        beforeRender(() => {
             const obj = this.trailRef().nativeElement;
             obj.position.x = Math.sin(Date.now() / 1000) * 4;
         });

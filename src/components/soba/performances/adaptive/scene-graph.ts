@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsAdaptiveDpr, NgtsAdaptiveEvents } from 'angular-three-soba/performances';
 import * as THREE from 'three';
 import type { GLTF } from 'three-stdlib';
@@ -15,7 +15,7 @@ interface ArcherGLTF extends GLTF {
 @Component({
 	selector: 'app-adaptive-archer',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			@let material = gltf.materials.material_0;
 			@let nodes = gltf.nodes;
 
@@ -35,7 +35,7 @@ interface ArcherGLTF extends GLTF {
 })
 class Archer {
 	protected readonly Math = Math;
-	protected gltf = injectGLTF<ArcherGLTF>(() => archerGLB);
+	protected gltf = gltfResource<ArcherGLTF>(() => archerGLB);
 }
 
 @Component({

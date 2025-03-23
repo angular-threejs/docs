@@ -40,7 +40,7 @@ export class SceneGraph {
     constructor() {
         extend({ Mesh, MeshBasicMaterial, BoxGeometry });
 
-        injectBeforeRender(() => {
+        beforeRender(() => {
             const mesh = this.meshRef().nativeElement;
             mesh.rotation.x += 0.01;
         });

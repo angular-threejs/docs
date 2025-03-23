@@ -7,7 +7,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs, type NgtThreeElements } from 'angular-three';
+import { beforeRender, extend, NgtArgs, type NgtThreeElements } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { TweakpaneCheckbox, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvasContent } from 'angular-three/dom';
@@ -62,7 +62,7 @@ export class SceneGraph {
 	constructor() {
 		extend(THREE);
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			this.groupRef().nativeElement.rotation.y += delta * 0.25;
 		});
 	}

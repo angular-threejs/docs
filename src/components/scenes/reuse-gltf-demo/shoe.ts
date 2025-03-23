@@ -13,7 +13,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { extend, NgtObjectEvents, type NgtThreeElements } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import type * as THREE from 'three';
 import { Group, Mesh } from 'three';
 import type { GLTF } from 'three-stdlib';
@@ -47,7 +47,7 @@ export type ShoeGLTFGLTFResult = GLTF & {
 @Component({
 	selector: 'app-shoe',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group #model [parameters]="options()" [dispose]="null">
 				<ngt-mesh
 					castShadow
@@ -130,7 +130,7 @@ export class Shoe {
 
 	modelRef = viewChild<ElementRef<Group>>('model');
 
-	protected gltf = injectGLTF<ShoeGLTFGLTFResult>(() => ShoeGLTF);
+	protected gltf = gltfResource<ShoeGLTFGLTFResult>(() => ShoeGLTF);
 
 	constructor() {
 		extend({ Group, Mesh });

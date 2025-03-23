@@ -35,7 +35,7 @@ export class ViewCube {
 
     constructor() {
         const matrix = new THREE.Matrix4();
-        injectBeforeRender(() => {
+        beforeRender(() => {
             const box = this.box()?.mesh().nativeElement;
             if (box) {
                 matrix.copy(this.store.snapshot.camera.matrix).invert();

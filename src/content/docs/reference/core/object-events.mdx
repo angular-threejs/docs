@@ -9,7 +9,7 @@ Object Events is an API that allows you to forward [pointer events](/learn/basic
 
 There are 2 ways to use Object Events API.
 
-### `injectObjectEvents`
+### `objectEvents`
 
 This is a more direct way to use the API. It is useful for cases where you control the events you want to forward to the underlying THREE.js object, like in [using directives guide](/learn/advanced/using-directives).
 
@@ -22,7 +22,7 @@ export class Cursor {
         const nativeElement = elementRef.nativeElement;
 
         if (nativeElement.isMesh) {
-            injectObjectEvents(() => nativeElement, {
+            objectEvents(() => nativeElement, {
                 pointerover: () => {
                     document.body.style.cursor = "pointer";
                 },
@@ -39,7 +39,7 @@ Then all `<ngt-mesh cursor>` will have `pointerover` and `pointerout` events for
 
 ### `NgtObjectEvents`
 
-This is intended to be used as a [`hostDirectives`](https://angular.dev/guide/directives/directive-composition-api) on a custom abstraction. This is useful for cases where you don't know which events the abstraction's consumers will use. `NgtObjectEvents` calls `injectObjectEvents` internally.
+This is intended to be used as a [`hostDirectives`](https://angular.dev/guide/directives/directive-composition-api) on a custom abstraction. This is useful for cases where you don't know which events the abstraction's consumers will use. `NgtObjectEvents` calls `objectEvents` internally.
 
 ```angular-ts
 @Component({
@@ -77,7 +77,7 @@ export class MyMesh {
 
 ## How it works
 
-When using `injetObjectEvents`:
+When using `objectEvents`:
 
 - It takes a target function that returns the object to attach events to
 - Event handlers are registered using [`Renderer2`](https://angular.dev/api/core/Renderer2)
@@ -90,7 +90,7 @@ When using `injetObjectEvents`:
 @Component({
     selector: 'app-astronaut',
     template: `
-        @if (gltf(); as gltf) {
+        @if (gltf.value(); as gltf) {
             <ngt-group #model [parameters]="options()">
                 <ngt-mesh
                     receiveShadow

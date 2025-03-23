@@ -100,9 +100,9 @@ With this approach, transmissive materials cannot _see_ other transparent or tra
 
 :::
 
-#### With `injectFBO`
+#### With `fbo`
 
-You can create an FBO with [`injectFBO`](/reference/soba/misc/fbo) and pass the texture to `buffer` option
+You can create an FBO with [`fbo`](/reference/soba/misc/fbo) and pass the texture to `buffer` option
 
 ```angular-ts
 @Component({
@@ -116,10 +116,10 @@ You can create an FBO with [`injectFBO`](/reference/soba/misc/fbo) and pass the 
     `
 })
 export class MyCmp {
-    protected fbo = injectFBO();
+    protected fbo = fbo();
 
     constructor() {
-        injectBeforeRender(({ gl, scene, camera }) => {
+        beforeRender(({ gl, scene, camera }) => {
             gl.setRenderTarget(this.fbo);
             gl.render(scene, camera);
             gl.setRenderTarget(null);

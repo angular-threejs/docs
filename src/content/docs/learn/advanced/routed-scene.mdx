@@ -58,7 +58,7 @@ Once you have the routed scene in place, all you need to do is to configure some
     <TabItem label="red-scene.ts">
     ```angular-ts
     import { Component, viewChild, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
-    import { injectBeforeRender } from 'angular-three';
+    import { beforeRender } from 'angular-three';
 
     @Component({
         template: `
@@ -74,7 +74,7 @@ Once you have the routed scene in place, all you need to do is to configure some
         private cubeRef = viewChild.required<ElementRef<THREE.Mesh>>('cube');
 
         constructor() {
-            injectBeforeRender(({ clock }) => {
+            beforeRender(({ clock }) => {
                 this.cube().nativeElement.rotation.x = clock.elapsedTime;
                 this.cube().nativeElement.rotation.y = clock.elapsedTime;
             });
@@ -85,7 +85,7 @@ Once you have the routed scene in place, all you need to do is to configure some
     <TabItem label="blue-scene.ts">
     ```angular-ts
     import { Component, viewChild, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
-    import { injectBeforeRender } from 'angular-three';
+    import { beforeRender } from 'angular-three';
 
     @Component({
         template: `
@@ -101,7 +101,7 @@ Once you have the routed scene in place, all you need to do is to configure some
         private cubeRef = viewChild.required<ElementRef<THREE.Mesh>>('cube');
 
         constructor() {
-            injectBeforeRender(({ clock }) => {
+            beforeRender(({ clock }) => {
                 this.cube().nativeElement.rotation.x = clock.elapsedTime;
                 this.cube().nativeElement.rotation.y = clock.elapsedTime;
             });

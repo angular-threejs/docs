@@ -121,7 +121,7 @@ The `NgtSelect` directive can be used on:
     <TabItem label="box.ts">
     ```angular-ts
     import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, input, model, viewChild } from '@angular/core';
-    import { injectBeforeRender, NgtSelection, type NgtThreeElements } from 'angular-three';
+    import { beforeRender, NgtSelection, type NgtThreeElements } from 'angular-three';
     import * as THREE from 'three';
 
     @Component({
@@ -149,7 +149,7 @@ The `NgtSelect` directive can be used on:
         private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
         constructor() {
-            injectBeforeRender(() => {
+            beforeRender(() => {
                 this.meshRef().nativeElement.rotation.x += 0.01;
             });
         }

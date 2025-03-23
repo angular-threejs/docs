@@ -7,8 +7,8 @@ import {
 	ElementRef,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { beforeRender, extend, NgtArgs } from 'angular-three';
+import { gltfResource } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
 import { MeshSurfaceSampler, type GLTF } from 'three-stdlib';
 
@@ -41,7 +41,7 @@ const blossomPalette = [0xf20587, 0xf2d479, 0xf2c879, 0xf2b077, 0xf24405];
 			<ngt-mesh-lambert-material color="#967259" />
 		</ngt-mesh>
 
-		@if (flowerGLTF(); as gltf) {
+		@if (flowerGLTF.value(); as gltf) {
 			<ngt-instanced-mesh #stem *args="[gltf.nodes.Stem.geometry, gltf.nodes.Stem.material, 2000]" />
 			<ngt-instanced-mesh #blossom *args="[gltf.nodes.Blossom.geometry, gltf.nodes.Blossom.material, 2000]" />
 		}
@@ -51,7 +51,7 @@ const blossomPalette = [0xf20587, 0xf2d479, 0xf2c879, 0xf2b077, 0xf24405];
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {
-	protected flowerGLTF = injectGLTF<FlowerGLTFResult>(() => FlowerGLB);
+	protected flowerGLTF = gltfResource<FlowerGLTFResult>(() => FlowerGLB);
 
 	private surfaceRef = viewChild.required<ElementRef<THREE.Mesh>>('surface');
 	private stemRef = viewChild<ElementRef<THREE.InstancedMesh>>('stem');
@@ -74,7 +74,7 @@ export class SceneGraph {
 	constructor() {
 		extend(THREE);
 
-		injectBeforeRender(({ clock, scene }) => {
+		beforeRender(({ clock, scene }) => {
 			const [stem, blossom] = [this.stemRef()?.nativeElement, this.blossomRef()?.nativeElement];
 			if (!stem || !blossom) return;
 

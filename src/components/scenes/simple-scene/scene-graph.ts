@@ -6,7 +6,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender } from 'angular-three';
+import { beforeRender, extend } from 'angular-three';
 import { BoxGeometry, Mesh, MeshNormalMaterial } from 'three';
 
 @Component({
@@ -28,7 +28,7 @@ export class SceneGraph {
 	constructor() {
 		extend({ Mesh, MeshNormalMaterial, BoxGeometry });
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const mesh = this.meshRef().nativeElement;
 			mesh.rotation.x += delta;
 			mesh.rotation.y += delta;

@@ -8,14 +8,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import {
-	extend,
-	injectBeforeRender,
-	NgtArgs,
-	NgtSelection,
-	NgtSelectionApi,
-	type NgtThreeElements,
-} from 'angular-three';
+import { beforeRender, extend, NgtArgs, NgtSelection, NgtSelectionApi, type NgtThreeElements } from 'angular-three';
 import { NgtpEffectComposer, NgtpSelectiveBloom } from 'angular-three-postprocessing';
 import * as THREE from 'three';
 
@@ -44,7 +37,7 @@ export class Box {
 	private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			this.meshRef().nativeElement.rotation.x += 0.01;
 		});
 	}

@@ -451,9 +451,9 @@ export class AppComponent {}
 
 ## Animate the Cube
 
-Let's make our cube less boring by adding some motion to it. The best way to do this in Angular Three is to participate in Angular Three's **unified frame loop** via [`injectBeforeRender()`](/reference/core/before-render) function.
+Let's make our cube less boring by adding some motion to it. The best way to do this in Angular Three is to participate in Angular Three's **unified frame loop** via [`beforeRender()`](/reference/core/before-render) function.
 
-First, we'll need to get a reference to the undering `THREE.Mesh` element from `<ngt-mesh>`. We can use [`viewChild`](https://angular.dev/api/core/ViewChild) to do this.
+First, we'll need to get a reference to the underlying `THREE.Mesh` element from `<ngt-mesh>`. We can use [`viewChild`](https://angular.dev/api/core/ViewChild) to do this.
 
 ```diff lang="angular-ts"
 // scene-graph.ts
@@ -484,7 +484,7 @@ export class SceneGraph {
 }
 ```
 
-Next, we'll use `meshRef` in `injectBeforeRender` and update its property **frame by frame** before the canvas is rendered.
+Next, we'll use `meshRef` in `beforeRender` body and update its property **frame by frame** before the canvas is rendered.
 
 ```diff lang="angular-ts"
 // scene-graph.ts
@@ -492,7 +492,7 @@ Next, we'll use `meshRef` in `injectBeforeRender` and update its property **fram
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild, ElementRef } from "@angular/core";
 -import { extend, NgtArgs } from "angular-three";
-+import { extend, NgtArgs, injectBeforeRender } from "angular-three";
++import { extend, NgtArgs, beforeRender } from "angular-three";
 import * as THREE from "three";
 
 extend(THREE);
@@ -512,7 +512,7 @@ export class SceneGraph {
     private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
 +    constructor() {
-+        injectBeforeRender(({ delta }) => {
++        beforeRender(({ delta }) => {
 +            this.meshRef().nativeElement.rotation.y += delta;
 +        });
 +    }
@@ -531,7 +531,7 @@ Using Angular means we can componentize our cube so we can reuse it. This is wha
 // cube.ts
 
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from "@angular/core";
-import { NgtArgs, injectBeforeRender } from "angular-three";
+import { NgtArgs, beforeRender } from "angular-three";
 import * as THREE from "three";
 
 @Component({
@@ -549,7 +549,7 @@ export class Cube {
     private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
     constructor() {
-        injectBeforeRender(({ delta }) => {
+        beforeRender(({ delta }) => {
             this.meshRef().nativeElement.rotation.y += delta;
         });
     }
@@ -563,7 +563,7 @@ Then, we'll use this `Cube` component in our `SceneGraph`
 
 -import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild, ElementRef } from "@angular/core";
 +import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
--import { extend, NgtArgs, injectBeforeRender } from "angular-three";
+-import { extend, NgtArgs, beforeRender } from "angular-three";
 +import { extend } from "angular-three";
 import * as THREE from "three";
 
@@ -588,7 +588,7 @@ export class SceneGraph {
 -    private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 -
 -    constructor() {
--        injectBeforeRender(({ delta }) => {
+-        beforeRender(({ delta }) => {
 -            this.meshRef().nativeElement.rotation.y += delta;
 -        });
 -    }
@@ -620,7 +620,7 @@ import {
     viewChild,
 +    signal
 } from "@angular/core";
-import { NgtArgs, injectBeforeRender } from "angular-three";
+import { NgtArgs, beforeRender } from "angular-three";
 import * as THREE from "three";
 
 @Component({
@@ -650,7 +650,7 @@ export class Cube {
 +    protected clicked = signal(false);
 
     constructor() {
-        injectBeforeRender(({ delta }) => {
+        beforeRender(({ delta }) => {
             this.meshRef().nativeElement.rotation.y += delta;
         });
     }
@@ -676,7 +676,7 @@ import {
     signal,
 +    input
 } from "@angular/core";
-import { NgtArgs, injectBeforeRender } from "angular-three";
+import { NgtArgs, beforeRender } from "angular-three";
 import * as THREE from "three";
 
 @Component({
@@ -706,7 +706,7 @@ export class Cube {
     protected clicked = signal(false);
 
     constructor() {
-        injectBeforeRender(({ delta }) => {
+        beforeRender(({ delta }) => {
             this.meshRef().nativeElement.rotation.y += delta;
         });
     }
@@ -797,7 +797,7 @@ import {
     signal,
     input
 } from "@angular/core";
-import { NgtArgs, injectBeforeRender } from "angular-three";
+import { NgtArgs, beforeRender } from "angular-three";
 import * as THREE from "three";
 
 @Component({
@@ -827,7 +827,7 @@ export class Cube {
     protected clicked = signal(false);
 
     constructor() {
-        injectBeforeRender(({ delta }) => {
+        beforeRender(({ delta }) => {
             this.meshRef().nativeElement.rotation.y += delta;
         });
     }
@@ -928,7 +928,7 @@ import {
     signal,
     input
 } from "@angular/core";
-import { NgtArgs, injectBeforeRender } from "angular-three";
+import { NgtArgs, beforeRender } from "angular-three";
 import * as THREE from "three";
 
 @Component({
@@ -958,7 +958,7 @@ export class Cube {
     protected clicked = signal(false);
 
     constructor() {
-        injectBeforeRender(({ delta }) => {
+        beforeRender(({ delta }) => {
             this.meshRef().nativeElement.rotation.y += delta;
         });
     }

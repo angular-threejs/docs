@@ -61,7 +61,7 @@ export class SceneGraph {
 
     constructor() {
         // ✅ can access Angular Three APIs
-        injectBeforeRender(() => {})
+        beforeRender(() => {})
     }
 }
 ```
@@ -74,6 +74,7 @@ The following template looks like it should work but it does not.
 // app.component.ts
 
 import { Component, viewChild, ElementRef } from "@angular/core";
+import { beforeRender } from "angular-three";
 import { NgtCanvas } from "angular-three/dom";
 import * as THREE from "three";
 
@@ -95,7 +96,7 @@ export class App {
 
     constructor() {
         // ❌ No provider for NGT_STORE
-        injectBeforeRender(() => {
+        beforeRender(() => {
             this.meshRef().nativeElement.rotation.y += 0.01;
         });
     }

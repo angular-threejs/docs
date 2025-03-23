@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { extend, injectBeforeRender } from 'angular-three';
+import { beforeRender, extend } from 'angular-three';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -69,7 +69,7 @@ export class SceneGraph {
 	constructor() {
 		extend(THREE);
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const obj = this.trailRef().nativeElement;
 			obj.position.x = Math.sin(Date.now() / 1000) * 4;
 		});

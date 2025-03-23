@@ -39,19 +39,19 @@ returns:
                 available when isReady is true)
 ---
 
-`injectAnimations` is an abstraction around [`THREE.AnimationMixer`](https://threejs.org/docs/index.html#api/en/animation/AnimationMixer) that provides type-safe animations handling.
+`animations` is an abstraction around [`THREE.AnimationMixer`](https://threejs.org/docs/index.html#api/en/animation/AnimationMixer) that provides type-safe animations handling.
 
 ### Usage
 
 ```angular-ts
-import {  injectAnimations } from 'angular-three-soba/misc';
+import {  animations } from 'angular-three-soba/misc';
 ```
 
 ```angular-ts
 export class MyCmp {
-    protected gltf = injectGLTF(() => 'my/gltf.glb');
-    protected animations = injectAnimations(this.gltf, this.gltf.scene);
-    
+    protected gltf = gltfResource(() => 'my/gltf.glb');
+    protected animations = animations(this.gltf.value, this.gltf.scene);
+
     constructor() {
         effect(() => {
             if (!this.animations.isReady) return;
@@ -67,7 +67,7 @@ export class MyCmp {
 
 #### With GLTF type
 
-Usually, you will want to provide the GLTF type to `injectGLTF` then `injectAnimations` will be able to infer the animations type from `this.gltf`
+Usually, you will want to provide the GLTF type to `gltfResource` then `animations` will be able to infer the animations type from `this.gltf.value`
 
 ```angular-ts
 import { NgtsAnimationClips } from 'angular-three-soba/misc';
@@ -77,22 +77,22 @@ interface MyGLTF extends GLTF {
 }
 
 export class MyCmp {
-    protected gltf = injectGLTF<MyGLTF>(() => 'my/gltf.glb');
-    protected animations = injectAnimations(this.gltf, this.gltf.scene);
-    // this.animaations.actions.Dance is strongly-typed
+    protected gltf = gltfResource<MyGLTF>(() => 'my/gltf.glb');
+    protected animations = animations(this.gltf.value, this.gltf.scene);
+    // this.animations.actions.Dance is strongly-typed
 }
 ```
 
 #### With animations type
 
-If you don't want to or don't have the GLTF type, you can provide the animations type directly to `injectAnimations`
+If you don't want to or don't have the GLTF type, you can provide the animations type directly to `animations`
 
 ```angular-ts
 import { NgtsAnimation } from 'angular-three-soba/misc';
 
 export class MyCmp {
-    protected animations = injectAnimations<NgtsAnimation<'Dance'>>(...);
-    // this.animaations.actions.Dance is strongly-typed
+    protected animations = animations<NgtsAnimation<'Dance'>>(...);
+    // this.animations.actions.Dance is strongly-typed
 }
 ```
 

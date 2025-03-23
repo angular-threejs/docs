@@ -10,7 +10,7 @@ When you have a need to change some deeply nested property of a THREE.js object 
 ```angular-ts
 @Component({
     template: `
-        @if (gltf(); as gltf) {
+        @if (gltf.value(); as gltf) {
             <ngt-mesh [geometry]="gltf.nodes.model.geometry" [material]="gltf.materials.material">
                 <ngt-value rawValue="green" attach="material.color" />
             </ngt-mesh>
@@ -18,7 +18,7 @@ When you have a need to change some deeply nested property of a THREE.js object 
     `
 })
 export class MyCmp {
-    protected gltf = injectGLTF(() => someGLTF);
+    protected gltf = gltfResource(() => someGLTF);
 }
 ```
 

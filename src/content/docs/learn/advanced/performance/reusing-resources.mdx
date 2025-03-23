@@ -77,7 +77,7 @@ import type * as THREE from "three";
 import { Group, Mesh } from "three";
 import { extend, type NgtThreeElements, NgtObjectEvents } from "angular-three";
 import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, input, viewChild, ElementRef, inject, effect } from "@angular/core";
-import { injectGLTF } from "angular-three-soba/loaders";
+import { gltfResource } from "angular-three-soba/loaders";
 import type { GLTF } from "three-stdlib";
 
 // @ts-expect-error - import .glb/.gltf file
@@ -109,7 +109,7 @@ export type ShoeGLTFGLTFResult = GLTF & {
 @Component({
     selector: "app-shoe",
     template: `
-        @if (gltf(); as gltf) {
+        @if (gltf.value(); as gltf) {
             <ngt-group #model [parameters]="options()" [dispose]="null">
                 <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe.geometry" [material]="gltf.materials.laces" />
                 <ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.shoe_1.geometry" >
@@ -144,7 +144,7 @@ export class Shoe {
 
     modelRef = viewChild<ElementRef<Group>>("model");
 
-    protected gltf = injectGLTF<ShoeGLTFGLTFResult>(() => ShoeGLTF);
+    protected gltf = gltfResource<ShoeGLTFGLTFResult>(() => ShoeGLTF);
 
     constructor() {
         extend({ Group, Mesh });

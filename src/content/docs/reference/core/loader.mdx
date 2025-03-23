@@ -1,30 +1,30 @@
 ---
-title: injectLoader
-description: angular-three injectLoader API
+title: loaderResource
+description: angular-three loaderResource API
 ---
 
-`injectLoader` is a utility function that helps manage loading external assets in Angular Three. It returns a `readonly Signal` containing the loaded asset(s) and handles caching automatically.
+`loaderResource` is a utility function that helps manage loading external assets in Angular Three using [Angular Resource API](https://angular.dev/guide/signals/resource). It returns a [`ResourceRef`](https://angular.dev/api/core/ResourceRef) containing the loaded asset(s) and handles caching automatically.
 
 ## Usage
 
-`injectLoader` accepts a loader constructor factory and an inputs function:
+`loaderResource` accepts a loader constructor factory and an inputs function:
 
 ```angular-ts
 export class MyCmp {
     // Single texture
-    texture = injectLoader(
+    texture = loaderResource(
         () => THREE.TextureLoader,
         () => 'path/to/texture.jpg'
     );
 
     // Multiple textures
-    textures = injectLoader(
+    textures = loaderResource(
         () => THREE.TextureLoader,
         () => ['texture1.jpg', 'texture2.jpg']
     );
 
     // Named textures
-    namedTextures = injectLoader(
+    namedTextures = loaderResource(
         () => THREE.TextureLoader,
         () => ({
             albedo: 'albedo.jpg',
@@ -40,7 +40,7 @@ You can customize the loader behavior with `extensions`:
 
 ```angular-ts
 export class MyCmp {
-    gltf = injectLoader(
+    gltf = loaderResource(
         () => THREE.GLTFLoader,
         () => 'model.gltf',
         {
@@ -58,7 +58,7 @@ Monitor loading progress with `onProgress`
 
 ```angular-ts
 export class MyCmp {
-    model = injectLoader(
+    model = loaderResource(
         () => THREE.GLTFLoader,
         () => 'model.gltf',
         {
@@ -76,7 +76,7 @@ Handle loaded assets via `onLoad`
 
 ```angular-ts
 export class MyCmp {
-    model = injectLoader(
+    model = loaderResource(
         () => THREE.GLTFLoader,
         () => 'model.gltf',
         {
@@ -90,28 +90,31 @@ export class MyCmp {
 
 ### Preloading
 
-Preload assets before render cycle via `injectLoader.preload`
+Preload assets before render cycle via `loaderResource.preload`
 
 ```angular-ts
-injectLoader.preload(
-    () => THREE.TextureLoader,
-    () => 'texture.jpg'
-);
+loaderResource.preload(THREE.TextureLoader, 'texture.jpg');
 
 export class MyCmp {
-    texture = injectLoader(
+    texture = loaderResource(
         () => THREE.TextureLoader,
         () => 'texture.jpg'
     );
 }
 ```
 
+:::note
+
+`loaderResource.preload` accepts raw values instead of reactive values.
+
+:::
+
 ## How it works
 
-`injectLoader` provides several key features:
+`loaderResource` provides several key features:
 
 - Caching: Assets are cached using a Map to prevent redundant loading
-- Loader Memoization: Loader instances are memoized using a WeakMap
+- Loader Memoization: Loader instances are memoized using a `WeakMap`
 - Type Safety: Full TypeScript support for different loader types and return values
 - GLTF Enhancement: GLTF models are automatically enhanced with an object graph for easier traversal
 
@@ -123,12 +126,14 @@ The return value depends on the input type:
 
 :::note
 
-The returned `Signal` will be `null` until the asset(s) finish loading. Make sure to handle this case in your templates
+The returned `ResourceRef#value` will be `undefined` until the asset(s) finish loading. Make sure to handle this case in your templates
 
 ```angular-html
-@if (gltf(); as gltf) {
+@if (gltf.value(); as gltf) {
     <ngt-primitive *args="[gltf.scene]" />
 }
 ```
+
+`ResourceRef` also contains other information like: `error()`, `isLoading()`, `status()` etc...
 
 :::

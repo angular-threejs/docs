@@ -37,7 +37,7 @@ Most common use-case for `ngt-primitive` is to render a pre-made 3D model
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsCenter, NgtsEnvironment } from 'angular-three-soba/staging';
 
 import littlestTokyo from './LittlestTokyo-transformed.glb' with { loader: 'file' };
@@ -58,7 +58,7 @@ import littlestTokyo from './LittlestTokyo-transformed.glb' with { loader: 'file
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {
-    protected gltf = injectGLTF(() => littlestTokyo);
+    protected gltf = gltfResource(() => littlestTokyo);
 }
 ```
 

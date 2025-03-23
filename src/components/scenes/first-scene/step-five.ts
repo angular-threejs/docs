@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, extend, NgtArgs } from 'angular-three';
 import * as THREE from 'three';
 
 extend(THREE);
@@ -20,7 +20,7 @@ export class StepFive {
 	private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			this.meshRef().nativeElement.rotation.y += delta;
 		});
 	}

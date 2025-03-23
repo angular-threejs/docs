@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, extend, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
 import * as THREE from 'three';
@@ -51,7 +51,7 @@ export class SceneGraph {
 	constructor() {
 		extend(THREE);
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const cube = this.cube().nativeElement;
 			cube.rotation.y += delta * 0.2;
 		});

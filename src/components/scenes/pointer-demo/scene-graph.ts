@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectObjectEvents } from 'angular-three';
+import { beforeRender, extend, objectEvents } from 'angular-three';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 
@@ -21,7 +21,7 @@ export class Cursor {
 		const nativeElement = elementRef.nativeElement;
 
 		if (nativeElement.isMesh) {
-			injectObjectEvents(() => nativeElement, {
+			objectEvents(() => nativeElement, {
 				pointerover: () => {
 					document.body.style.cursor = 'pointer';
 				},
@@ -67,7 +67,7 @@ export class SceneGraph {
 	constructor() {
 		extend(THREE);
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const mesh = this.meshRef().nativeElement;
 			mesh.rotation.x += delta;
 			mesh.rotation.y += delta;

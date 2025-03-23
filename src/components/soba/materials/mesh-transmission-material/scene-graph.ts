@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial, type NgtsMeshTransmissionMaterialOptions } from 'angular-three-soba/materials';
+import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 
 import gelatinousCubeGLB from '@common-assets/gelatinous_cube.glb' with { loader: 'file' };
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 
 @Component({
 	selector: 'app-gelatinous-cube',
 	template: `
 		<ngt-group [dispose]="null">
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-mesh [geometry]="gltf.meshes['cube1'].geometry" [position]="[-0.56, 0.38, -0.11]">
 					<ngts-mesh-transmission-material [options]="options()" />
 				</ngt-mesh>
@@ -58,7 +58,7 @@ export class GelatinousCube {
 
 	options = input({} as NgtsMeshTransmissionMaterialOptions);
 
-	protected gltf = injectGLTF(() => gelatinousCubeGLB);
+	protected gltf = gltfResource(() => gelatinousCubeGLB);
 }
 
 @Component({

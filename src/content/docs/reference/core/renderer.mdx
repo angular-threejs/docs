@@ -392,6 +392,52 @@ group.add(mesh);
 
 ### Angular Three events
 
+#### `created`
+
+This event is emitted when the element is **created** but before **attached**.
+
+```angular-ts
+@Component({
+    template: `
+        <ngt-mesh
+            [position]="[1, 1, 1]"
+            (created)="onCreated($event)"
+        ></ngt-mesh>
+    `
+})
+export class SceneGraph {
+    onCreated(event: THREE.Mesh) { }
+}
+```
+
+:::note
+
+Technically, this event is emitted when Angular processes the `(created)` event handler on the element, so it is slightly **after** the moment the element is created.
+
+<details>
+    <summary>Check out the compiled output</summary>
+
+```angular-ts {'When the element is created': 3-4} {'When the event is processed': 6-7}
+template: function TestCmp_Template(rf, ctx) {
+    if (rf & 1) {
+
+        ɵɵelementStart(0, 'ngt-mesh', 0);
+
+
+        ɵɵlistener(
+            'created',
+            function MyCmp_Template_ngt_mesh_created_0_listener($event) {
+                return ctx.onCreated($event);
+            },
+        );
+        ɵɵelementEnd();
+    }
+},
+```
+</details>
+
+:::
+
 #### `attached`
 
 This event is emitted when the element is **attached** or **added** to the parent. This is subtly different than the THREE.js `added` event because it also emits when a non-Object3D object (i.e: Material) is attached to the parent.

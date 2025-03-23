@@ -6,7 +6,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs, type NgtVector3 } from 'angular-three';
+import { beforeRender, NgtArgs, type NgtVector3 } from 'angular-three';
 import { NgtsCameraContent, NgtsCubeCamera } from 'angular-three-soba/cameras';
 import * as THREE from 'three';
 
@@ -31,7 +31,7 @@ export class CubeCameraSphere {
 	private mesh = viewChild<ElementRef<THREE.Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const mesh = this.mesh()?.nativeElement;
 			if (!mesh) return;
 			mesh.position.y = Math.sin(this.offset() + clock.elapsedTime) * 5;

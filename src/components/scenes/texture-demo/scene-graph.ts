@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { extend, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectTexture } from 'angular-three-soba/loaders';
+import { textureResource } from 'angular-three-soba/loaders';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 
@@ -21,7 +21,7 @@ The images used in this project are sourced from NASA and ESA and may require at
 		<ngt-mesh>
 			<ngt-sphere-geometry *args="[10, 64, 64]" />
 
-			@let _textures = textures();
+			@let _textures = textures.value();
 			@let map = _textures?.map;
 			@let bumpMap = _textures?.bumpMap;
 			<ngt-mesh-standard-material [map]="map" [bumpMap]="bumpMap" />
@@ -35,7 +35,7 @@ The images used in this project are sourced from NASA and ESA and may require at
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {
-	protected textures = injectTexture(() => ({
+	protected textures = textureResource(() => ({
 		map: 'https://raw.githubusercontent.com/nartc/threejs-earth/refs/heads/main/src/assets/Albedo.jpg',
 		bumpMap: 'https://raw.githubusercontent.com/nartc/threejs-earth/refs/heads/main/src/assets/Bump.jpg',
 	}));

@@ -62,19 +62,19 @@ export class MyCmp {
 
 ## Resource Management in Custom Inject Functions (CIFs)
 
-Custom inject functions in Angular Three handle resource cleanup internally. For example, `injectTexture` manages texture disposal automatically
+Custom inject functions in Angular Three handle resource cleanup internally. For example, `textureResource` manages texture disposal automatically
 
 ```angular-ts
-import { injectTexture } from 'angular-three-soba/loaders';
+import { textureResource } from 'angular-three-soba/loaders';
 
 @Component({
     template: `
-        <ngt-mesh-standard-material [map]="texture()" />
+        <ngt-mesh-standard-material [map]="texture.value()" />
     `
 })
 export class MyCmp {
-    protected texture = injectTexture(() => './path/to/texture');
+    protected texture = textureResource(() => './path/to/texture');
 }
 ```
 
-When `MyCmp` is destroyed, `injectTexture` will dispose the `texture` properly.
+When `MyCmp` is destroyed, `textureResource` will dispose the `texture` properly.

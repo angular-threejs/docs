@@ -10,7 +10,7 @@ import {
 import { injectStore, type NgtEuler } from 'angular-three';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import {
 	TweakpaneButton,
@@ -27,7 +27,7 @@ import suziGLB from '@common-assets/suzanne.glb' with { loader: 'file' };
 @Component({
 	selector: 'app-suzi',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh
 				#mesh
 				[geometry]="gltf.meshes['Suzanne'].geometry"
@@ -45,7 +45,7 @@ import suziGLB from '@common-assets/suzanne.glb' with { loader: 'file' };
 export class Suzi {
 	rotation = input<NgtEuler>([0, 0, 0]);
 
-	protected gltf = injectGLTF(() => suziGLB);
+	protected gltf = gltfResource(() => suziGLB);
 
 	meshRef = viewChild<ElementRef<THREE.Mesh>>('mesh');
 }
@@ -241,8 +241,6 @@ export class Shadows {}
 		TweakpaneFolder,
 		TweakpaneButton,
 		TweakpanePoint,
-		// TweakpaneNumber,
-		// TweakpaneCheckbox,
 	],
 })
 export class SceneGraph {
