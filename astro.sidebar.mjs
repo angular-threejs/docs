@@ -271,6 +271,10 @@ export function ngtSidebar() {
 								slug: 'reference/soba/abstractions/billboard',
 							},
 							{
+								label: 'NgtsGrid',
+								slug: 'reference/soba/abstractions/grid',
+							},
+							{
 								label: 'NgtsText',
 								slug: 'reference/soba/abstractions/text',
 							},

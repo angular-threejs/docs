@@ -1,0 +1,10 @@
+---
+title: NgtsGrid
+description: angular-three-soba/abstractions NgtsGrid API
+---
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Grid, { content, sceneGraphContent } from '@soba/abstractions/grid/grid?includeContent';
+
+<ReferenceWrapper path="soba/abstractions/grid" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+    <Grid client:only />
+</ReferenceWrapper>
