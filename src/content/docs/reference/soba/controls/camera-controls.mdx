@@ -4,8 +4,11 @@ description: angular-three-soba/controls NgtsCameraControls API
 ---
 
 import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
-import CameraControls, { content, sceneGraphContent } from '@soba/controls/camera-controls/camera-controls?includeContent';
+import CameraControls, {
+	content,
+	sceneGraphContent,
+} from '@soba/controls/camera-controls/camera-controls?includeContent';
 
 <ReferenceWrapper path="soba/controls/camera-controls" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
- <CameraControls client:only />
+	<CameraControls client:only />
 </ReferenceWrapper>

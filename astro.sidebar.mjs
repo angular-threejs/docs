@@ -275,6 +275,10 @@ export function ngtSidebar() {
 								slug: 'reference/soba/abstractions/grid',
 							},
 							{
+								label: 'NgtsGradientTexture',
+								slug: 'reference/soba/abstractions/gradient-texture',
+							},
+							{
 								label: 'NgtsText',
 								slug: 'reference/soba/abstractions/text',
 							},
