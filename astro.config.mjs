@@ -137,9 +137,10 @@ export default defineConfig({
 				light: './src/assets/angular-three.svg',
 				dark: './src/assets/angular-three-dark.svg',
 			},
-			social: {
-				github: 'https://github.com/angular-threejs/angular-three',
-			},
+			// social: {
+			// 	github: 'https://github.com/angular-threejs/angular-three',
+			// },
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/angular-threejs/angular-three' }],
 			customCss: ['./src/tailwind.css'],
 		}),
 		tailwind({ applyBaseStyles: false }),
