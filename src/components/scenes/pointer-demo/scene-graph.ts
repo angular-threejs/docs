@@ -1,4 +1,5 @@
 import { DOCUMENT } from '@angular/common';
+import '@angular/compiler';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -59,7 +60,7 @@ export class Cursor {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SceneGraph {
-	private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+	private meshRef = viewChild<ElementRef<THREE.Mesh>>('mesh');
 
 	protected hovered = signal(false);
 	protected scale = signal(2);
@@ -68,7 +69,8 @@ export class SceneGraph {
 		extend(THREE);
 
 		beforeRender(({ delta }) => {
-			const mesh = this.meshRef().nativeElement;
+			const mesh = this.meshRef()?.nativeElement;
+			if (!mesh) return;
 			mesh.rotation.x += delta;
 			mesh.rotation.y += delta;
 		});

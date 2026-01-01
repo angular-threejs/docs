@@ -1,3 +1,4 @@
+import '@angular/compiler';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
