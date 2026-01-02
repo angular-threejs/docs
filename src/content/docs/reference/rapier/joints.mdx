@@ -1,0 +1,352 @@
+---
+title: Joints
+description: angular-three-rapier Joint functions API
+---
+
+Joints connect rigid bodies together, constraining their movement. Angular Three Rapier provides several joint types as injectable functions.
+
+## Usage
+
+Joints are created using functions that take two rigid body references and configuration:
+
+```ts
+import { Component, viewChild } from '@angular/core';
+import { NgtrRigidBody, sphericalJoint } from 'angular-three-rapier';
+
+@Component({
+	template: `
+		<ngt-object3D rigidBody="fixed" #bodyA="rigidBody">
+			<ngt-mesh>
+				<ngt-box-geometry />
+			</ngt-mesh>
+		</ngt-object3D>
+		<ngt-object3D rigidBody #bodyB="rigidBody">
+			<ngt-mesh>
+				<ngt-sphere-geometry />
+			</ngt-mesh>
+		</ngt-object3D>
+	`,
+})
+export class JointExample {
+	bodyA = viewChild.required<NgtrRigidBody>('bodyA');
+	bodyB = viewChild.required<NgtrRigidBody>('bodyB');
+
+	joint = sphericalJoint(
+		() => this.bodyA().rigidBody(),
+		() => this.bodyB().rigidBody(),
+		{
+			data: {
+				body1Anchor: [0, -0.5, 0],
+				body2Anchor: [0, 0.5, 0],
+			},
+		},
+	);
+}
+```
+
+## sphericalJoint
+
+Creates a ball-and-socket joint that allows rotation around all axes but prevents relative translation. Use for ragdoll arms, pendulums, etc.
+
+```ts
+joint = sphericalJoint(
+	() => this.bodyA().rigidBody(),
+	() => this.bodyB().rigidBody(),
+	{
+		data: {
+			body1Anchor: [0, -0.5, 0],
+			body2Anchor: [0, 0.5, 0],
+		},
+	},
+);
+```
+
+### Parameters
+
+| Parameter     | Type        | Description                                      |
+| ------------- | ----------- | ------------------------------------------------ |
+| `body1Anchor` | `[x, y, z]` | Anchor point on first body in local coordinates  |
+| `body2Anchor` | `[x, y, z]` | Anchor point on second body in local coordinates |
+
+## revoluteJoint
+
+Creates a hinge joint that allows rotation around one axis only. Use for doors, wheels, fans, etc.
+
+```ts
+hingeJoint = revoluteJoint(
+	() => this.bodyA().rigidBody(),
+	() => this.bodyB().rigidBody(),
+	{
+		data: {
+			body1Anchor: [0, 0, 0],
+			body2Anchor: [0, 1, 0],
+			axis: [0, 1, 0],
+			limits: [-Math.PI / 2, Math.PI / 2], // Optional
+		},
+	},
+);
+```
+
+### Parameters
+
+| Parameter     | Type         | Description                         |
+| ------------- | ------------ | ----------------------------------- |
+| `body1Anchor` | `[x, y, z]`  | Anchor point on first body          |
+| `body2Anchor` | `[x, y, z]`  | Anchor point on second body         |
+| `axis`        | `[x, y, z]`  | Rotation axis                       |
+| `limits`      | `[min, max]` | Optional rotation limits in radians |
+
+## prismaticJoint
+
+Creates a slider joint that allows translation along one axis only. Use for pistons, sliding doors, etc.
+
+```ts
+sliderJoint = prismaticJoint(
+	() => this.bodyA().rigidBody(),
+	() => this.bodyB().rigidBody(),
+	{
+		data: {
+			body1Anchor: [0, 0, 0],
+			body2Anchor: [2, 0, 0],
+			axis: [1, 0, 0],
+			limits: [-1, 1], // Optional
+		},
+	},
+);
+```
+
+### Parameters
+
+| Parameter     | Type         | Description                 |
+| ------------- | ------------ | --------------------------- |
+| `body1Anchor` | `[x, y, z]`  | Anchor point on first body  |
+| `body2Anchor` | `[x, y, z]`  | Anchor point on second body |
+| `axis`        | `[x, y, z]`  | Translation axis            |
+| `limits`      | `[min, max]` | Optional translation limits |
+
+## fixedJoint
+
+Creates a joint that prevents all relative movement between two bodies. The joint is defined by local frames (isometries) on each body.
+
+```ts
+fixed = fixedJoint(
+	() => this.bodyA().rigidBody(),
+	() => this.bodyB().rigidBody(),
+	{
+		data: {
+			body1Anchor: [0, 0, 0],
+			body1LocalFrame: [0, 0, 0, 1], // Quaternion
+			body2Anchor: [0, 0, 0],
+			body2LocalFrame: [0, 0, 0, 1], // Quaternion
+		},
+	},
+);
+```
+
+### Parameters
+
+| Parameter         | Type           | Description                           |
+| ----------------- | -------------- | ------------------------------------- |
+| `body1Anchor`     | `[x, y, z]`    | Anchor point on first body            |
+| `body1LocalFrame` | `[x, y, z, w]` | Quaternion orientation on first body  |
+| `body2Anchor`     | `[x, y, z]`    | Anchor point on second body           |
+| `body2LocalFrame` | `[x, y, z, w]` | Quaternion orientation on second body |
+
+## ropeJoint
+
+Creates a joint that limits the maximum distance between two anchor points. Bodies can move freely within this distance.
+
+```ts
+rope = ropeJoint(
+	() => this.bodyA().rigidBody(),
+	() => this.bodyB().rigidBody(),
+	{
+		data: {
+			body1Anchor: [0, 0, 0],
+			body2Anchor: [0, 0, 0],
+			length: 5,
+		},
+	},
+);
+```
+
+### Parameters
+
+| Parameter     | Type        | Description                      |
+| ------------- | ----------- | -------------------------------- |
+| `body1Anchor` | `[x, y, z]` | Anchor point on first body       |
+| `body2Anchor` | `[x, y, z]` | Anchor point on second body      |
+| `length`      | `number`    | Maximum distance between anchors |
+
+## springJoint
+
+Creates a spring that applies force proportional to the distance between anchors. The spring tries to maintain its rest length.
+
+```ts
+spring = springJoint(
+	() => this.bodyA().rigidBody(),
+	() => this.bodyB().rigidBody(),
+	{
+		data: {
+			body1Anchor: [0, 0, 0],
+			body2Anchor: [0, 0, 0],
+			restLength: 2,
+			stiffness: 100,
+			damping: 10,
+		},
+	},
+);
+```
+
+### Parameters
+
+| Parameter     | Type        | Description                  |
+| ------------- | ----------- | ---------------------------- |
+| `body1Anchor` | `[x, y, z]` | Anchor point on first body   |
+| `body2Anchor` | `[x, y, z]` | Anchor point on second body  |
+| `restLength`  | `number`    | Natural length of the spring |
+| `stiffness`   | `number`    | Spring stiffness coefficient |
+| `damping`     | `number`    | Damping coefficient          |
+
+## Options
+
+All joint functions accept an options object with:
+
+| Option     | Type          | Description                      |
+| ---------- | ------------- | -------------------------------- |
+| `data`     | `JointParams` | Joint-specific configuration     |
+| `injector` | `Injector`    | Optional injector for DI context |
+
+## Accessing the Joint
+
+Joint functions return a signal containing the created joint:
+
+```ts
+joint = sphericalJoint(...);
+
+applyMotor() {
+  const j = this.joint();
+  if (j) {
+    // Access Rapier joint API
+    j.configureMotorModel(...);
+    j.configureMotorVelocity(...);
+  }
+}
+```
+
+## Complete Example
+
+```ts
+import { Component, viewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtArgs } from 'angular-three';
+import { NgtrPhysics, NgtrRigidBody, sphericalJoint, springJoint } from 'angular-three-rapier';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<!-- Fixed anchor point -->
+				<ngt-object3D rigidBody="fixed" #anchor="rigidBody" [position]="[0, 5, 0]">
+					<ngt-mesh>
+						<ngt-sphere-geometry *args="[0.2]" />
+						<ngt-mesh-standard-material color="red" />
+					</ngt-mesh>
+				</ngt-object3D>
+
+				<!-- Pendulum bob -->
+				<ngt-object3D rigidBody #bob="rigidBody" [position]="[2, 5, 0]">
+					<ngt-mesh>
+						<ngt-sphere-geometry *args="[0.5]" />
+						<ngt-mesh-standard-material color="blue" />
+					</ngt-mesh>
+				</ngt-object3D>
+
+				<!-- Spring-connected box -->
+				<ngt-object3D rigidBody #box="rigidBody" [position]="[-2, 3, 0]">
+					<ngt-mesh>
+						<ngt-box-geometry />
+						<ngt-mesh-standard-material color="green" />
+					</ngt-mesh>
+				</ngt-object3D>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgtrRigidBody, NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class JointsExample {
+	anchor = viewChild.required<NgtrRigidBody>('anchor');
+	bob = viewChild.required<NgtrRigidBody>('bob');
+	box = viewChild.required<NgtrRigidBody>('box');
+
+	// Pendulum joint
+	pendulumJoint = sphericalJoint(
+		() => this.anchor().rigidBody(),
+		() => this.bob().rigidBody(),
+		{
+			data: {
+				body1Anchor: [0, 0, 0],
+				body2Anchor: [0, 0, 0],
+			},
+		},
+	);
+
+	// Spring connection
+	springConnection = springJoint(
+		() => this.anchor().rigidBody(),
+		() => this.box().rigidBody(),
+		{
+			data: {
+				body1Anchor: [0, 0, 0],
+				body2Anchor: [0, 0, 0],
+				restLength: 3,
+				stiffness: 50,
+				damping: 5,
+			},
+		},
+	);
+}
+```
+
+## Chain Example
+
+Create a chain of connected bodies:
+
+```ts
+@Component({...})
+export class ChainExample {
+  links = viewChildren(NgtrRigidBody);
+
+  constructor() {
+    // Create joints between consecutive links
+    effect(() => {
+      const links = this.links();
+      for (let i = 0; i < links.length - 1; i++) {
+        sphericalJoint(
+          () => links[i].rigidBody(),
+          () => links[i + 1].rigidBody(),
+          {
+            data: {
+              body1Anchor: [0, -0.5, 0],
+              body2Anchor: [0, 0.5, 0],
+            },
+          },
+        );
+      }
+    });
+  }
+}
+```
+
+## Deprecated APIs
+
+The following APIs are deprecated and will be removed in v5.0.0:
+
+| Deprecated             | Use Instead      |
+| ---------------------- | ---------------- |
+| `injectFixedJoint`     | `fixedJoint`     |
+| `injectSphericalJoint` | `sphericalJoint` |
+| `injectRevoluteJoint`  | `revoluteJoint`  |
+| `injectPrismaticJoint` | `prismaticJoint` |
+| `injectRopeJoint`      | `ropeJoint`      |
+| `injectSpringJoint`    | `springJoint`    |

@@ -1,0 +1,42 @@
+---
+title: NgtpVignette
+description: Vignette darkening post-processing effect
+---
+
+The vignette effect darkens the edges of the screen, drawing focus to the center of the scene.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpVignette } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-vignette [options]="{ darkness: 0.5, offset: 0.3 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpVignette],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property   | Type      | Default | Description                              |
+| ---------- | --------- | ------- | ---------------------------------------- |
+| `darkness` | `number`  | `0.5`   | Darkness intensity of the vignette       |
+| `offset`   | `number`  | `0.5`   | Offset from center where vignette starts |
+| `eskil`    | `boolean` | `false` | Use Eskil's vignette technique           |
+
+## Example: Cinematic Look
+
+```angular-html
+<ngtp-effect-composer>
+  <ngtp-vignette [options]="{
+    darkness: 0.7,
+    offset: 0.2,
+    eskil: false
+  }" />
+</ngtp-effect-composer>
+```

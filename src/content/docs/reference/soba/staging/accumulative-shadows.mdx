@@ -1,0 +1,18 @@
+---
+title: NgtsAccumulativeShadows
+description: angular-three-soba/staging NgtsAccumulativeShadows API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import AccumulativeShadows, {
+	content,
+	sceneGraphContent,
+} from '@soba/staging/accumulative-shadows/accumulative-shadows?includeContent';
+
+<ReferenceWrapper
+	path="soba/staging/accumulative-shadows"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<AccumulativeShadows client:only />
+</ReferenceWrapper>

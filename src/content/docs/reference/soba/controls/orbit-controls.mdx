@@ -1,0 +1,11 @@
+---
+title: NgtsOrbitControls
+description: angular-three-soba/controls NgtsOrbitControls API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import OrbitControls, { content, sceneGraphContent } from '@soba/controls/orbit-controls/orbit-controls?includeContent';
+
+<ReferenceWrapper path="soba/controls/orbit-controls" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<OrbitControls client:only />
+</ReferenceWrapper>

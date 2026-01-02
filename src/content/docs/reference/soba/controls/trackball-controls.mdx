@@ -1,0 +1,18 @@
+---
+title: NgtsTrackballControls
+description: angular-three-soba/controls NgtsTrackballControls API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import TrackballControls, {
+	content,
+	sceneGraphContent,
+} from '@soba/controls/trackball-controls/trackball-controls?includeContent';
+
+<ReferenceWrapper
+	path="soba/controls/trackball-controls"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<TrackballControls client:only />
+</ReferenceWrapper>

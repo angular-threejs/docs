@@ -2,3 +2,26 @@
 title: Introduction
 description: angular-three-soba/controls introduction
 ---
+
+`angular-three-soba/controls` provides camera control components for manipulating the camera in your scene.
+
+## Peer Dependencies
+
+| Package           | Required By          |
+| ----------------- | -------------------- |
+| `camera-controls` | `NgtsCameraControls` |
+| `maath`           | `NgtsScrollControls` |
+
+```bash
+npm install camera-controls maath
+# yarn add camera-controls maath
+# pnpm add camera-controls maath
+```
+
+## Available Components
+
+- [NgtsCameraControls](./camera-controls) - Advanced camera controls based on the `camera-controls` library
+- [NgtsOrbitControls](./orbit-controls) - Orbit controls for rotating the camera around a target point
+- [NgtsPointerLockControls](./pointer-lock-controls) - First-person style controls by locking the mouse pointer
+- [NgtsScrollControls](./scroll-controls) - Scroll-based interactions within a Three.js canvas
+- [NgtsTrackballControls](./trackball-controls) - Trackball-style camera controls with unrestricted rotation

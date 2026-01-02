@@ -1,0 +1,38 @@
+---
+title: NgtpNoise
+description: Noise post-processing effect
+---
+
+The noise effect adds film grain or static noise to the scene, useful for creating a cinematic or vintage look.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpNoise } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-noise [options]="{ opacity: 0.02 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpNoise],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property      | Type      | Default | Description                          |
+| ------------- | --------- | ------- | ------------------------------------ |
+| `opacity`     | `number`  | `0.02`  | Opacity/intensity of the noise       |
+| `premultiply` | `boolean` | `false` | Premultiply the noise with the scene |
+
+## Example: Film Grain
+
+```angular-html
+<ngtp-effect-composer>
+  <ngtp-noise [options]="{ opacity: 0.05, premultiply: true }" />
+  <ngtp-vignette [options]="{ darkness: 0.5 }" />
+</ngtp-effect-composer>
+```

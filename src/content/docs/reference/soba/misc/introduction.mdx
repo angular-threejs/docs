@@ -2,3 +2,48 @@
 title: Introduction
 description: angular-three-soba/misc introduction
 ---
+
+`angular-three-soba/misc` provides miscellaneous utilities and components for animations, shadows, frame buffer objects (FBOs), HTML overlays, and more.
+
+## Animations
+
+- [animations](./animations) - Create animation API for managing THREE.js animation clips
+
+## Frame Buffer Objects
+
+- [fbo](./fbo) - Create `WebGLRenderTarget` for off-screen rendering
+- [NgtsFBO](./ngts-fbo) - Structural directive for rendering to FBO via `ng-template`
+- [depthBuffer](./depth-buffer) - Create depth buffer texture for effects like soft particles or SSAO
+
+## Shadows
+
+- [NgtsBakeShadows](./bake-shadows) - Bake shadows for improved performance
+
+## Sampling
+
+- [NgtsSampler](./sampler) - Distribute instances across a mesh surface
+- [surfaceSampler](./surface-sampler) - Sample points on a mesh surface
+
+## Geometry & Attributes
+
+- [NgtsComputedAttribute](./computed-attribute) - Compute and attach attributes to geometry declaratively
+- [NgtsDecal](./decal) - Abstraction around THREE.js `DecalGeometry`
+
+## HTML Integration
+
+- [NgtsHTML](./html) - Render HTML content positioned in 3D space
+
+## Visibility & Frustum
+
+- [intersect](./intersect) - Track whether an object is within the camera's view frustum
+- [NgtsIntersect](./ngts-intersect) - Directive for tracking Object3D visibility
+
+## Performance
+
+- [NgtsPreload](./preload) - Pre-compile shaders and textures to reduce runtime jank
+
+## Utilities
+
+- [calculateScaleFactor](./calculate-scale-factor) - Maintain consistent pixel-size at a 3D position
+- [getVersion](./get-version) - Get the current THREE.js version as a number
+- [setUpdateRange](./set-update-range) - Set update range on BufferAttribute for partial GPU uploads

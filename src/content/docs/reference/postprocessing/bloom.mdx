@@ -1,0 +1,56 @@
+---
+title: NgtpBloom
+description: Bloom/glow post-processing effect
+---
+
+The bloom effect creates a glow around bright areas of the scene, simulating how bright lights appear to bleed into surrounding areas.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpBloom } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-bloom [options]="{
+        luminanceThreshold: 0.9,
+        luminanceSmoothing: 0.025,
+        intensity: 0.5
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpBloom],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property             | Type      | Default     | Description                        |
+| -------------------- | --------- | ----------- | ---------------------------------- |
+| `intensity`          | `number`  | `1`         | Bloom intensity                    |
+| `luminanceThreshold` | `number`  | `0.9`       | Luminance threshold for bloom      |
+| `luminanceSmoothing` | `number`  | `0.025`     | Smoothness of luminance threshold  |
+| `mipmapBlur`         | `boolean` | `false`     | Use mipmap blur for better quality |
+| `radius`             | `number`  | `0.85`      | Blur radius                        |
+| `levels`             | `number`  | `undefined` | Number of blur levels              |
+
+## Example: Emissive Materials
+
+Bloom works great with emissive materials:
+
+```angular-html
+<ngt-mesh>
+  <ngt-sphere-geometry />
+  <ngt-mesh-standard-material
+    color="#ff0000"
+    [emissive]="'#ff0000'"
+    [emissiveIntensity]="2"
+  />
+</ngt-mesh>
+
+<ngtp-effect-composer>
+  <ngtp-bloom [options]="{ luminanceThreshold: 0.5, intensity: 1.5 }" />
+</ngtp-effect-composer>
+```

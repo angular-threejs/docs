@@ -1,0 +1,97 @@
+---
+title: depthBuffer
+description: angular-three-soba/misc depthBuffer API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import DepthBuffer, { content, sceneGraphContent } from '@soba/misc/depth-buffer/depth-buffer?includeContent';
+
+<ReferenceWrapper path="soba/misc/depth-buffer" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<DepthBuffer client:only />
+</ReferenceWrapper>
+
+Creates a depth buffer texture that captures scene depth information. Renders the scene to an off-screen FBO with a depth texture attachment, which can be used for effects like soft particles, SSAO, or custom shaders.
+
+## Usage
+
+```ts
+import { depthBuffer } from 'angular-three-soba/misc';
+
+@Component({...})
+class MyComponent {
+	depth = depthBuffer(() => ({
+		size: 256,    // The size of the depth buffer (default: 256)
+		frames: Infinity, // The amount of frames to render (default: Infinity)
+	}));
+
+	constructor() {
+		// Use in a shader
+		effect(() => {
+			material.uniforms['depthTexture'].value = this.depth;
+		});
+	}
+}
+```
+
+## Signature
+
+```ts
+function depthBuffer(
+	params: () => { size?: number; frames?: number } = () => ({}),
+	{ injector }: { injector?: Injector } = {},
+): THREE.DepthTexture;
+```
+
+## Parameters
+
+| Parameter  | Type                                       | Description                              |
+| ---------- | ------------------------------------------ | ---------------------------------------- |
+| `params`   | `() => { size?: number; frames?: number }` | Signal of depth buffer configuration     |
+| `injector` | `Injector` (optional)                      | Custom injector for dependency injection |
+
+### Params Object
+
+| Property | Type     | Default    | Description                    |
+| -------- | -------- | ---------- | ------------------------------ |
+| `size`   | `number` | `256`      | Resolution of the depth buffer |
+| `frames` | `number` | `Infinity` | Number of frames to render     |
+
+## Return Value
+
+Returns a `THREE.DepthTexture` that can be used in shaders or materials.
+
+## Performance Tip
+
+Since depth buffer rendering is expensive, limit the number of frames when objects are static:
+
+```ts
+// Render only once for static scenes
+const depth = depthBuffer(() => ({ frames: 1 }));
+
+// Render every frame for dynamic scenes
+const depth = depthBuffer(() => ({ frames: Infinity }));
+```
+
+## Example: Soft Particles
+
+```ts
+@Component({
+	template: `
+		<ngt-points>
+			<ngt-buffer-geometry />
+			<ngt-shader-material
+				[uniforms]="{ depthTexture: { value: depth }, cameraNear: { value: 0.1 }, cameraFar: { value: 100 } }"
+				[vertexShader]="vertexShader"
+				[fragmentShader]="fragmentShader"
+			/>
+		</ngt-points>
+	`,
+})
+class SoftParticles {
+	depth = depthBuffer(() => ({ size: 512 }));
+}
+```
+
+:::note
+`injectDepthBuffer` is deprecated. Use `depthBuffer` instead.
+:::

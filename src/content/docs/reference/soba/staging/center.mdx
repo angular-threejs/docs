@@ -4,5 +4,8 @@ description: angular-three-soba/staging NgtsCenter API
 ---
 
 import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Center, { content, sceneGraphContent } from '@soba/staging/center/center?includeContent';
 
-<ReferenceWrapper path="soba/staging/center" />
+<ReferenceWrapper path="soba/staging/center" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Center client:only />
+</ReferenceWrapper>

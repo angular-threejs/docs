@@ -1,0 +1,59 @@
+---
+title: NgtpDepthOfField
+description: Depth of field post-processing effect
+---
+
+The depth of field effect simulates camera focus, blurring objects that are not at the focal distance.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpDepthOfField } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-depth-of-field [options]="{
+        focusDistance: 0.01,
+        focalLength: 0.02,
+        bokehScale: 2
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpDepthOfField],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property        | Type      | Default     | Description                              |
+| --------------- | --------- | ----------- | ---------------------------------------- |
+| `focusDistance` | `number`  | `0`         | Distance to focus point (normalized 0-1) |
+| `focalLength`   | `number`  | `0.05`      | Focal length of the camera               |
+| `bokehScale`    | `number`  | `2`         | Scale of the bokeh blur                  |
+| `target`        | `Vector3` | `undefined` | Target position to focus on              |
+
+## Example: Focus on Object
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh #target [position]="[0, 0, -5]">
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-depth-of-field [options]="{
+        target: targetPosition,
+        focalLength: 0.02,
+        bokehScale: 3
+      }" />
+    </ngtp-effect-composer>
+  `,
+})
+export class SceneGraph {
+  targetPosition = new THREE.Vector3(0, 0, -5);
+}
+```

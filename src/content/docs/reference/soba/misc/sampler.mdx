@@ -1,0 +1,150 @@
+---
+title: NgtsSampler / surfaceSampler
+description: angular-three-soba/misc sampler API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Sampler, { content, sceneGraphContent } from '@soba/misc/sampler/sampler?includeContent';
+
+<ReferenceWrapper path="soba/misc/sampler" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Sampler client:only />
+</ReferenceWrapper>
+
+Utilities for distributing instances across a mesh surface using THREE.js `MeshSurfaceSampler`.
+
+## NgtsSampler
+
+A component that distributes instances across a mesh surface. It samples points from a mesh and automatically updates an `InstancedMesh` with the sampled transforms. Both the source mesh and target instances can be provided as inputs or as children.
+
+### Usage with Content Children
+
+```html
+<ngts-sampler [options]="{ weight: 'normal', transform: transformPoint, count: 500 }">
+	<ngt-mesh>
+		<ngt-sphere-geometry *args="[2]" />
+	</ngt-mesh>
+
+	<ngt-instanced-mesh *args="[undefined, undefined, 500]">
+		<ngt-sphere-geometry *args="[0.1]" />
+	</ngt-instanced-mesh>
+</ngts-sampler>
+```
+
+### Usage with References
+
+```ts
+@Component({
+	template: `
+		<ngts-sampler [instances]="instancedRef()" [mesh]="mesh()" [options]="{ count: 500 }" />
+
+		<ngt-instanced-mesh #instanced *args="[undefined, undefined, 500]">
+			<!-- content -->
+		</ngt-instanced-mesh>
+	`,
+})
+class MyComponent {
+	instancedRef = viewChild<ElementRef<InstancedMesh>>('instanced');
+
+	gltf = gltfResource(() => 'my/mesh/url');
+	mesh = computed(() => this.gltf.value()?.scene || null);
+}
+```
+
+### Inputs
+
+| Property    | Description                                                                            | Default |
+| ----------- | -------------------------------------------------------------------------------------- | ------- |
+| `mesh`      | The mesh to sample points from. If not provided, uses the first Mesh child             | `null`  |
+| `instances` | The InstancedMesh to update with sampled transforms. If not provided, uses first child | `null`  |
+| `options`   | Sampler configuration object                                                           | -       |
+
+### Options (NgtsSamplerOptions)
+
+| Property    | Description                                                                                 | Default     |
+| ----------- | ------------------------------------------------------------------------------------------- | ----------- |
+| `weight`    | Name of a vertex attribute for weighted sampling. Higher values = more likely to be sampled | `undefined` |
+| `transform` | Custom transform function applied to each sampled instance                                  | `undefined` |
+| `count`     | Number of samples to distribute across the mesh surface                                     | `16`        |
+
+### Transform Function
+
+The `transform` function receives sample data and should mutate `payload.dummy` to set position, rotation, and scale:
+
+```ts
+const transformPoint = ({ dummy, position, normal }: TransformPayload) => {
+	dummy.position.copy(position);
+	dummy.lookAt(position.clone().add(normal));
+	dummy.scale.setScalar(Math.random() * 0.5 + 0.5);
+};
+```
+
+---
+
+## surfaceSampler
+
+A function that creates a computed signal sampling points on a mesh surface. Returns an `InstancedBufferAttribute` containing transform matrices for each sample, suitable for use with `InstancedMesh` or custom instancing solutions.
+
+### Signature
+
+```ts
+function surfaceSampler(
+	mesh: () => ElementRef<THREE.Mesh> | THREE.Mesh | null | undefined,
+	options?: {
+		count?: () => number;
+		transform?: () => TransformFn | undefined;
+		weight?: () => string | undefined;
+		instancedMesh?: () => ElementRef<THREE.InstancedMesh> | THREE.InstancedMesh | null | undefined;
+	},
+): Signal<THREE.InstancedBufferAttribute>;
+```
+
+### Usage
+
+```ts
+@Component({
+	template: `
+		<ngt-mesh #mesh>
+			<ngt-sphere-geometry />
+		</ngt-mesh>
+		<ngt-instanced-mesh #instances *args="[undefined, undefined, 1000]">
+			<ngt-box-geometry *args="[0.1, 0.1, 0.1]" />
+		</ngt-instanced-mesh>
+	`,
+})
+class MyComponent {
+	meshRef = viewChild<ElementRef<THREE.Mesh>>('mesh');
+	instancesRef = viewChild<ElementRef<THREE.InstancedMesh>>('instances');
+
+	samples = surfaceSampler(() => this.meshRef()?.nativeElement, {
+		count: () => 1000,
+		instancedMesh: () => this.instancesRef()?.nativeElement,
+		transform:
+			() =>
+			({ dummy, position, normal }) => {
+				dummy.position.copy(position);
+				dummy.lookAt(position.clone().add(normal));
+				dummy.scale.setScalar(Math.random() * 0.5 + 0.5);
+			},
+	});
+}
+```
+
+### Parameters
+
+| Parameter | Type                                                  | Description                       |
+| --------- | ----------------------------------------------------- | --------------------------------- |
+| `mesh`    | `() => ElementRef<Mesh> \| Mesh \| null \| undefined` | Signal of the mesh to sample from |
+| `options` | Object (see below)                                    | Configuration options             |
+
+### Options
+
+| Property        | Type                                                       | Description                     |
+| --------------- | ---------------------------------------------------------- | ------------------------------- |
+| `count`         | `() => number`                                             | Signal of sample count          |
+| `transform`     | `() => TransformFn \| undefined`                           | Signal of transform function    |
+| `weight`        | `() => string \| undefined`                                | Signal of vertex attribute name |
+| `instancedMesh` | `() => ElementRef<InstancedMesh> \| InstancedMesh \| null` | Signal of target instanced mesh |
+
+### Return Value
+
+Returns a `Signal<THREE.InstancedBufferAttribute>` containing the transform matrices.

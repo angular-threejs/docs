@@ -1,0 +1,11 @@
+---
+title: NgtsBounds
+description: angular-three-soba/staging NgtsBounds API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Bounds, { content, sceneGraphContent } from '@soba/staging/bounds/bounds?includeContent';
+
+<ReferenceWrapper path="soba/staging/bounds" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Bounds client:only />
+</ReferenceWrapper>

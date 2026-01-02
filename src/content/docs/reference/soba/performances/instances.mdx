@@ -1,0 +1,11 @@
+---
+title: NgtsInstances
+description: angular-three-soba/performances NgtsInstances and NgtsInstance introduction
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Instances, { content, sceneGraphContent } from '@soba/performances/instances/instances?includeContent';
+
+<ReferenceWrapper path="soba/performances/instances" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Instances client:only />
+</ReferenceWrapper>

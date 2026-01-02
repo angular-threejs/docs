@@ -1,0 +1,356 @@
+---
+title: Hooks
+description: angular-three-rapier Physics Hooks and Utilities API
+---
+
+Angular Three Rapier provides several hooks and utilities for advanced physics control.
+
+## beforePhysicsStep
+
+Registers a callback executed before each physics simulation step. Use for applying forces, updating kinematic bodies, or pre-step logic.
+
+```ts
+import { beforePhysicsStep } from 'angular-three-rapier';
+
+@Component({...})
+export class MyComponent {
+  constructor() {
+    beforePhysicsStep((world) => {
+      // Apply custom forces
+      world.bodies.forEach((body) => {
+        if (body.isDynamic()) {
+          body.applyImpulse({ x: 0, y: 0.1, z: 0 }, true);
+        }
+      });
+    });
+  }
+}
+```
+
+### Parameters
+
+| Parameter  | Type                     | Description                      |
+| ---------- | ------------------------ | -------------------------------- |
+| `callback` | `(world: World) => void` | Function called before each step |
+| `injector` | `Injector`               | Optional injector for DI context |
+
+The callback is automatically unregistered when the component is destroyed.
+
+## afterPhysicsStep
+
+Registers a callback executed after each physics simulation step. Use for reading physics state, updating visuals, or post-step logic.
+
+```ts
+import { afterPhysicsStep } from 'angular-three-rapier';
+
+@Component({...})
+export class MyComponent {
+  constructor() {
+    afterPhysicsStep((world) => {
+      // Read physics state
+      world.bodies.forEach((body) => {
+        const position = body.translation();
+        console.log('Body position:', position);
+      });
+    });
+  }
+}
+```
+
+### Parameters
+
+| Parameter  | Type                     | Description                      |
+| ---------- | ------------------------ | -------------------------------- |
+| `callback` | `(world: World) => void` | Function called after each step  |
+| `injector` | `Injector`               | Optional injector for DI context |
+
+## filterContactPair
+
+Registers a callback to filter contact pairs and control solver behavior. Determines if contact computation should happen between two colliders.
+
+```ts
+import { filterContactPair } from 'angular-three-rapier';
+import { SolverFlags } from '@dimforge/rapier3d-compat';
+
+@Component({...})
+export class MyComponent {
+  constructor() {
+    filterContactPair((collider1, collider2, body1, body2) => {
+      // Skip contact between specific objects
+      if (shouldSkipContact(collider1, collider2)) {
+        return SolverFlags.EMPTY; // No collision response
+      }
+
+      // Normal collision processing
+      return SolverFlags.COMPUTE_IMPULSE;
+
+      // Or let other hooks decide
+      return null;
+    });
+  }
+}
+```
+
+### Return Values
+
+| Value                             | Effect                                 |
+| --------------------------------- | -------------------------------------- |
+| `SolverFlags.COMPUTE_IMPULSE` (1) | Process collision normally             |
+| `SolverFlags.EMPTY` (0)           | Skip computing impulses (pass through) |
+| `null`                            | Skip this hook, let next hook decide   |
+
+### Parameters
+
+```ts
+type NgtrFilterContactPairCallback = (
+	collider1: ColliderHandle,
+	collider2: ColliderHandle,
+	body1: RigidBodyHandle,
+	body2: RigidBodyHandle,
+) => SolverFlags | null;
+```
+
+:::note
+This callback only executes if at least one collider has `ActiveHooks.FILTER_CONTACT_PAIRS` in its active hooks.
+:::
+
+## filterIntersectionPair
+
+Registers a callback to filter intersection pairs for sensors. Determines if intersection detection should occur between two colliders.
+
+```ts
+import { filterIntersectionPair } from 'angular-three-rapier';
+
+@Component({...})
+export class MyComponent {
+  constructor() {
+    filterIntersectionPair((collider1, collider2, body1, body2) => {
+      // Block intersection detection for specific pairs
+      if (shouldBlockIntersection(collider1, collider2)) {
+        return false;
+      }
+
+      // Allow intersection detection
+      return true;
+    });
+  }
+}
+```
+
+### Return Values
+
+| Value   | Effect                              |
+| ------- | ----------------------------------- |
+| `true`  | Allow intersection detection        |
+| `false` | Block intersection (no events fire) |
+
+:::note
+This callback only executes if at least one collider has `ActiveHooks.FILTER_INTERSECTION_PAIR` in its active hooks.
+:::
+
+## interactionGroups
+
+Calculates a bitmask for collision/solver group filtering. Use to control which objects can collide with each other.
+
+```ts
+import { interactionGroups } from 'angular-three-rapier';
+
+// Object in group 0, collides with groups 0 and 1
+const groups = interactionGroups([0], [0, 1]);
+
+// Object in groups 0 and 1, collides with everything
+const groupsAll = interactionGroups([0, 1]);
+
+// Object in groups 0 and 1, collides with nothing
+const groupsNone = interactionGroups([0, 1], []);
+```
+
+### Parameters
+
+| Parameter     | Type                 | Description                                 |
+| ------------- | -------------------- | ------------------------------------------- |
+| `memberships` | `number \| number[]` | Groups the object belongs to (0-15)         |
+| `filters`     | `number \| number[]` | Groups to collide with (0-15). Default: all |
+
+### Usage in Components
+
+```ts
+import { interactionGroups } from 'angular-three-rapier';
+
+@Component({
+	template: `
+		<ngt-object3D rigidBody [options]="{ collisionGroups: playerGroups }">...</ngt-object3D>
+	`,
+})
+export class PlayerComponent {
+	// Player in group 0, collides with groups 0, 1, and 2
+	playerGroups = interactionGroups([0], [0, 1, 2]);
+}
+```
+
+## NgtrInteractionGroups Directive
+
+Alternatively, use the directive for declarative collision group setup:
+
+```html
+<!-- Object in group 0, collides with groups 0 and 1 -->
+<ngt-object3D rigidBody [interactionGroups]="[[0], [0, 1]]">...</ngt-object3D>
+
+<!-- Object in groups 0 and 1, collides with everything -->
+<ngt-object3D rigidBody [interactionGroups]="[[0, 1]]">...</ngt-object3D>
+```
+
+## Complete Example
+
+```ts
+import { Component, viewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtArgs } from 'angular-three';
+import {
+	NgtrPhysics,
+	NgtrRigidBody,
+	beforePhysicsStep,
+	afterPhysicsStep,
+	filterContactPair,
+	interactionGroups,
+} from 'angular-three-rapier';
+import { SolverFlags } from '@dimforge/rapier3d-compat';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<!-- Player (group 0) -->
+				<ngt-object3D
+					rigidBody
+					#player="rigidBody"
+					[options]="{ collisionGroups: playerGroups }"
+					[position]="[0, 5, 0]"
+				>
+					<ngt-mesh>
+						<ngt-sphere-geometry />
+						<ngt-mesh-standard-material color="blue" />
+					</ngt-mesh>
+				</ngt-object3D>
+
+				<!-- Enemies (group 1) -->
+				<ngt-object3D rigidBody [options]="{ collisionGroups: enemyGroups }" [position]="[2, 5, 0]">
+					<ngt-mesh>
+						<ngt-box-geometry />
+						<ngt-mesh-standard-material color="red" />
+					</ngt-mesh>
+				</ngt-object3D>
+
+				<!-- Platforms (group 2) -->
+				<ngt-object3D rigidBody="fixed" [options]="{ collisionGroups: platformGroups }" [position]="[0, -1, 0]">
+					<ngt-mesh>
+						<ngt-box-geometry *args="[20, 1, 20]" />
+						<ngt-mesh-standard-material color="gray" />
+					</ngt-mesh>
+				</ngt-object3D>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgtrRigidBody, NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class GameExample {
+	player = viewChild.required<NgtrRigidBody>('player');
+
+	// Player collides with enemies and platforms
+	playerGroups = interactionGroups([0], [1, 2]);
+
+	// Enemies collide with player and platforms
+	enemyGroups = interactionGroups([1], [0, 2]);
+
+	// Platforms collide with everything
+	platformGroups = interactionGroups([2], [0, 1, 2]);
+
+	constructor() {
+		// Apply upward force to player every frame
+		beforePhysicsStep((world) => {
+			const playerBody = this.player()?.rigidBody();
+			if (playerBody && playerBody.isDynamic()) {
+				// Counteract some gravity
+				playerBody.applyImpulse({ x: 0, y: 0.05, z: 0 }, true);
+			}
+		});
+
+		// Log player position after physics step
+		afterPhysicsStep((world) => {
+			const playerBody = this.player()?.rigidBody();
+			if (playerBody) {
+				const pos = playerBody.translation();
+				if (pos.y < -10) {
+					console.log('Player fell off!');
+				}
+			}
+		});
+
+		// Custom contact filtering
+		filterContactPair((c1, c2, b1, b2) => {
+			// Example: Make certain collisions one-way
+			// Return null to use default behavior
+			return null;
+		});
+	}
+}
+```
+
+## Kinematic Body Control
+
+Common pattern using `beforePhysicsStep` for kinematic bodies:
+
+```ts
+@Component({
+	template: `
+		<ngt-object3D rigidBody="kinematicPosition" #platform="rigidBody">
+			<ngt-mesh>
+				<ngt-box-geometry *args="[4, 0.5, 4]" />
+				<ngt-mesh-standard-material />
+			</ngt-mesh>
+		</ngt-object3D>
+	`,
+})
+export class MovingPlatform {
+	platform = viewChild.required<NgtrRigidBody>('platform');
+
+	constructor() {
+		beforePhysicsStep(() => {
+			const body = this.platform()?.rigidBody();
+			if (body) {
+				const time = Date.now() / 1000;
+				body.setNextKinematicTranslation({
+					x: Math.sin(time) * 3,
+					y: 2,
+					z: 0,
+				});
+			}
+		});
+	}
+}
+```
+
+## Physics Queries
+
+Use `afterPhysicsStep` to perform physics queries:
+
+```ts
+@Component({...})
+export class RaycastExample {
+  constructor() {
+    afterPhysicsStep((world) => {
+      // Cast a ray downward
+      const ray = new world.castRay(
+        { x: 0, y: 10, z: 0 }, // origin
+        { x: 0, y: -1, z: 0 }, // direction
+        10, // max distance
+        true, // solid
+      );
+
+      if (ray) {
+        console.log('Hit at distance:', ray.toi);
+      }
+    });
+  }
+}
+```

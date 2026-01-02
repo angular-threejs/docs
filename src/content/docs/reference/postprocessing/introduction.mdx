@@ -1,0 +1,140 @@
+---
+title: Introduction
+description: Post-processing effects for Angular Three
+---
+
+`angular-three-postprocessing` provides a comprehensive set of post-processing effects for your 3D scenes. It wraps the popular [postprocessing](https://github.com/pmndrs/postprocessing) library for use with Angular Three.
+
+## Installation
+
+```bash
+npm install angular-three-postprocessing postprocessing three-stdlib maath
+# yarn add angular-three-postprocessing postprocessing three-stdlib maath
+# pnpm add angular-three-postprocessing postprocessing three-stdlib maath
+```
+
+## Basic Usage
+
+Post-processing effects are applied using the `NgtpEffectComposer` component, which wraps one or more effect components:
+
+```angular-ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtpEffectComposer, NgtpBloom, NgtpVignette } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material color="hotpink" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-bloom [options]="{ luminanceThreshold: 0.9, intensity: 0.5 }" />
+      <ngtp-vignette [options]="{ darkness: 0.5 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpBloom, NgtpVignette],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Effect Composer Options
+
+The `NgtpEffectComposer` accepts the following options:
+
+| Property           | Type              | Default         | Description                                              |
+| ------------------ | ----------------- | --------------- | -------------------------------------------------------- |
+| `enabled`          | `boolean`         | `true`          | Whether the effect composer is enabled                   |
+| `depthBuffer`      | `boolean`         | `undefined`     | Whether to use a depth buffer                            |
+| `stencilBuffer`    | `boolean`         | `undefined`     | Whether to use a stencil buffer                          |
+| `enableNormalPass` | `boolean`         | `undefined`     | Enable normal pass (required for some effects like N8AO) |
+| `autoClear`        | `boolean`         | `true`          | Auto-clear output buffer before rendering                |
+| `resolutionScale`  | `number`          | `undefined`     | Resolution scaling factor                                |
+| `multisampling`    | `number`          | `8`             | MSAA samples (0 to disable)                              |
+| `frameBufferType`  | `TextureDataType` | `HalfFloatType` | Frame buffer data type                                   |
+| `renderPriority`   | `number`          | `1`             | Render priority                                          |
+| `camera`           | `Camera`          | `undefined`     | Custom camera (uses default if not provided)             |
+| `scene`            | `Scene`           | `undefined`     | Custom scene (uses default if not provided)              |
+
+## Available Effects
+
+| Effect                    | Selector                    | Description                           |
+| ------------------------- | --------------------------- | ------------------------------------- |
+| `NgtpAscii`               | `ngtp-ascii`                | ASCII art effect                      |
+| `NgtpBloom`               | `ngtp-bloom`                | Bloom/glow effect                     |
+| `NgtpBrightnessContrast`  | `ngtp-brightness-contrast`  | Brightness and contrast adjustment    |
+| `NgtpChromaticAberration` | `ngtp-chromatic-aberration` | Chromatic aberration effect           |
+| `NgtpColorAverage`        | `ngtp-color-average`        | Color averaging effect                |
+| `NgtpColorDepth`          | `ngtp-color-depth`          | Color depth reduction                 |
+| `NgtpDepth`               | `ngtp-depth`                | Depth visualization                   |
+| `NgtpDepthOfField`        | `ngtp-depth-of-field`       | Depth of field effect                 |
+| `NgtpDotScreen`           | `ngtp-dot-screen`           | Dot screen effect                     |
+| `NgtpFXAA`                | `ngtp-fxaa`                 | Fast approximate anti-aliasing        |
+| `NgtpGlitch`              | `ngtp-glitch`               | Glitch effect                         |
+| `NgtpGodRays`             | `ngtp-god-rays`             | God rays/light shafts                 |
+| `NgtpGrid`                | `ngtp-grid`                 | Grid overlay                          |
+| `NgtpHueSaturation`       | `ngtp-hue-saturation`       | Hue and saturation adjustment         |
+| `NgtpLensFlare`           | `ngtp-lens-flare`           | Lens flare effect                     |
+| `NgtpLUT`                 | `ngtp-lut`                  | LUT color grading                     |
+| `NgtpNoise`               | `ngtp-noise`                | Noise effect                          |
+| `NgtpOutline`             | `ngtp-outline`              | Outline effect                        |
+| `NgtpPixelation`          | `ngtp-pixelation`           | Pixelation effect                     |
+| `NgtpScanline`            | `ngtp-scanline`             | Scanline effect                       |
+| `NgtpSelectiveBloom`      | `ngtp-selective-bloom`      | Selective bloom on specific objects   |
+| `NgtpSepia`               | `ngtp-sepia`                | Sepia tone effect                     |
+| `NgtpShockWave`           | `ngtp-shock-wave`           | Shock wave distortion                 |
+| `NgtpSMAA`                | `ngtp-smaa`                 | Subpixel morphological anti-aliasing  |
+| `NgtpTiltShift`           | `ngtp-tilt-shift`           | Tilt-shift blur                       |
+| `NgtpTiltShift2`          | `ngtp-tilt-shift-2`         | Alternative tilt-shift implementation |
+| `NgtpToneMapping`         | `ngtp-tone-mapping`         | Tone mapping                          |
+| `NgtpVignette`            | `ngtp-vignette`             | Vignette darkening                    |
+| `NgtpWater`               | `ngtp-water`                | Water effect                          |
+
+## N8AO (Ambient Occlusion)
+
+For ambient occlusion, install the additional dependency:
+
+```bash
+npm install n8ao
+```
+
+```angular-ts
+import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
+
+@Component({
+  template: `
+    <ngtp-effect-composer [options]="{ enableNormalPass: true }">
+      <ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: 1 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpN8AO],
+})
+export class SceneGraph {}
+```
+
+## Combining Effects
+
+Effects are applied in the order they appear. You can combine multiple effects:
+
+```angular-html
+<ngtp-effect-composer>
+  <!-- Anti-aliasing first -->
+  <ngtp-smaa />
+
+  <!-- Then visual effects -->
+  <ngtp-bloom [options]="{ intensity: 0.5 }" />
+  <ngtp-chromatic-aberration [options]="{ offset: [0.002, 0.002] }" />
+
+  <!-- Color grading last -->
+  <ngtp-vignette [options]="{ darkness: 0.5 }" />
+  <ngtp-noise [options]="{ opacity: 0.02 }" />
+</ngtp-effect-composer>
+```
+
+## Performance Tips
+
+1. **Disable when not needed**: Set `enabled` to `false` on the effect composer when effects aren't needed
+2. **Reduce multisampling**: Lower `multisampling` value for better performance
+3. **Use resolution scaling**: Set `resolutionScale` below 1 for lower-resolution effects
+4. **Limit effects**: Each effect adds GPU overhead; use only what's necessary

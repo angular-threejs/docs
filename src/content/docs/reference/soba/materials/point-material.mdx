@@ -1,0 +1,14 @@
+---
+title: NgtsPointMaterial
+description: angular-three-soba/materials NgtsPointMaterial API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import PointMaterial, {
+	content,
+	sceneGraphContent,
+} from '@soba/materials/point-material/point-material?includeContent';
+
+<ReferenceWrapper path="soba/materials/point-material" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<PointMaterial client:only />
+</ReferenceWrapper>

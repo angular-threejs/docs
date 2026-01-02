@@ -132,37 +132,7 @@ We'll also need to adjust the `NgtCanvas` dimensions by adjusting the parent's d
 
 :::tip[Did you know?]
 
-In order to render your scene graph properly, Angular Three needs to _wait_ until it finishes setting up the context (i.e: store) before rendering. This is where [`NgtCanvasContent`](/reference/core/dom/canvas) directive comes in. It acts _purely_ as an anchor so `NgtCanvas` can render the content when it is ready.
-
-<details>
-<summary>Angular Structural Directive Syntax</summary>
-
-Angular structural directive has a long syntax and a micro-syntax.
-
-<Tabs>
-
-    <TabItem label="long syntax">
-    ```angular-html
-    <ngt-canvas>
-        <ng-template canvasContent>
-            <app-scene-graph />
-        </ng-template>
-    </ngt-canvas>
-    ```
-    </TabItem>
-    <TabItem label="micro syntax">
-    ```angular-html
-    <ngt-canvas>
-        <app-scene-graph *canvasContent />
-    </ngt-canvas>
-    ```
-    </TabItem>
-
-</Tabs>
-
-Read more at [Angular Structure Directives](https://angular.dev/guide/directives/structural-directives)
-
-</details>
+`NgtCanvasContent` directive acts as an anchor so `NgtCanvas` can render the content when the store is ready. You can use either the micro-syntax (`*canvasContent`) or long syntax (`<ng-template canvasContent>`).
 
 :::
 
@@ -255,7 +225,7 @@ export class SceneGraph {}
 :::
 
 <DemoWrapper>
-	<FirstScene client:only step={1}/>
+	<FirstScene client:only step={1} />
 </DemoWrapper>
 
 :::note[Did you know?]

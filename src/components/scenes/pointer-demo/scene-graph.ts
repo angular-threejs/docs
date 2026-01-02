@@ -1,5 +1,4 @@
 import { DOCUMENT } from '@angular/common';
-import '@angular/compiler';
 import {
 	ChangeDetectionStrategy,
 	Component,

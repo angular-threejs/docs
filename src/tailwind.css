@@ -108,7 +108,8 @@ div.tp-dfwv {
 		margin-top: 0;
 	}
 
-	& div.tp-rotv_m, div.tp-fldv_m {
+	& div.tp-rotv_m,
+	div.tp-fldv_m {
 		margin: auto;
 	}
 }

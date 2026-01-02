@@ -1,4 +1,3 @@
-import '@angular/compiler';
 import { Component } from '@angular/core';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';

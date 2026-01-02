@@ -1,0 +1,11 @@
+---
+title: NgtsGizmoHelper
+description: angular-three-soba/gizmos NgtsGizmoHelper, NgtsGizmoViewcube, NgtsGizmoViewport API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import GizmoHelper, { content, sceneGraphContent } from '@soba/gizmos/gizmo-helper/gizmo-helper?includeContent';
+
+<ReferenceWrapper path="soba/gizmos/gizmo-helper" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<GizmoHelper client:only />
+</ReferenceWrapper>

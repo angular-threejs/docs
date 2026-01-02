@@ -1,0 +1,18 @@
+---
+title: NgtsMeshWobbleMaterial
+description: angular-three-soba/materials NgtsMeshWobbleMaterial API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import MeshWobbleMaterial, {
+	content,
+	sceneGraphContent,
+} from '@soba/materials/mesh-wobble-material/mesh-wobble-material?includeContent';
+
+<ReferenceWrapper
+	path="soba/materials/mesh-wobble-material"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<MeshWobbleMaterial client:only />
+</ReferenceWrapper>

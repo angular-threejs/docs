@@ -1,0 +1,246 @@
+---
+title: Sheet Object
+description: angular-three-theatre TheatreSheetObject, TheatreSheetObjectSync, and TheatreSheetObjectTransform API
+---
+
+Sheet objects are containers for animatable properties within a Theatre.js sheet.
+
+## TheatreSheetObject
+
+The `sheetObject` directive creates a Theatre.js sheet object. Must be applied to an `ng-template` element.
+
+### Usage
+
+```html
+<ng-template sheetObject="cube" [sheetObjectProps]="{ opacity: 1, scale: 1 }" let-values="values">
+	<ngt-mesh [scale]="values().scale">
+		<ngt-box-geometry />
+		<ngt-mesh-standard-material [opacity]="values().opacity" transparent />
+	</ngt-mesh>
+</ng-template>
+```
+
+### Template Context
+
+The directive provides the following context variables:
+
+```html
+<ng-template
+	sheetObject="myObject"
+	[sheetObjectProps]="{ opacity: 1 }"
+	let-values="values"
+	let-sheetObject="sheetObject"
+	let-select="select"
+	let-deselect="deselect"
+>
+	<!-- values() - Signal of current animated values -->
+	<!-- sheetObject() - Signal of Theatre.js sheet object instance -->
+	<!-- select() - Select this object in Studio -->
+	<!-- deselect() - Deselect this object in Studio -->
+</ng-template>
+```
+
+### Options
+
+| Option                | Type                            | Default      | Description                               |
+| --------------------- | ------------------------------- | ------------ | ----------------------------------------- |
+| `sheetObject`         | `string`                        | **required** | Unique key for this sheet object          |
+| `sheetObjectProps`    | `UnknownShorthandCompoundProps` | `{}`         | Initial animatable properties             |
+| `sheetObjectDetach`   | `boolean`                       | `false`      | Remove object when directive is destroyed |
+| `sheetObjectSelected` | `boolean`                       | `false`      | Two-way bindable selection state          |
+
+### Methods
+
+| Method               | Description                                     |
+| -------------------- | ----------------------------------------------- |
+| `select()`           | Select this object in Theatre.js Studio         |
+| `deselect()`         | Deselect this object from Studio                |
+| `addProps(props)`    | Add new properties to the sheet object          |
+| `removeProps(props)` | Remove properties from the sheet object         |
+| `update()`           | Reconfigure the sheet object with current props |
+
+## TheatreSheetObjectSync
+
+The `sync` directive synchronizes Three.js object properties with Theatre.js animations.
+
+### Usage
+
+```html
+<ng-template sheetObject="myMaterial">
+	<ngt-mesh-standard-material [sync]="material" [syncProps]="['opacity', 'roughness', 'metalness']" #material />
+</ng-template>
+```
+
+### With Custom Property Mapping
+
+```html
+<ng-template sheetObject="myLight">
+	<ngt-point-light
+		[sync]="light"
+		[syncProps]="[
+      ['intensity', { label: 'Light Intensity', key: 'lightIntensity' }],
+      ['color', 'lightColor'],
+      'distance'
+    ]"
+		#light
+	/>
+</ng-template>
+```
+
+### Options
+
+| Option      | Type                                               | Default      | Description               |
+| ----------- | -------------------------------------------------- | ------------ | ------------------------- |
+| `sync`      | `TObject \| ElementRef<TObject> \| Signal`         | **required** | Three.js object to sync   |
+| `syncProps` | `Array<string \| [string, string \| PropOptions]>` | `[]`         | Properties to synchronize |
+
+#### PropOptions
+
+| Property      | Type                 | Description                        |
+| ------------- | -------------------- | ---------------------------------- |
+| `label`       | `string`             | Display label in Theatre.js Studio |
+| `key`         | `string`             | Unique key for the property        |
+| `transformer` | `TheatreTransformer` | Custom value transformer           |
+
+### Methods
+
+| Method      | Description                                     |
+| ----------- | ----------------------------------------------- |
+| `capture()` | Capture current values and commit to Theatre.js |
+
+### Pierced Properties
+
+You can sync nested properties using dot notation:
+
+```html
+<ngt-mesh [sync]="mesh" [syncProps]="['position.x', 'position.y', 'rotation.z']" #mesh />
+```
+
+## TheatreSheetObjectTransform
+
+The `theatre-transform` component provides transform controls for position, rotation, and scale animation.
+
+### Usage
+
+```html
+<ng-template sheetObject="myCube">
+	<theatre-transform>
+		<ngt-mesh>
+			<ngt-box-geometry />
+			<ngt-mesh-standard-material />
+		</ngt-mesh>
+	</theatre-transform>
+</ng-template>
+```
+
+### With Custom Key and Label
+
+```html
+<ng-template sheetObject="scene">
+	<theatre-transform key="cubeTransform" label="Cube">
+		<ngt-mesh />
+	</theatre-transform>
+
+	<theatre-transform key="sphereTransform" label="Sphere">
+		<ngt-mesh />
+	</theatre-transform>
+</ng-template>
+```
+
+When selected in Theatre.js Studio, transform gizmos appear for direct manipulation.
+
+### Options
+
+| Option    | Type               | Default     | Description                        |
+| --------- | ------------------ | ----------- | ---------------------------------- |
+| `label`   | `string`           | `undefined` | Display label in Studio            |
+| `key`     | `string`           | `undefined` | Group key for transform properties |
+| `options` | `TransformOptions` | `{}`        | Transform controls configuration   |
+
+#### TransformOptions
+
+| Property          | Type                                 | Description                    |
+| ----------------- | ------------------------------------ | ------------------------------ |
+| `mode`            | `'translate' \| 'rotate' \| 'scale'` | Active transform mode          |
+| `translationSnap` | `number`                             | Snap increment for translation |
+| `rotationSnap`    | `number`                             | Snap increment for rotation    |
+| `scaleSnap`       | `number`                             | Snap increment for scale       |
+| `space`           | `'world' \| 'local'`                 | Coordinate space               |
+
+## Built-in Transformers
+
+Theatre.js uses transformers to convert between Three.js and Theatre.js values:
+
+| Transformer  | Description                  |
+| ------------ | ---------------------------- |
+| `color`      | RGBA color picker            |
+| `degrees`    | Radian to degrees conversion |
+| `euler`      | Euler rotation controls      |
+| `normalized` | 0-1 range slider             |
+| `side`       | Material side property       |
+| `generic`    | Fallback for common types    |
+
+### Custom Transformer
+
+```ts
+import { createTransformer } from 'angular-three-theatre';
+import { types } from '@theatre/core';
+
+export const percentage = createTransformer({
+	transform: (value) => types.number(value * 100, { range: [0, 100] }),
+	apply: (target, property, value) => {
+		target[property] = value / 100;
+	},
+});
+```
+
+Use it with sync:
+
+```html
+<ngt-mesh-standard-material [sync]="material" [syncProps]="[['opacity', { transformer: percentage }]]" #material />
+```
+
+## Complete Example
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TheatreProject, TheatreSheet, TheatreSheetObject, TheatreStudio } from 'angular-three-theatre';
+import { environment } from '../environments/environment';
+
+@Component({
+	template: `
+		<theatre-project name="Demo" [studio]="!environment.production">
+			<ng-container sheet="Scene" [sequence]="{ autoplay: true }">
+				<!-- Custom properties -->
+				<ng-template
+					sheetObject="settings"
+					[sheetObjectProps]="{ intensity: 1, ambient: 0.5 }"
+					let-values="values"
+				>
+					<ngt-ambient-light [intensity]="values().ambient" />
+					<ngt-directional-light [intensity]="values().intensity" />
+				</ng-template>
+
+				<!-- Transform animation -->
+				<ng-template sheetObject="cube">
+					<theatre-transform label="Animated Cube">
+						<ngt-mesh>
+							<ngt-box-geometry />
+							<ngt-mesh-standard-material
+								[sync]="material"
+								[syncProps]="['color', 'roughness', 'metalness']"
+								#material
+							/>
+						</ngt-mesh>
+					</theatre-transform>
+				</ng-template>
+			</ng-container>
+		</theatre-project>
+	`,
+	imports: [TheatreProject, TheatreSheet, TheatreSheetObject, TheatreStudio],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class AnimatedScene {
+	environment = environment;
+}
+```

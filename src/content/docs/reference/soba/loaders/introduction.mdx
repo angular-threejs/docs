@@ -2,3 +2,31 @@
 title: Introduction
 description: angular-three-soba/loaders introduction
 ---
+
+`angular-three-soba/loaders` provides various loaders for files such as GLTF, FBX, textures, and fonts.
+
+## Resource-based APIs (recommended)
+
+These functions use Angular's resource API and are the recommended approach for loading assets:
+
+- [gltfResource](./gltf-resource) - Load GLTF/GLB 3D models with Draco and Meshopt support
+- [textureResource](./texture-resource) - Load texture images
+- [fontResource](./font-resource) - Load font files for TextGeometry
+- [fbxResource](./fbx-resource) - Load FBX 3D models
+
+## Progress Tracking
+
+- [progress](./progress) - Track Three.js asset loading progress
+- [NgtsLoader](./loader) - Loading screen component while assets are being loaded
+
+## Legacy APIs (deprecated)
+
+> **Note**: These functions are deprecated and will be removed in v5.0.0. Use the resource-based APIs instead.
+
+| Deprecated       | Replacement       |
+| ---------------- | ----------------- |
+| `injectGLTF`     | `gltfResource`    |
+| `injectTexture`  | `textureResource` |
+| `injectFont`     | `fontResource`    |
+| `injectFBX`      | `fbxResource`     |
+| `injectProgress` | `progress`        |

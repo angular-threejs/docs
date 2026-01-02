@@ -3,4 +3,49 @@ title: Introduction
 description: angular-three-soba/abstractions introduction
 ---
 
-`angular-three-soba/abstractions`
+`angular-three-soba/abstractions` provides abstract components and patterns for building reusable and composable 3D elements.
+
+## Peer Dependencies
+
+| Package             | Required By      |
+| ------------------- | ---------------- |
+| `troika-three-text` | `NgtsText`       |
+| `three-mesh-bvh`    | Shader utilities |
+
+```bash
+npm install troika-three-text three-mesh-bvh
+# yarn add troika-three-text three-mesh-bvh
+# pnpm add troika-three-text three-mesh-bvh
+```
+
+## Shapes & Geometry
+
+- [NgtsBillboard](./billboard) - Rotate contents to always face the camera
+- [NgtsRoundedBox](./rounded-box) - Box with rounded edges
+- [NgtsPrismGeometry](./prism-geometry) - Prism geometry using ExtrudeGeometry
+
+## Grid
+
+- [NgtsGrid](./grid) - Y-up oriented shader-based grid
+
+## Text
+
+- [NgtsText](./text) - High-quality text rendering with SDF and antialiasing
+- [NgtsText3D](./text-3d) - 3D text using TextGeometry
+
+## Lines
+
+- [NgtsLine](./line) - Render `THREE.Line2` or `THREE.LineSegments2`
+- [NgtsQuadraticBezierLine](./quadratic-bezier-line) - Line using quadratic bezier curve interpolation
+- [NgtsCubicBezierLine](./cubic-bezier-line) - Line using cubic bezier curve interpolation
+- [NgtsCatmullRomLine](./catmull-rom-line) - Line using Catmull-Rom curve interpolation
+- [NgtsEdges](./edges) - Abstraction around `THREE.EdgesGeometry`
+
+## Textures
+
+- [NgtsGradientTexture](./gradient-texture) - Declarative gradient texture
+
+## Helpers
+
+- [helper](./helper) - Function to add helpers to scene nodes
+- [NgtsHelper](./ngts-helper) - Declarative helper directive

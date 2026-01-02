@@ -1,0 +1,88 @@
+---
+title: NgtsLoader
+description: angular-three-soba/loaders NgtsLoader component
+---
+
+A component that renders a loading screen while THREE.js assets are being loaded. Uses `progress()` internally to track loading state.
+
+## Usage
+
+`NgtsLoader` is a normal Angular component that renders HTML, so it must be placed at the same level as `ngt-canvas`, not within it.
+
+```html
+<ngt-canvas [sceneGraph]="sceneGraph" />
+<ngts-loader />
+```
+
+```ts
+import { NgtsLoader } from 'angular-three-soba/loaders';
+
+@Component({
+	selector: 'app-root',
+	template: `
+		<ngt-canvas [sceneGraph]="sceneGraph" />
+		<ngts-loader />
+	`,
+	imports: [NgtCanvas, NgtsLoader],
+})
+export class AppComponent {
+	sceneGraph = MyScene;
+}
+```
+
+## Options
+
+Pass options via the `[options]` input:
+
+```html
+<ngts-loader [options]="loaderOptions" />
+```
+
+| Property            | Type                          | Default                                         | Description                                             |
+| ------------------- | ----------------------------- | ----------------------------------------------- | ------------------------------------------------------- |
+| `containerClass`    | `string`                      | `''`                                            | Additional CSS classes for the loader's container.      |
+| `innerClass`        | `string`                      | `''`                                            | Additional CSS classes for the inner loader element.    |
+| `barClass`          | `string`                      | `''`                                            | Additional CSS classes for the loader bar element.      |
+| `dataClass`         | `string`                      | `''`                                            | Additional CSS classes for the text element.            |
+| `dataInterpolation` | `(value: number) => string`   | `` (value) => `Loading ${value.toFixed(2)}%` `` | A function that formats the displayed loading progress. |
+| `initialState`      | `(value: boolean) => boolean` | `(value) => value`                              | A function that determines initial visibility.          |
+
+## Example: Custom Styling
+
+```ts
+@Component({
+	template: `
+		<ngt-canvas [sceneGraph]="sceneGraph" />
+		<ngts-loader [options]="loaderOptions" />
+	`,
+	imports: [NgtCanvas, NgtsLoader],
+})
+export class AppComponent {
+	sceneGraph = MyScene;
+
+	loaderOptions = {
+		containerClass: 'my-loader-container',
+		barClass: 'my-progress-bar',
+		dataInterpolation: (value: number) => `${Math.round(value)}% complete`,
+	};
+}
+```
+
+## Example: Delayed Hide
+
+```ts
+@Component({
+	template: `
+		<ngt-canvas [sceneGraph]="sceneGraph" />
+		<ngts-loader [options]="loaderOptions" />
+	`,
+})
+export class AppComponent {
+	sceneGraph = MyScene;
+
+	// Keep loader visible for a moment after loading completes
+	loaderOptions = {
+		initialState: (active: boolean) => active,
+	};
+}
+```

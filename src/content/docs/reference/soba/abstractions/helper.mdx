@@ -1,0 +1,11 @@
+---
+title: helper
+description: angular-three-soba/abstractions helper API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Helper, { content, sceneGraphContent } from '@soba/abstractions/helper/helper?includeContent';
+
+<ReferenceWrapper path="soba/abstractions/helper" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Helper client:only />
+</ReferenceWrapper>

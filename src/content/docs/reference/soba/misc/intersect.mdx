@@ -1,0 +1,165 @@
+---
+title: intersect / NgtsIntersect
+description: angular-three-soba/misc intersect API
+---
+
+Utilities for tracking whether an object is within the camera's view frustum. Uses THREE.js's built-in frustum culling by monitoring `onBeforeRender` calls.
+
+## intersect Function
+
+Creates a signal that tracks whether an object is visible in the camera's frustum.
+
+### Signature
+
+```ts
+function intersect<TObject extends THREE.Object3D>(
+	object: () => ElementRef<TObject> | TObject | undefined | null,
+	options?: { injector?: Injector; source?: WritableSignal<boolean> },
+): Signal<boolean>;
+```
+
+### Usage
+
+```ts
+import { intersect } from 'angular-three-soba/misc';
+
+@Component({
+	template: `
+		<ngt-mesh #mesh>
+			<ngt-box-geometry />
+			<ngt-mesh-basic-material />
+		</ngt-mesh>
+	`,
+})
+class MyComponent {
+	meshRef = viewChild<ElementRef<THREE.Mesh>>('mesh');
+	isVisible = intersect(() => this.meshRef());
+
+	constructor() {
+		effect(() => {
+			if (this.isVisible()) {
+				// Object is in view - start expensive animations
+				console.log('Mesh is visible');
+			} else {
+				// Object is out of view - pause expensive operations
+				console.log('Mesh is hidden');
+			}
+		});
+	}
+}
+```
+
+### Parameters
+
+| Parameter | Type                                             | Description                   |
+| --------- | ------------------------------------------------ | ----------------------------- |
+| `object`  | `() => ElementRef<Object3D> \| Object3D \| null` | Signal of the object to track |
+| `options` | Object (optional)                                | Configuration options         |
+
+### Options
+
+| Property   | Type                      | Description                              |
+| ---------- | ------------------------- | ---------------------------------------- |
+| `injector` | `Injector`                | Custom injector for dependency injection |
+| `source`   | `WritableSignal<boolean>` | External signal to sync visibility state |
+
+### Return Value
+
+Returns a read-only `Signal<boolean>` that emits `true` when the object is visible in the frustum.
+
+---
+
+## NgtsIntersect Directive
+
+A directive that tracks whether the host Object3D is in the camera frustum. Provides two-way binding for visibility state.
+
+### Usage
+
+```html
+<ngt-mesh [(intersect)]="isInView">
+	<ngt-box-geometry />
+	<ngt-mesh-basic-material />
+</ngt-mesh>
+```
+
+```ts
+@Component({...})
+class MyComponent {
+	isInView = signal(false);
+
+	constructor() {
+		effect(() => {
+			console.log('Mesh visible:', this.isInView());
+		});
+	}
+}
+```
+
+### One-Way Binding
+
+```html
+<ngt-mesh (intersectChange)="onVisibilityChange($event)">
+	<ngt-sphere-geometry />
+	<ngt-mesh-standard-material />
+</ngt-mesh>
+```
+
+```ts
+onVisibilityChange(isVisible: boolean) {
+	console.log('Visibility changed:', isVisible);
+}
+```
+
+## Use Cases
+
+### Pause Animations When Off-Screen
+
+```ts
+class AnimatedMesh {
+	meshRef = viewChild<ElementRef<THREE.Mesh>>('mesh');
+	isVisible = intersect(() => this.meshRef());
+
+	constructor() {
+		beforeRender(({ delta }) => {
+			if (this.isVisible()) {
+				// Only animate when visible
+				this.meshRef()?.nativeElement.rotation.y += delta;
+			}
+		});
+	}
+}
+```
+
+### Lazy Load Content
+
+```ts
+class LazyContent {
+	containerRef = viewChild<ElementRef<THREE.Group>>('container');
+	hasBeenVisible = signal(false);
+	isVisible = intersect(() => this.containerRef());
+
+	constructor() {
+		effect(() => {
+			if (this.isVisible() && !this.hasBeenVisible()) {
+				this.hasBeenVisible.set(true);
+				this.loadHeavyContent();
+			}
+		});
+	}
+}
+```
+
+### Performance Optimization
+
+```ts
+class OptimizedScene {
+	objects = viewChildren<ElementRef<THREE.Mesh>>('object');
+
+	// Track visibility for each object
+	visibilityStates = computed(() => this.objects().map((obj) => intersect(() => obj)));
+}
+```
+
+:::note
+`injectIntersect` is deprecated. Use `intersect` instead.
+:::

@@ -1,0 +1,18 @@
+---
+title: NgtsPointerLockControls
+description: angular-three-soba/controls NgtsPointerLockControls API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import PointerLockControls, {
+	content,
+	sceneGraphContent,
+} from '@soba/controls/pointer-lock-controls/pointer-lock-controls?includeContent';
+
+<ReferenceWrapper
+	path="soba/controls/pointer-lock-controls"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<PointerLockControls client:only />
+</ReferenceWrapper>

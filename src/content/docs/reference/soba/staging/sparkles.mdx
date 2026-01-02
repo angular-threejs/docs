@@ -1,0 +1,11 @@
+---
+title: NgtsSparkles
+description: angular-three-soba/staging NgtsSparkles API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Sparkles, { content, sceneGraphContent } from '@soba/staging/sparkles/sparkles?includeContent';
+
+<ReferenceWrapper path="soba/staging/sparkles" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Sparkles client:only />
+</ReferenceWrapper>

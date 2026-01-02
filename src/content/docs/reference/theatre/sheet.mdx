@@ -1,0 +1,165 @@
+---
+title: Sheet and Sequence
+description: angular-three-theatre TheatreSheet and TheatreSequence API
+---
+
+Sheets and sequences are core concepts in Theatre.js for organizing and playing back animations.
+
+## TheatreSheet
+
+The `sheet` directive creates and manages a Theatre.js sheet within a project. A sheet is a container for sheet objects and their animations.
+
+### Usage
+
+```html
+<theatre-project>
+	<ng-container sheet="mainScene">
+		<!-- sheet objects here -->
+	</ng-container>
+</theatre-project>
+```
+
+With template reference:
+
+```html
+<ng-container sheet="mySheet" #sheetRef="sheet">{{ sheetRef.sheet().sequence.position }}</ng-container>
+```
+
+### Options
+
+| Option  | Type     | Default                   | Description                                  |
+| ------- | -------- | ------------------------- | -------------------------------------------- |
+| `sheet` | `string` | `'default-theatre-sheet'` | Unique name for the sheet within the project |
+
+### Exports
+
+| Export  | Type             | Description                   |
+| ------- | ---------------- | ----------------------------- |
+| `sheet` | `Signal<ISheet>` | The Theatre.js sheet instance |
+
+## TheatreSequence
+
+The `sequence` directive provides control over animation playback. Must be used together with the `sheet` directive.
+
+### Usage
+
+```html
+<theatre-project name="My Project">
+	<ng-container sheet="Scene" [sequence]="{ autoplay: true, rate: 1 }" #seq="sequence">
+		<p>Position: {{ seq.position() }}</p>
+		<p>Playing: {{ seq.playing() }}</p>
+		<p>Length: {{ seq.length() }}</p>
+
+		<button (click)="seq.play()">Play</button>
+		<button (click)="seq.pause()">Pause</button>
+		<button (click)="seq.reset()">Reset</button>
+
+		<!-- sheet objects here -->
+	</ng-container>
+</theatre-project>
+```
+
+### With Audio Synchronization
+
+```html
+<ng-container sheet="scene" [sequence]="{ autoplay: true }" [sequenceAudio]="{ source: '/audio/soundtrack.mp3' }">
+	<!-- sheet objects here -->
+</ng-container>
+```
+
+### Options
+
+| Option          | Type                     | Default     | Description                    |
+| --------------- | ------------------------ | ----------- | ------------------------------ |
+| `sequence`      | `TheatreSequenceOptions` | See below   | Sequence configuration options |
+| `sequenceAudio` | `AttachAudioOptions`     | `undefined` | Audio synchronization options  |
+
+#### TheatreSequenceOptions
+
+| Property         | Type                                                         | Default     | Description                        |
+| ---------------- | ------------------------------------------------------------ | ----------- | ---------------------------------- |
+| `rate`           | `number`                                                     | `1`         | Playback rate (1 = normal speed)   |
+| `autoplay`       | `boolean`                                                    | `false`     | Start playback automatically       |
+| `autopause`      | `boolean`                                                    | `false`     | Pause when directive is destroyed  |
+| `delay`          | `number`                                                     | `0`         | Delay in ms before autoplay starts |
+| `autoreset`      | `'init' \| 'destroy' \| 'always'`                            | `undefined` | When to reset position to 0        |
+| `iterationCount` | `number`                                                     | `1`         | Number of times to play            |
+| `range`          | `[number, number]`                                           | `undefined` | Start/end range for playback       |
+| `direction`      | `'normal' \| 'reverse' \| 'alternate' \| 'alternateReverse'` | `'normal'`  | Playback direction                 |
+
+#### AttachAudioOptions
+
+| Property          | Type                    | Description                  |
+| ----------------- | ----------------------- | ---------------------------- |
+| `source`          | `string \| AudioBuffer` | URL or AudioBuffer for audio |
+| `audioContext`    | `AudioContext`          | Optional custom AudioContext |
+| `destinationNode` | `AudioNode`             | Optional destination node    |
+
+### Exports
+
+| Export     | Type                   | Description                                    |
+| ---------- | ---------------------- | ---------------------------------------------- |
+| `sequence` | `Signal<ISequence>`    | The Theatre.js sequence instance               |
+| `position` | `ModelSignal<number>`  | Current playback position (two-way bindable)   |
+| `playing`  | `ModelSignal<boolean>` | Whether sequence is playing (two-way bindable) |
+| `length`   | `ModelSignal<number>`  | Total sequence length (two-way bindable)       |
+
+### Methods
+
+| Method    | Parameters              | Description               |
+| --------- | ----------------------- | ------------------------- |
+| `play()`  | `options?: PlayOptions` | Start or resume playback  |
+| `pause()` | -                       | Pause at current position |
+| `reset()` | -                       | Reset position to 0       |
+
+## Example: Complete Animation Controller
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { TheatreProject, TheatreSheet, TheatreSheetObject } from 'angular-three-theatre';
+
+@Component({
+	template: `
+		<theatre-project name="Animation Demo">
+			<ng-container
+				sheet="Scene"
+				[sequence]="{ rate: playbackRate(), autoplay: true, iterationCount: Infinity }"
+				#seq="sequence"
+			>
+				<div class="controls">
+					<button (click)="seq.playing() ? seq.pause() : seq.play()">
+						{{ seq.playing() ? 'Pause' : 'Play' }}
+					</button>
+					<input
+						type="range"
+						[min]="0"
+						[max]="seq.length()"
+						[value]="seq.position()"
+						(input)="onSeek($event, seq)"
+					/>
+					<span>{{ seq.position().toFixed(2) }}s / {{ seq.length() }}s</span>
+				</div>
+
+				<ng-template sheetObject="Box" [sheetObjectProps]="boxProps" let-values="values">
+					<ngt-mesh [position]="[values().x, values().y, 0]">
+						<ngt-box-geometry />
+						<ngt-mesh-standard-material [color]="values().color" />
+					</ngt-mesh>
+				</ng-template>
+			</ng-container>
+		</theatre-project>
+	`,
+	imports: [TheatreProject, TheatreSheet, TheatreSheetObject],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class AnimationDemo {
+	playbackRate = signal(1);
+	boxProps = { x: 0, y: 0, color: '#ff0000' };
+
+	onSeek(event: Event, seq: { pause: () => void; sequence: () => { position: number } }) {
+		const value = (event.target as HTMLInputElement).valueAsNumber;
+		seq.pause();
+		seq.sequence().position = value;
+	}
+}
+```

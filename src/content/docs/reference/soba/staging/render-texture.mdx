@@ -1,0 +1,11 @@
+---
+title: NgtsRenderTexture
+description: angular-three-soba/staging NgtsRenderTexture API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import RenderTexture, { content, sceneGraphContent } from '@soba/staging/render-texture/render-texture?includeContent';
+
+<ReferenceWrapper path="soba/staging/render-texture" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<RenderTexture client:only />
+</ReferenceWrapper>

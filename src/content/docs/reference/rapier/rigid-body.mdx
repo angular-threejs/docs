@@ -1,0 +1,319 @@
+---
+title: NgtrRigidBody
+description: angular-three-rapier Rigid Body API
+---
+
+`NgtrRigidBody` creates a rigid body in the physics simulation. Rigid bodies can be dynamic (simulated), fixed (static), or kinematic (user-controlled).
+
+## Usage
+
+Use `ngt-object3D` with the `rigidBody` attribute. The rigid body type is specified as the attribute value:
+
+```html
+<!-- Dynamic (default when empty) -->
+<ngt-object3D rigidBody [position]="[0, 5, 0]">
+	<ngt-mesh>
+		<ngt-box-geometry />
+		<ngt-mesh-standard-material />
+	</ngt-mesh>
+</ngt-object3D>
+
+<!-- Fixed (static) -->
+<ngt-object3D rigidBody="fixed" [position]="[0, -1, 0]">
+	<ngt-mesh>
+		<ngt-box-geometry *args="[20, 1, 20]" />
+		<ngt-mesh-standard-material />
+	</ngt-mesh>
+</ngt-object3D>
+
+<!-- Kinematic -->
+<ngt-object3D rigidBody="kinematicPosition">
+	<ngt-mesh>
+		<ngt-sphere-geometry />
+		<ngt-mesh-standard-material />
+	</ngt-mesh>
+</ngt-object3D>
+```
+
+## Rigid Body Types
+
+| Type                  | Description                                            |
+| --------------------- | ------------------------------------------------------ |
+| `''` or `'dynamic'`   | Fully simulated body affected by forces and collisions |
+| `'fixed'`             | Static, immovable body that can be collided with       |
+| `'kinematicPosition'` | User-controlled body moved by setting position         |
+| `'kinematicVelocity'` | User-controlled body moved by setting velocity         |
+
+## Options
+
+Configure rigid body behavior via the `options` input:
+
+```html
+<ngt-object3D
+	rigidBody
+	[options]="{
+    colliders: 'ball',
+    ccd: true,
+    gravityScale: 0.5,
+    linearVelocity: [0, 10, 0],
+    angularVelocity: [0, 1, 0]
+  }"
+>
+	...
+</ngt-object3D>
+```
+
+### Available Options
+
+| Option                       | Type                                                 | Default     | Description                                   |
+| ---------------------------- | ---------------------------------------------------- | ----------- | --------------------------------------------- |
+| `canSleep`                   | `boolean`                                            | `true`      | Whether the body can sleep when inactive      |
+| `linearVelocity`             | `[x, y, z]`                                          | `[0, 0, 0]` | Initial linear velocity                       |
+| `angularVelocity`            | `[x, y, z]`                                          | `[0, 0, 0]` | Initial angular velocity                      |
+| `gravityScale`               | `number`                                             | `1`         | Scaling factor for gravity                    |
+| `dominanceGroup`             | `number`                                             | `0`         | Dominance group for collision immunity        |
+| `ccd`                        | `boolean`                                            | `false`     | Enable Continuous Collision Detection         |
+| `softCcdPrediction`          | `number`                                             | `0`         | Soft CCD prediction distance                  |
+| `linearDamping`              | `number`                                             | `undefined` | Linear velocity damping                       |
+| `angularDamping`             | `number`                                             | `undefined` | Angular velocity damping                      |
+| `lockRotations`              | `boolean`                                            | `undefined` | Lock all rotations                            |
+| `lockTranslations`           | `boolean`                                            | `undefined` | Lock all translations                         |
+| `enabledRotations`           | `[x, y, z]`                                          | `undefined` | Enable rotation per axis                      |
+| `enabledTranslations`        | `[x, y, z]`                                          | `undefined` | Enable translation per axis                   |
+| `additionalSolverIterations` | `number`                                             | `undefined` | Extra solver iterations                       |
+| `colliders`                  | `'ball' \| 'cuboid' \| 'hull' \| 'trimesh' \| false` | inherited   | Auto-collider type                            |
+| `friction`                   | `number`                                             | `undefined` | Friction for auto-colliders                   |
+| `restitution`                | `number`                                             | `undefined` | Bounciness for auto-colliders                 |
+| `collisionGroups`            | `InteractionGroups`                                  | `undefined` | Collision group bitmask                       |
+| `solverGroups`               | `InteractionGroups`                                  | `undefined` | Solver group bitmask                          |
+| `activeCollisionTypes`       | `ActiveCollisionTypes`                               | `undefined` | Active collision types                        |
+| `contactSkin`                | `number`                                             | `0`         | Contact skin width                            |
+| `includeInvisible`           | `boolean`                                            | `false`     | Include invisible meshes in collider creation |
+
+## Events
+
+Listen to physics events on rigid bodies:
+
+```html
+<ngt-object3D
+	rigidBody
+	(collisionEnter)="onCollisionEnter($event)"
+	(collisionExit)="onCollisionExit($event)"
+	(intersectionEnter)="onIntersectionEnter($event)"
+	(intersectionExit)="onIntersectionExit($event)"
+	(contactForce)="onContactForce($event)"
+	(sleep)="onSleep()"
+	(wake)="onWake()"
+>
+	...
+</ngt-object3D>
+```
+
+### Event Types
+
+| Event               | Payload                        | Description                 |
+| ------------------- | ------------------------------ | --------------------------- |
+| `collisionEnter`    | `NgtrCollisionEnterPayload`    | Collision started           |
+| `collisionExit`     | `NgtrCollisionExitPayload`     | Collision ended             |
+| `intersectionEnter` | `NgtrIntersectionEnterPayload` | Sensor intersection started |
+| `intersectionExit`  | `NgtrIntersectionExitPayload`  | Sensor intersection ended   |
+| `contactForce`      | `NgtrContactForcePayload`      | Contact force applied       |
+| `sleep`             | `void`                         | Body went to sleep          |
+| `wake`              | `void`                         | Body woke up                |
+
+### Collision Payload
+
+```ts
+interface NgtrCollisionEnterPayload {
+	target: {
+		rigidBody?: RigidBody;
+		collider: Collider;
+		rigidBodyObject?: THREE.Object3D;
+		colliderObject?: THREE.Object3D;
+	};
+	other: {
+		rigidBody?: RigidBody;
+		collider: Collider;
+		rigidBodyObject?: THREE.Object3D;
+		colliderObject?: THREE.Object3D;
+	};
+	manifold: TempContactManifold;
+	flipped: boolean;
+}
+```
+
+### Contact Force Payload
+
+```ts
+interface NgtrContactForcePayload extends NgtrCollisionPayload {
+	totalForce: Vector;
+	totalForceMagnitude: number;
+	maxForceDirection: Vector;
+	maxForceMagnitude: number;
+}
+```
+
+## Accessing the Rigid Body
+
+Export the directive to access the underlying Rapier rigid body:
+
+```html
+<ngt-object3D rigidBody #body="rigidBody">...</ngt-object3D>
+```
+
+```ts
+@Component({...})
+export class MyComponent {
+  body = viewChild.required<NgtrRigidBody>('body');
+
+  applyForce() {
+    const rb = this.body().rigidBody();
+    if (rb) {
+      rb.applyImpulse({ x: 0, y: 10, z: 0 }, true);
+    }
+  }
+}
+```
+
+## Auto-Colliders
+
+By default, rigid bodies automatically generate colliders from child meshes. Control this behavior:
+
+```html
+<!-- Use cuboid colliders (default) -->
+<ngt-object3D rigidBody [options]="{ colliders: 'cuboid' }">
+	<ngt-mesh>
+		<ngt-box-geometry />
+	</ngt-mesh>
+</ngt-object3D>
+
+<!-- Use ball colliders -->
+<ngt-object3D rigidBody [options]="{ colliders: 'ball' }">
+	<ngt-mesh>
+		<ngt-sphere-geometry />
+	</ngt-mesh>
+</ngt-object3D>
+
+<!-- Use convex hull colliders -->
+<ngt-object3D rigidBody [options]="{ colliders: 'hull' }">
+	<ngt-mesh>
+		<ngt-torus-geometry />
+	</ngt-mesh>
+</ngt-object3D>
+
+<!-- Use triangle mesh colliders (expensive) -->
+<ngt-object3D rigidBody [options]="{ colliders: 'trimesh' }">
+	<ngt-mesh>
+		<ngt-torus-knot-geometry />
+	</ngt-mesh>
+</ngt-object3D>
+
+<!-- Disable auto-colliders -->
+<ngt-object3D rigidBody [options]="{ colliders: false }">
+	<!-- Add manual colliders -->
+	<ngt-object3D [ballCollider]="[0.5]" />
+</ngt-object3D>
+```
+
+## Kinematic Bodies
+
+Kinematic bodies are controlled by you rather than the physics engine:
+
+### Position-Based
+
+```ts
+@Component({
+	template: `
+		<ngt-object3D rigidBody="kinematicPosition" #kinematic="rigidBody">
+			<ngt-mesh>
+				<ngt-box-geometry />
+			</ngt-mesh>
+		</ngt-object3D>
+	`,
+})
+export class KinematicExample {
+	kinematic = viewChild.required<NgtrRigidBody>('kinematic');
+
+	constructor() {
+		beforePhysicsStep(() => {
+			const rb = this.kinematic().rigidBody();
+			if (rb) {
+				// Move to a new position
+				rb.setNextKinematicTranslation({ x: Math.sin(Date.now() / 1000), y: 0, z: 0 });
+			}
+		});
+	}
+}
+```
+
+### Velocity-Based
+
+```ts
+@Component({
+	template: `
+		<ngt-object3D rigidBody="kinematicVelocity" #kinematic="rigidBody">
+			<ngt-mesh>
+				<ngt-box-geometry />
+			</ngt-mesh>
+		</ngt-object3D>
+	`,
+})
+export class KinematicVelocityExample {
+	kinematic = viewChild.required<NgtrRigidBody>('kinematic');
+
+	constructor() {
+		beforePhysicsStep(() => {
+			const rb = this.kinematic().rigidBody();
+			if (rb) {
+				// Set velocity
+				rb.setLinvel({ x: 1, y: 0, z: 0 }, true);
+			}
+		});
+	}
+}
+```
+
+## Locking Axes
+
+Restrict movement to specific axes:
+
+```html
+<!-- Lock all rotations -->
+<ngt-object3D rigidBody [options]="{ lockRotations: true }">...</ngt-object3D>
+
+<!-- Lock all translations -->
+<ngt-object3D rigidBody [options]="{ lockTranslations: true }">...</ngt-object3D>
+
+<!-- Enable only specific axes -->
+<ngt-object3D
+	rigidBody
+	[options]="{
+  enabledRotations: [false, true, false],
+  enabledTranslations: [true, true, false]
+}"
+>
+	...
+</ngt-object3D>
+```
+
+## Continuous Collision Detection
+
+Enable CCD to prevent fast objects from tunneling through thin objects:
+
+```html
+<ngt-object3D rigidBody [options]="{ ccd: true }">...</ngt-object3D>
+
+<!-- Or use soft CCD for moderate speeds -->
+<ngt-object3D rigidBody [options]="{ softCcdPrediction: 2 }">...</ngt-object3D>
+```
+
+## Dominance Groups
+
+Control which bodies are affected by collisions:
+
+```html
+<!-- Higher dominance = immune to forces from lower groups -->
+<ngt-object3D rigidBody [options]="{ dominanceGroup: 10 }">...</ngt-object3D>
+
+<ngt-object3D rigidBody [options]="{ dominanceGroup: 0 }">...</ngt-object3D>
+```

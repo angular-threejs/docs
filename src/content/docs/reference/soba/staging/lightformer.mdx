@@ -1,0 +1,11 @@
+---
+title: NgtsLightformer
+description: angular-three-soba/staging NgtsLightformer API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Lightformer, { content, sceneGraphContent } from '@soba/staging/lightformer/lightformer?includeContent';
+
+<ReferenceWrapper path="soba/staging/lightformer" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Lightformer client:only />
+</ReferenceWrapper>

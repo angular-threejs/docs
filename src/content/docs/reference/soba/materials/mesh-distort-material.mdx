@@ -1,0 +1,18 @@
+---
+title: NgtsMeshDistortMaterial
+description: angular-three-soba/materials NgtsMeshDistortMaterial API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import MeshDistortMaterial, {
+	content,
+	sceneGraphContent,
+} from '@soba/materials/mesh-distort-material/mesh-distort-material?includeContent';
+
+<ReferenceWrapper
+	path="soba/materials/mesh-distort-material"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<MeshDistortMaterial client:only />
+</ReferenceWrapper>

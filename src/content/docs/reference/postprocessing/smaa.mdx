@@ -1,0 +1,42 @@
+---
+title: NgtpSMAA
+description: Subpixel Morphological Anti-Aliasing post-processing effect
+---
+
+SMAA (Subpixel Morphological Anti-Aliasing) is a high-quality anti-aliasing technique that smooths jagged edges in the rendered scene.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpSMAA } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer [options]="{ multisampling: 0 }">
+      <ngtp-smaa />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpSMAA],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property | Type         | Default           | Description                               |
+| -------- | ------------ | ----------------- | ----------------------------------------- |
+| `preset` | `SMAAPreset` | `SMAAPreset.HIGH` | Quality preset (LOW, MEDIUM, HIGH, ULTRA) |
+
+## Note
+
+When using SMAA, you typically want to disable the built-in multisampling on the effect composer by setting `multisampling: 0`.
+
+## Example: High Quality AA
+
+```angular-html
+<ngtp-effect-composer [options]="{ multisampling: 0 }">
+  <ngtp-smaa [options]="{ preset: SMAAPreset.ULTRA }" />
+  <!-- Other effects -->
+  <ngtp-bloom [options]="{ intensity: 0.5 }" />
+</ngtp-effect-composer>
+```

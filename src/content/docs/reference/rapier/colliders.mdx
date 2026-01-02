@@ -1,0 +1,342 @@
+---
+title: Colliders
+description: angular-three-rapier Collider directives API
+---
+
+Colliders define the physical shape of objects for collision detection. By default, rigid bodies auto-generate colliders from child meshes, but you can also define explicit colliders.
+
+## Auto-Generated Colliders
+
+Rigid bodies automatically create colliders based on their child mesh geometries:
+
+```html
+<ngt-object3D rigidBody>
+	<!-- Collider auto-generated from box geometry -->
+	<ngt-mesh>
+		<ngt-box-geometry />
+		<ngt-mesh-standard-material />
+	</ngt-mesh>
+</ngt-object3D>
+```
+
+Control the auto-collider type via the `colliders` option:
+
+```html
+<!-- Use ball colliders -->
+<ngt-object3D rigidBody [options]="{ colliders: 'ball' }">
+	<ngt-mesh>
+		<ngt-sphere-geometry />
+	</ngt-mesh>
+</ngt-object3D>
+```
+
+## Disabling Auto-Colliders
+
+Disable auto-colliders to define manual colliders:
+
+```html
+<ngt-object3D rigidBody [options]="{ colliders: false }">
+	<!-- Manual colliders only -->
+	<ngt-object3D [ballCollider]="[0.5]" />
+</ngt-object3D>
+```
+
+## Explicit Collider Directives
+
+### NgtrBallCollider
+
+Creates a spherical collider:
+
+```html
+<ngt-object3D [ballCollider]="[radius]" [position]="[0, 2, 0]" />
+```
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `radius` | `number` | Radius of the sphere |
+
+### NgtrCuboidCollider
+
+Creates a box collider with half-extents:
+
+```html
+<ngt-object3D [cuboidCollider]="[halfWidth, halfHeight, halfDepth]" [position]="[0, 0, 0]" />
+```
+
+| Argument     | Type     | Description              |
+| ------------ | -------- | ------------------------ |
+| `halfWidth`  | `number` | Half-extent along X axis |
+| `halfHeight` | `number` | Half-extent along Y axis |
+| `halfDepth`  | `number` | Half-extent along Z axis |
+
+### NgtrCapsuleCollider
+
+Creates a capsule collider:
+
+```html
+<ngt-object3D [capsuleCollider]="[halfHeight, radius]" [position]="[0, 1, 0]" />
+```
+
+| Argument     | Type     | Description                             |
+| ------------ | -------- | --------------------------------------- |
+| `halfHeight` | `number` | Half the height of the cylindrical part |
+| `radius`     | `number` | Radius of the capsule                   |
+
+### NgtrCylinderCollider
+
+Creates a cylinder collider:
+
+```html
+<ngt-object3D [cylinderCollider]="[halfHeight, radius]" />
+```
+
+| Argument     | Type     | Description                     |
+| ------------ | -------- | ------------------------------- |
+| `halfHeight` | `number` | Half the height of the cylinder |
+| `radius`     | `number` | Radius of the cylinder          |
+
+### NgtrConeCollider
+
+Creates a cone collider:
+
+```html
+<ngt-object3D [coneCollider]="[halfHeight, radius]" />
+```
+
+| Argument     | Type     | Description                 |
+| ------------ | -------- | --------------------------- |
+| `halfHeight` | `number` | Half the height of the cone |
+| `radius`     | `number` | Base radius of the cone     |
+
+### NgtrConvexHullCollider
+
+Creates a convex hull from vertices:
+
+```html
+<ngt-object3D [convexHullCollider]="[vertices]" />
+```
+
+| Argument   | Type                | Description                                   |
+| ---------- | ------------------- | --------------------------------------------- |
+| `vertices` | `ArrayLike<number>` | Flat array of vertex positions (x, y, z, ...) |
+
+### NgtrTrimeshCollider
+
+Creates a triangle mesh collider for exact collision shapes:
+
+```html
+<ngt-object3D [trimeshCollider]="[vertices, indices]" />
+```
+
+| Argument   | Type                | Description                    |
+| ---------- | ------------------- | ------------------------------ |
+| `vertices` | `ArrayLike<number>` | Flat array of vertex positions |
+| `indices`  | `ArrayLike<number>` | Triangle indices               |
+
+:::caution
+Trimesh colliders are computationally expensive. Use sparingly and prefer simpler shapes when possible.
+:::
+
+### NgtrHeightfieldCollider
+
+Creates a heightfield for terrain-like surfaces:
+
+```html
+<ngt-object3D [heightfieldCollider]="[rows, cols, heights, scale]" />
+```
+
+| Argument  | Type          | Description                       |
+| --------- | ------------- | --------------------------------- |
+| `rows`    | `number`      | Number of rows in the height grid |
+| `cols`    | `number`      | Number of columns                 |
+| `heights` | `number[]`    | Array of height values            |
+| `scale`   | `{ x, y, z }` | Scale factor for dimensions       |
+
+### Rounded Colliders
+
+Rounded variants provide smoother collision response:
+
+#### NgtrRoundCuboidCollider
+
+```html
+<ngt-object3D [roundCuboidCollider]="[halfW, halfH, halfD, borderRadius]" />
+```
+
+#### NgtrRoundCylinderCollider
+
+```html
+<ngt-object3D [roundCylinderCollider]="[halfHeight, radius, borderRadius]" />
+```
+
+#### NgtrRoundConeCollider
+
+```html
+<ngt-object3D [roundConeCollider]="[halfHeight, radius, borderRadius]" />
+```
+
+### Mesh Colliders
+
+#### NgtrConvexMeshCollider
+
+```html
+<ngt-object3D [convexMeshCollider]="[vertices, indices]" />
+```
+
+#### NgtrRoundConvexHullCollider
+
+```html
+<ngt-object3D [roundConvexHullCollider]="[vertices, indices, borderRadius]" />
+```
+
+#### NgtrRoundConvexMeshCollider
+
+```html
+<ngt-object3D [roundConvexMeshCollider]="[vertices, indices, borderRadius]" />
+```
+
+#### NgtrPolylineCollider
+
+```html
+<ngt-object3D [polylineCollider]="[vertices, indices]" />
+```
+
+## NgtrMeshCollider
+
+Generate colliders from mesh geometry when you need different collider types for parts of a complex object:
+
+```html
+<ngt-object3D rigidBody [options]="{ colliders: false }">
+	<ngt-object3D [meshCollider]="'trimesh'">
+		<ngt-mesh>
+			<ngt-torus-geometry />
+			<ngt-mesh-standard-material />
+		</ngt-mesh>
+	</ngt-object3D>
+</ngt-object3D>
+```
+
+Mesh collider types:
+
+| Type        | Description                 |
+| ----------- | --------------------------- |
+| `'cuboid'`  | Box from bounding box       |
+| `'ball'`    | Sphere from bounding sphere |
+| `'hull'`    | Convex hull from vertices   |
+| `'trimesh'` | Exact triangle mesh         |
+
+## Collider Options
+
+All colliders accept an `options` input for physics properties:
+
+```html
+<ngt-object3D
+	[ballCollider]="[0.5]"
+	[options]="{
+    friction: 0.5,
+    restitution: 0.8,
+    density: 1.0,
+    sensor: false
+  }"
+/>
+```
+
+### Available Options
+
+| Option                   | Type                     | Default     | Description                                    |
+| ------------------------ | ------------------------ | ----------- | ---------------------------------------------- |
+| `friction`               | `number`                 | `undefined` | Friction coefficient (0 = no friction)         |
+| `frictionCombineRule`    | `CoefficientCombineRule` | `undefined` | How friction combines between bodies           |
+| `restitution`            | `number`                 | `undefined` | Bounciness (0 = no bounce, 1 = perfect bounce) |
+| `restitutionCombineRule` | `CoefficientCombineRule` | `undefined` | How restitution combines                       |
+| `density`                | `number`                 | `undefined` | Uniform density for mass calculation           |
+| `mass`                   | `number`                 | `undefined` | Direct mass value                              |
+| `massProperties`         | `object`                 | `undefined` | Full mass properties                           |
+| `sensor`                 | `boolean`                | `false`     | Make this a sensor (no physical collision)     |
+| `collisionGroups`        | `InteractionGroups`      | `undefined` | Collision group bitmask                        |
+| `solverGroups`           | `InteractionGroups`      | `undefined` | Solver group bitmask                           |
+| `activeCollisionTypes`   | `ActiveCollisionTypes`   | `undefined` | Active collision types                         |
+| `contactSkin`            | `number`                 | `0`         | Contact skin width                             |
+
+## Sensors
+
+Sensors detect intersections without causing physical collision:
+
+```html
+<ngt-object3D
+	[ballCollider]="[2]"
+	[options]="{ sensor: true }"
+	(intersectionEnter)="onEnterZone($event)"
+	(intersectionExit)="onExitZone($event)"
+/>
+```
+
+## Collider Events
+
+Colliders can emit physics events:
+
+```html
+<ngt-object3D
+	[cuboidCollider]="[1, 1, 1]"
+	(collisionEnter)="onCollisionEnter($event)"
+	(collisionExit)="onCollisionExit($event)"
+	(intersectionEnter)="onIntersectionEnter($event)"
+	(intersectionExit)="onIntersectionExit($event)"
+	(contactForce)="onContactForce($event)"
+/>
+```
+
+## Accessing the Collider
+
+Export the directive to access the underlying Rapier collider:
+
+```html
+<ngt-object3D [ballCollider]="[0.5]" #col="ballCollider" />
+```
+
+```ts
+@Component({...})
+export class MyComponent {
+  col = viewChild.required<NgtrBallCollider>('col');
+
+  getCollider() {
+    return this.col().collider();
+  }
+}
+```
+
+## Complete Example
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtArgs } from 'angular-three';
+import { NgtrPhysics, NgtrRigidBody, NgtrBallCollider, NgtrCuboidCollider } from 'angular-three-rapier';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<!-- Compound collider -->
+				<ngt-object3D rigidBody [options]="{ colliders: false }">
+					<ngt-object3D [cuboidCollider]="[0.5, 0.5, 0.5]" [position]="[0, 0, 0]" />
+					<ngt-object3D [ballCollider]="[0.5]" [position]="[1, 0, 0]" />
+
+					<ngt-mesh>
+						<ngt-box-geometry />
+						<ngt-mesh-standard-material />
+					</ngt-mesh>
+				</ngt-object3D>
+
+				<!-- Sensor zone -->
+				<ngt-object3D [ballCollider]="[5]" [options]="{ sensor: true }" (intersectionEnter)="onEnter($event)" />
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgtrRigidBody, NgtrBallCollider, NgtrCuboidCollider],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class ColliderExample {
+	onEnter(event: any) {
+		console.log('Object entered sensor zone', event);
+	}
+}
+```

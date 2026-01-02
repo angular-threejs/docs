@@ -1,0 +1,63 @@
+---
+title: fontResource
+description: angular-three-soba/loaders fontResource API
+---
+
+Creates a resource for loading font files for use with Three.js TextGeometry. Supports loading from URLs (typeface.js JSON format) or pre-loaded font data. Results are cached for efficient reuse.
+
+## Usage
+
+```ts
+import { fontResource } from 'angular-three-soba/loaders';
+
+@Component({...})
+class MyComponent {
+	font = fontResource(() => '/fonts/helvetiker_regular.typeface.json');
+
+	constructor() {
+		effect(() => {
+			const f = this.font.value();
+			if (f) {
+				const geometry = new TextGeometry('Hello', { font: f, size: 1 });
+			}
+		});
+	}
+}
+```
+
+### With NgtsText3D
+
+`fontResource` is commonly used with `NgtsText3D` for 3D text rendering:
+
+```ts
+import { fontResource } from 'angular-three-soba/loaders';
+import { NgtsText3D } from 'angular-three-soba/abstractions';
+
+@Component({
+	template: `
+		@if (font.value(); as font) {
+			<ngts-text-3d text="Hello" [font]="font" />
+		}
+	`,
+	imports: [NgtsText3D],
+})
+class MyComponent {
+	font = fontResource(() => '/fonts/inter_bold.json');
+}
+```
+
+## Static Methods
+
+- `fontResource.preload(input: NgtsFontInput)` - Preloads a font into the cache.
+- `fontResource.clear(input?: NgtsFontInput)` - Clears a specific font or all fonts from the cache.
+
+```ts
+// Preload a font
+fontResource.preload('/fonts/helvetiker_regular.typeface.json');
+
+// Clear a specific font from cache
+fontResource.clear('/fonts/helvetiker_regular.typeface.json');
+
+// Clear all fonts from cache
+fontResource.clear();
+```

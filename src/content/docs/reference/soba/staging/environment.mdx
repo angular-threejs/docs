@@ -1,0 +1,11 @@
+---
+title: NgtsEnvironment
+description: angular-three-soba/staging NgtsEnvironment API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Environment, { content, sceneGraphContent } from '@soba/staging/environment/environment?includeContent';
+
+<ReferenceWrapper path="soba/staging/environment" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Environment client:only />
+</ReferenceWrapper>

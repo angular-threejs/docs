@@ -1,4 +1,31 @@
 ---
-title: angular-three-soba/materials
+title: Introduction
 description: angular-three-soba/materials introduction
 ---
+
+`angular-three-soba/materials` provides a variety of materials for customizing the appearance of your 3D objects.
+
+## Peer Dependencies
+
+| Package                        | Required By                  |
+| ------------------------------ | ---------------------------- |
+| `three-custom-shader-material` | `NgtsCustomShaderMaterial`   |
+| `@pmndrs/vanilla`              | Various material utilities   |
+| `three-mesh-bvh`               | `NgtsMeshRefractionMaterial` |
+
+```bash
+npm install three-custom-shader-material @pmndrs/vanilla three-mesh-bvh
+# yarn add three-custom-shader-material @pmndrs/vanilla three-mesh-bvh
+# pnpm add three-custom-shader-material @pmndrs/vanilla three-mesh-bvh
+```
+
+## Available Materials
+
+- [NgtsCustomShaderMaterial](./custom-shader-material) - Create custom shader materials using `three-custom-shader-material`
+- [NgtsMeshDistortMaterial](./mesh-distort-material) - Animated noise-based distortion material
+- [NgtsMeshPortalMaterial](./mesh-portal-material) - Portal effect rendering a separate scene inside a mesh
+- [NgtsMeshReflectorMaterial](./mesh-reflector-material) - Realistic reflections on planar surfaces
+- [NgtsMeshRefractionMaterial](./mesh-refraction-material) - Realistic light refraction for diamonds, glass, crystals
+- [NgtsMeshTransmissionMaterial](./mesh-transmission-material) - Physically-based transmission for glass and water
+- [NgtsMeshWobbleMaterial](./mesh-wobble-material) - Animated sine-wave wobble distortion
+- [NgtsPointMaterial](./point-material) - Consistent point cloud rendering regardless of distance

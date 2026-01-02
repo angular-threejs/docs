@@ -1,0 +1,18 @@
+---
+title: NgtsMeshPortalMaterial
+description: angular-three-soba/materials NgtsMeshPortalMaterial API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import MeshPortalMaterial, {
+	content,
+	sceneGraphContent,
+} from '@soba/materials/mesh-portal-material/mesh-portal-material?includeContent';
+
+<ReferenceWrapper
+	path="soba/materials/mesh-portal-material"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<MeshPortalMaterial client:only />
+</ReferenceWrapper>

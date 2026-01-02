@@ -1,0 +1,108 @@
+---
+title: Introduction
+description: angular-three-theatre Introduction and Setup
+---
+
+`angular-three-theatre` provides [Theatre.js](https://www.theatrejs.com/) integration for Angular Three, enabling powerful animation and motion design capabilities for your 3D scenes.
+
+## Installation
+
+```bash
+npm install angular-three-theatre @theatre/core @theatre/studio
+# yarn add angular-three-theatre @theatre/core @theatre/studio
+# pnpm add angular-three-theatre @theatre/core @theatre/studio
+```
+
+> Make sure `angular-three` is already installed.
+
+## Basic Setup
+
+The foundation of Theatre.js integration is the `TheatreProject` component, which creates a Theatre.js project container.
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TheatreProject, TheatreSheet, TheatreSheetObject } from 'angular-three-theatre';
+
+@Component({
+	template: `
+		<theatre-project name="My Project">
+			<ng-container sheet="Scene">
+				<ng-template sheetObject="Box" [sheetObjectProps]="{ x: 0, y: 0, z: 0 }" let-values="values">
+					<ngt-mesh [position]="[values().x, values().y, values().z]">
+						<ngt-box-geometry />
+						<ngt-mesh-standard-material />
+					</ngt-mesh>
+				</ng-template>
+			</ng-container>
+		</theatre-project>
+	`,
+	imports: [TheatreProject, TheatreSheet, TheatreSheetObject],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## TheatreProject
+
+The `theatre-project` component is the root container for all Theatre.js animation data. It contains sheets, which in turn contain sheet objects with animatable properties.
+
+### Usage
+
+```html
+<theatre-project name="my-animation" [config]="{ state: savedState }">
+	<ng-container sheet="scene1">
+		<!-- sheet objects here -->
+	</ng-container>
+</theatre-project>
+```
+
+### Options
+
+| Option   | Type             | Default                     | Description                                         |
+| -------- | ---------------- | --------------------------- | --------------------------------------------------- |
+| `name`   | `string`         | `'default-theatre-project'` | Unique name to identify the project                 |
+| `config` | `IProjectConfig` | `{}`                        | Configuration options, can include saved state data |
+
+### Exports
+
+| Export    | Type               | Description                     |
+| --------- | ------------------ | ------------------------------- |
+| `project` | `Signal<IProject>` | The Theatre.js project instance |
+
+## Hierarchy
+
+Theatre.js uses a hierarchical structure:
+
+```
+TheatreProject
+├── TheatreSheet (sheet directive)
+│   ├── TheatreSequence (optional, for playback control)
+│   └── TheatreSheetObject (ng-template with sheetObject)
+│       ├── TheatreSheetObjectSync (sync directive)
+│       └── TheatreSheetObjectTransform (theatre-transform)
+└── TheatreStudio (optional, for visual editing)
+```
+
+## Convenience Exports
+
+For easier importing, the library provides combined exports:
+
+```ts
+// TheatreSheet includes both TheatreSheetImpl and TheatreSequence
+import { TheatreSheet } from 'angular-three-theatre';
+
+// TheatreSheetObject includes TheatreSheetObjectImpl, TheatreSheetObjectSync, and TheatreSheetObjectTransform
+import { TheatreSheetObject } from 'angular-three-theatre';
+```
+
+## Available APIs
+
+| Export                        | Selector                   | Description                                    |
+| ----------------------------- | -------------------------- | ---------------------------------------------- |
+| `TheatreProject`              | `theatre-project`          | Root container for Theatre.js project          |
+| `TheatreSheet`                | `[sheet]`                  | Creates an animation sheet (includes Sequence) |
+| `TheatreSequence`             | `[sheet][sequence]`        | Controls sequence playback                     |
+| `TheatreStudio`               | `theatre-project[studio]`  | Enables Theatre.js Studio UI                   |
+| `TheatreSheetObject`          | `ng-template[sheetObject]` | Creates animatable properties                  |
+| `TheatreSheetObjectSync`      | `[sync]`                   | Syncs Three.js object properties               |
+| `TheatreSheetObjectTransform` | `theatre-transform`        | Adds transform controls                        |

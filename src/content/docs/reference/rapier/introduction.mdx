@@ -1,0 +1,198 @@
+---
+title: Introduction
+description: angular-three-rapier physics integration for Angular Three
+---
+
+`angular-three-rapier` provides [Rapier](https://rapier.rs/) physics integration for Angular Three. Rapier is a fast, cross-platform physics engine written in Rust with JavaScript bindings.
+
+## Installation
+
+```bash
+npm install angular-three-rapier @dimforge/rapier3d-compat
+# yarn add angular-three-rapier @dimforge/rapier3d-compat
+# pnpm add angular-three-rapier @dimforge/rapier3d-compat
+```
+
+> Make sure you already have `angular-three` installed
+
+## Basic Setup
+
+Wrap your physics-enabled 3D scene with `NgtrPhysics`:
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { extend, NgtArgs } from 'angular-three';
+import { NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
+import * as THREE from 'three';
+
+extend(THREE);
+
+@Component({
+	selector: 'app-box',
+	template: `
+		<ngt-object3D rigidBody [position]="[0, 5, 0]">
+			<ngt-mesh>
+				<ngt-box-geometry />
+				<ngt-mesh-standard-material color="hotpink" />
+			</ngt-mesh>
+		</ngt-object3D>
+	`,
+	imports: [NgtrRigidBody],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class Box {}
+
+@Component({
+	selector: 'app-ground',
+	template: `
+		<ngt-object3D rigidBody="fixed" [position]="[0, -1, 0]">
+			<ngt-mesh>
+				<ngt-box-geometry *args="[20, 1, 20]" />
+				<ngt-mesh-standard-material color="gray" />
+			</ngt-mesh>
+		</ngt-object3D>
+	`,
+	imports: [NgtrRigidBody, NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class Ground {}
+
+@Component({
+	template: `
+		<ngtr-physics [options]="{ gravity: [0, -9.81, 0] }">
+			<ng-template>
+				<app-box />
+				<app-ground />
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, Box, Ground],
+})
+export class SceneGraph {}
+```
+
+## NgtrPhysics
+
+The main component that creates and manages a Rapier physics world. All physics-enabled objects must be children of this component.
+
+```html
+<ngtr-physics [options]="{ gravity: [0, -9.81, 0], debug: true }">
+	<ng-template>
+		<!-- Your physics objects here -->
+	</ng-template>
+</ngtr-physics>
+```
+
+### Options
+
+| Option                     | Type                                                 | Default         | Description                                  |
+| -------------------------- | ---------------------------------------------------- | --------------- | -------------------------------------------- |
+| `gravity`                  | `[x, y, z]`                                          | `[0, -9.81, 0]` | Gravity vector for the physics world         |
+| `colliders`                | `'ball' \| 'cuboid' \| 'hull' \| 'trimesh' \| false` | `'cuboid'`      | Default collider type for rigid bodies       |
+| `paused`                   | `boolean`                                            | `false`         | Pause the physics simulation                 |
+| `timeStep`                 | `number \| 'vary'`                                   | `1/60`          | Fixed timestep for simulation                |
+| `debug`                    | `boolean`                                            | `false`         | Enable debug visualization                   |
+| `interpolate`              | `boolean`                                            | `true`          | Enable transform interpolation               |
+| `updateLoop`               | `'follow' \| 'independent'`                          | `'follow'`      | Update loop strategy                         |
+| `updatePriority`           | `number`                                             | `undefined`     | Priority for the update loop                 |
+| `allowedLinearError`       | `number`                                             | `0.001`         | Penetration the engine won't correct         |
+| `numSolverIterations`      | `number`                                             | `4`             | Solver iterations for calculating forces     |
+| `numInternalPgsIterations` | `number`                                             | `1`             | Internal PGS iterations per solver iteration |
+| `predictionDistance`       | `number`                                             | `0.002`         | Max distance for predictive contacts         |
+| `minIslandSize`            | `number`                                             | `128`           | Minimum dynamic bodies per active island     |
+| `maxCcdSubsteps`           | `number`                                             | `1`             | Maximum CCD substeps                         |
+| `contactNaturalFrequency`  | `number`                                             | `30`            | Error reduction parameter frequency          |
+| `lengthUnit`               | `number`                                             | `1`             | Approximate size of dynamic objects          |
+
+### Fallback Template
+
+Handle Rapier loading failures with a fallback template:
+
+```html
+<ngtr-physics>
+	<ng-template>
+		<!-- Physics scene content -->
+	</ng-template>
+	<ng-template rapierFallback let-error="error">
+		<p>Failed to load physics: {{ error }}</p>
+	</ng-template>
+</ngtr-physics>
+```
+
+### Debug Visualization
+
+Enable debug rendering to see collider shapes:
+
+```html
+<ngtr-physics [options]="{ debug: true }">
+	<ng-template>
+		<!-- Your physics objects -->
+	</ng-template>
+</ngtr-physics>
+```
+
+## Update Loop Strategies
+
+### Follow Mode (default)
+
+Physics updates are tied to the render loop via `beforeRender`. Use `updatePriority` to control scheduling.
+
+```html
+<ngtr-physics [options]="{ updateLoop: 'follow', updatePriority: -1 }">...</ngtr-physics>
+```
+
+### Independent Mode
+
+Physics runs in a separate loop, useful for on-demand rendering scenarios.
+
+```html
+<ngtr-physics [options]="{ updateLoop: 'independent' }">...</ngtr-physics>
+```
+
+## Timestep Configuration
+
+### Fixed Timestep (default)
+
+Ensures consistent physics behavior regardless of frame rate:
+
+```html
+<ngtr-physics [options]="{ timeStep: 1/60 }">...</ngtr-physics>
+```
+
+### Variable Timestep
+
+Synchronize physics with actual frame delta times:
+
+```html
+<ngtr-physics [options]="{ timeStep: 'vary' }">...</ngtr-physics>
+```
+
+## Exposed Properties
+
+`NgtrPhysics` exposes several useful properties:
+
+| Property              | Type                                | Description                       |
+| --------------------- | ----------------------------------- | --------------------------------- |
+| `rapier`              | `Signal<RAPIER \| null>`            | The loaded Rapier module          |
+| `worldSingleton`      | `Signal<World \| null>`             | The Rapier physics world          |
+| `paused`              | `Signal<boolean>`                   | Whether simulation is paused      |
+| `colliders`           | `Signal<NgtrRigidBodyAutoCollider>` | Default collider type             |
+| `rigidBodyStates`     | `Map`                               | Map of rigid body states          |
+| `colliderStates`      | `Map`                               | Map of collider states            |
+| `beforeStepCallbacks` | `Set`                               | Callbacks run before physics step |
+| `afterStepCallbacks`  | `Set`                               | Callbacks run after physics step  |
+
+## Manual Stepping
+
+You can manually step the physics simulation:
+
+```ts
+@Component({...})
+export class MyComponent {
+  physics = inject(NgtrPhysics);
+
+  manualStep() {
+    this.physics.step(1 / 60); // Step by 1/60 seconds
+  }
+}
+```

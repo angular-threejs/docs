@@ -1,0 +1,11 @@
+---
+title: NgtsShadow
+description: angular-three-soba/staging NgtsShadow API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Shadow, { content, sceneGraphContent } from '@soba/staging/shadow/shadow?includeContent';
+
+<ReferenceWrapper path="soba/staging/shadow" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Shadow client:only />
+</ReferenceWrapper>

@@ -1,0 +1,42 @@
+---
+title: NgtpChromaticAberration
+description: Chromatic aberration post-processing effect
+---
+
+Chromatic aberration simulates the color fringing that occurs in real camera lenses, where different wavelengths of light are focused at slightly different points.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpChromaticAberration } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-chromatic-aberration [options]="{ offset: [0.002, 0.002] }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpChromaticAberration],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property           | Type               | Default          | Description                 |
+| ------------------ | ------------------ | ---------------- | --------------------------- |
+| `offset`           | `[number, number]` | `[0.001, 0.001]` | Color channel offset (x, y) |
+| `radialModulation` | `boolean`          | `false`          | Apply radial modulation     |
+| `modulationOffset` | `number`           | `0.15`           | Modulation offset           |
+
+## Example: Subtle Effect
+
+```angular-html
+<ngtp-effect-composer>
+  <ngtp-chromatic-aberration [options]="{
+    offset: [0.001, 0.001],
+    radialModulation: true,
+    modulationOffset: 0.5
+  }" />
+</ngtp-effect-composer>
+```

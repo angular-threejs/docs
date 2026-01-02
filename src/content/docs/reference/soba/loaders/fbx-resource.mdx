@@ -1,0 +1,86 @@
+---
+title: fbxResource
+description: angular-three-soba/loaders fbxResource API
+---
+
+Creates a resource for loading FBX 3D models. Supports loading single files, arrays of files, or record objects mapping keys to URLs.
+
+## Usage
+
+```ts
+import { fbxResource } from 'angular-three-soba/loaders';
+
+@Component({...})
+class MyComponent {
+	// Single file
+	fbx = fbxResource(() => '/models/character.fbx');
+}
+```
+
+### Loading multiple files
+
+```ts
+@Component({...})
+class MyComponent {
+	// Array of files
+	fbxs = fbxResource(() => ['/models/a.fbx', '/models/b.fbx']);
+}
+```
+
+### Loading named files
+
+```ts
+@Component({...})
+class MyComponent {
+	// Named files as record
+	models = fbxResource(() => ({
+		hero: '/models/hero.fbx',
+		enemy: '/models/enemy.fbx',
+	}));
+
+	constructor() {
+		effect(() => {
+			const models = this.models.value();
+			if (models) {
+				console.log(models.hero); // Group
+				console.log(models.enemy); // Group
+			}
+		});
+	}
+}
+```
+
+### Using in template
+
+```ts
+@Component({
+	template: `
+		@if (fbx.value(); as fbx) {
+			<ngt-primitive *args="[fbx]" />
+		}
+	`,
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+class MyComponent {
+	fbx = fbxResource(() => '/models/character.fbx');
+}
+```
+
+## Static Methods
+
+- `fbxResource.preload(input)` - Preloads FBX models into the cache.
+
+```ts
+// Preload a single model
+fbxResource.preload('/models/character.fbx');
+
+// Preload multiple models
+fbxResource.preload(['/models/a.fbx', '/models/b.fbx']);
+
+// Preload named models
+fbxResource.preload({
+	hero: '/models/hero.fbx',
+	enemy: '/models/enemy.fbx',
+});
+```

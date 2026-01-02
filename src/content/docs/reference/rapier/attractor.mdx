@@ -1,0 +1,250 @@
+---
+title: NgtrAttractor
+description: angular-three-rapier Attractor addon API
+---
+
+`NgtrAttractor` creates a gravitational attractor point in the physics world. All dynamic rigid bodies within range will be attracted (or repelled) towards this point.
+
+## Installation
+
+Import from the addons entry point:
+
+```ts
+import { NgtrAttractor } from 'angular-three-rapier/addons';
+```
+
+## Basic Usage
+
+```html
+<!-- Simple attractor at origin -->
+<ngt-object3D attractor />
+
+<!-- Attractor with custom options -->
+<ngt-object3D [attractor]="{ strength: 10, range: 20 }" />
+
+<!-- Positioned attractor -->
+<ngt-object3D [attractor]="{ strength: 5 }" [position]="[5, 0, 0]" />
+```
+
+## Options
+
+| Option                  | Type                                  | Default     | Description                                        |
+| ----------------------- | ------------------------------------- | ----------- | -------------------------------------------------- |
+| `strength`              | `number`                              | `1`         | Force strength. Positive attracts, negative repels |
+| `range`                 | `number`                              | `10`        | Maximum distance for effect                        |
+| `type`                  | `'static' \| 'linear' \| 'newtonian'` | `'static'`  | Gravity calculation type                           |
+| `gravitationalConstant` | `number`                              | `6.673e-11` | G constant for newtonian type                      |
+| `collisionGroups`       | `InteractionGroups`                   | `undefined` | Limit effect to specific groups                    |
+
+## Gravity Types
+
+### Static
+
+Constant force regardless of distance:
+
+```html
+<ngt-object3D [attractor]="{ strength: 10, range: 20, type: 'static' }" />
+```
+
+Objects within range experience the same force magnitude.
+
+### Linear
+
+Force scales linearly with distance (closer = stronger):
+
+```html
+<ngt-object3D [attractor]="{ strength: 10, range: 20, type: 'linear' }" />
+```
+
+Force increases as objects approach the attractor.
+
+### Newtonian
+
+Follows Newton's law of universal gravitation (inverse square):
+
+```html
+<ngt-object3D
+	[attractor]="{
+    strength: 1000,
+    range: 50,
+    type: 'newtonian',
+    gravitationalConstant: 0.01
+  }"
+/>
+```
+
+Realistic gravity that increases dramatically at close range.
+
+## Repeller
+
+Use negative strength to push objects away:
+
+```html
+<ngt-object3D [attractor]="{ strength: -10, range: 15 }" [position]="[5, 0, 0]" />
+```
+
+## Collision Groups
+
+Limit the attractor's effect to specific collision groups:
+
+```ts
+import { interactionGroups, NgtrAttractor } from 'angular-three-rapier';
+import { NgtrAttractor } from 'angular-three-rapier/addons';
+
+@Component({
+	template: `
+		<!-- Only affects objects in group 1 -->
+		<ngt-object3D [attractor]="{ strength: 10 }" [interactionGroups]="[[0], [1]]" />
+	`,
+	imports: [NgtrAttractor, NgtrInteractionGroups],
+})
+export class MyComponent {}
+```
+
+## Complete Example
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtArgs } from 'angular-three';
+import { NgtrPhysics, NgtrRigidBody, interactionGroups } from 'angular-three-rapier';
+import { NgtrAttractor } from 'angular-three-rapier/addons';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<!-- Central attractor -->
+				<ngt-object3D
+					[attractor]="{
+						strength: 5,
+						range: 30,
+						type: 'newtonian',
+						gravitationalConstant: 0.5,
+					}"
+					[position]="[0, 0, 0]"
+				>
+					<!-- Visual representation -->
+					<ngt-mesh>
+						<ngt-sphere-geometry *args="[0.5]" />
+						<ngt-mesh-standard-material color="yellow" emissive="orange" />
+					</ngt-mesh>
+				</ngt-object3D>
+
+				<!-- Repelling field -->
+				<ngt-object3D [attractor]="{ strength: -3, range: 8, type: 'linear' }" [position]="[5, 0, 0]">
+					<ngt-mesh>
+						<ngt-sphere-geometry *args="[0.3]" />
+						<ngt-mesh-standard-material color="red" />
+					</ngt-mesh>
+				</ngt-object3D>
+
+				<!-- Orbiting particles -->
+				@for (pos of particlePositions; track $index) {
+					<ngt-object3D rigidBody [position]="pos" [options]="{ linearVelocity: velocities[$index] }">
+						<ngt-mesh>
+							<ngt-sphere-geometry *args="[0.2]" />
+							<ngt-mesh-standard-material color="cyan" />
+						</ngt-mesh>
+					</ngt-object3D>
+				}
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgtrRigidBody, NgtrAttractor, NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class OrbitExample {
+	particlePositions = Array.from({ length: 20 }, (_, i) => {
+		const angle = (i / 20) * Math.PI * 2;
+		const radius = 10 + Math.random() * 5;
+		return [Math.cos(angle) * radius, (Math.random() - 0.5) * 4, Math.sin(angle) * radius] as [
+			number,
+			number,
+			number,
+		];
+	});
+
+	// Initial velocities for orbit
+	velocities = this.particlePositions.map((pos) => {
+		const [x, y, z] = pos;
+		const speed = 2;
+		// Perpendicular to position for circular motion
+		return [-z * speed * 0.1, 0, x * speed * 0.1] as [number, number, number];
+	});
+}
+```
+
+## Multiple Attractors
+
+Create complex gravitational fields with multiple attractors:
+
+```html
+<ngtr-physics>
+	<ng-template>
+		<!-- Binary star system -->
+		<ngt-object3D
+			[attractor]="{ strength: 100, range: 50, type: 'newtonian', gravitationalConstant: 0.1 }"
+			[position]="[-5, 0, 0]"
+		/>
+
+		<ngt-object3D
+			[attractor]="{ strength: 80, range: 50, type: 'newtonian', gravitationalConstant: 0.1 }"
+			[position]="[5, 0, 0]"
+		/>
+
+		<!-- Particles will be affected by both -->
+		...
+	</ng-template>
+</ngtr-physics>
+```
+
+## Manual Force Application
+
+For custom attractor behavior, use `applyAttractorForceOnRigidBody`:
+
+```ts
+import { applyAttractorForceOnRigidBody } from 'angular-three-rapier/addons';
+import { beforePhysicsStep } from 'angular-three-rapier';
+
+@Component({...})
+export class CustomAttractor {
+  attractorMesh = viewChild.required<ElementRef<THREE.Mesh>>('attractor');
+
+  constructor() {
+    beforePhysicsStep((world) => {
+      world.bodies.forEach((body) => {
+        if (body.isDynamic()) {
+          applyAttractorForceOnRigidBody(body, {
+            object: this.attractorMesh().nativeElement,
+            strength: 10,
+            range: 20,
+            type: 'linear',
+            gravitationalConstant: 6.673e-11,
+          });
+        }
+      });
+    });
+  }
+}
+```
+
+## Debug Visualization
+
+The attractor includes built-in debug visualization when physics debug mode is enabled:
+
+```html
+<ngtr-physics [options]="{ debug: true }">
+	<ng-template>
+		<ngt-object3D [attractor]="{ strength: 10, range: 15 }" />
+	</ng-template>
+</ngtr-physics>
+```
+
+This shows the range sphere of the attractor.
+
+## Performance Considerations
+
+- Attractors iterate over all dynamic bodies each physics step
+- Limit `range` to reduce unnecessary calculations
+- Use `collisionGroups` to filter which bodies are affected
+- Consider using fewer, stronger attractors instead of many weak ones

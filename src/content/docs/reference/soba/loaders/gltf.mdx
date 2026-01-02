@@ -2,3 +2,44 @@
 title: gltfResource
 description: angular-three-soba/loaders gltfResource API
 ---
+
+Creates a resource for loading GLTF/GLB 3D models. Supports Draco compression and Meshopt optimization out of the box. Returns a resource with a `scene` computed signal for direct access to the loaded scene(s).
+
+## Usage
+
+```ts
+import { gltfResource } from 'angular-three-soba/loaders';
+
+@Component({
+	selector: 'app-suzi',
+	template: `
+		@if (gltf.value(); as gltf) {
+			<ngt-primitive *args="[gltf.scene]" [rotation]="[-0.63, 0, 0]" [scale]="2" />
+		}
+	`,
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class Suzi {
+	gltf = gltfResource(() => './suzanne-high-poly.gltf');
+
+	// Or access scene directly via computed signal
+	scene = this.gltf.scene;
+}
+```
+
+## Options
+
+| Option       | Type                           | Default | Description                                            |
+| ------------ | ------------------------------ | ------- | ------------------------------------------------------ |
+| `useDraco`   | `boolean \| string`            | `true`  | Enable Draco compression. Pass string for custom path. |
+| `useMeshOpt` | `boolean`                      | `true`  | Enable Meshopt optimization.                           |
+| `extensions` | `(loader: GLTFLoader) => void` | -       | Custom extensions callback for GLTFLoader.             |
+| `onLoad`     | `(data) => void`               | -       | Callback fired when loading completes.                 |
+| `injector`   | `Injector`                     | -       | Optional injector for DI context.                      |
+
+## Static Methods
+
+- `gltfResource.preload(input, options?)` - Preloads a GLTF model into the cache.
+- `gltfResource.setDecoderPath(path: string)` - Sets the global Draco decoder path.

@@ -1,0 +1,106 @@
+---
+title: NgtsPreload
+description: angular-three-soba/misc NgtsPreload directive
+---
+
+A directive that pre-compiles shaders and textures to reduce runtime jank. When added to a scene, it triggers `WebGLRenderer.compile()` and uses a CubeCamera to ensure environment maps are also compiled.
+
+## Usage
+
+### Preload Entire Scene
+
+```html
+<ngts-preload [all]="true" />
+```
+
+### Preload with Custom Scene/Camera
+
+```html
+<ngts-preload [scene]="customScene" [camera]="customCamera" />
+```
+
+## Inputs
+
+| Input    | Type           | Description                                                             |
+| -------- | -------------- | ----------------------------------------------------------------------- |
+| `all`    | `boolean`      | When `true`, temporarily makes invisible objects visible during compile |
+| `scene`  | `THREE.Scene`  | Custom scene to preload. Defaults to the store's scene                  |
+| `camera` | `THREE.Camera` | Custom camera for compilation. Defaults to the store's camera           |
+
+## How It Works
+
+1. When the directive initializes, it calls `WebGLRenderer.compile(scene, camera)`
+2. This forces THREE.js to compile all shader programs before they're needed
+3. If `all` is `true`, it temporarily sets `visible = true` on all objects during compilation
+4. Uses a CubeCamera to ensure environment maps and reflection probes are compiled
+
+## Examples
+
+### Basic Preload
+
+```ts
+@Component({
+	template: `
+		<ngt-group>
+			<!-- Your scene content -->
+			<ngt-mesh>
+				<ngt-box-geometry />
+				<ngt-mesh-standard-material />
+			</ngt-mesh>
+
+			<!-- Preload at the end -->
+			<ngts-preload />
+		</ngt-group>
+	`,
+})
+class MyScene {}
+```
+
+### Preload All Objects (Including Hidden)
+
+```html
+<!-- Preloads shaders for hidden objects too -->
+<ngts-preload [all]="true" />
+```
+
+### Conditional Preload
+
+```html
+@if (shouldPreload()) {
+<ngts-preload [all]="true" />
+}
+```
+
+### With Custom Scene
+
+```ts
+@Component({
+	template: `
+		<ngts-preload [scene]="offscreenScene" [camera]="offscreenCamera" />
+	`,
+})
+class MyScene {
+	offscreenScene = new THREE.Scene();
+	offscreenCamera = new THREE.PerspectiveCamera();
+
+	constructor() {
+		// Set up offscreen scene with heavy materials
+		const mesh = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshPhysicalMaterial({ clearcoat: 1 }));
+		this.offscreenScene.add(mesh);
+	}
+}
+```
+
+## When to Use
+
+- **Complex materials**: Scenes with PBR materials, custom shaders, or transmission materials
+- **Many objects**: Scenes with lots of meshes that may cause frame drops on first render
+- **Environment maps**: When using HDR environments that need compilation
+- **On-demand loaded content**: Preload GLTF models after loading to avoid jank when they first appear
+
+## Performance Notes
+
+- Preloading happens synchronously and may cause a brief freeze
+- Use strategically - not every scene needs preloading
+- Consider using `@defer` or lazy loading if preload time is significant
+- The `all` option is more thorough but takes longer

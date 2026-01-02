@@ -1,0 +1,198 @@
+---
+title: Studio
+description: angular-three-theatre TheatreStudio API
+---
+
+Theatre.js Studio is a visual editor for creating and editing animations directly in the browser.
+
+## TheatreStudio
+
+The `studio` directive initializes and manages Theatre.js Studio. It dynamically imports the studio to avoid including it in production builds.
+
+### Usage
+
+```html
+<!-- Enable studio (default when attribute present) -->
+<theatre-project studio>
+	<ng-container sheet="scene">...</ng-container>
+</theatre-project>
+```
+
+```html
+<!-- Conditionally enable studio -->
+<theatre-project [studio]="isDevelopment">
+	<ng-container sheet="scene">...</ng-container>
+</theatre-project>
+```
+
+```html
+<!-- Disable studio -->
+<theatre-project [studio]="false">
+	<ng-container sheet="scene">...</ng-container>
+</theatre-project>
+```
+
+### Import
+
+```ts
+import { TheatreProject, TheatreStudio } from 'angular-three-theatre';
+
+@Component({
+  imports: [TheatreProject, TheatreStudio],
+  // ...
+})
+```
+
+### Options
+
+| Option   | Type      | Default | Description                      |
+| -------- | --------- | ------- | -------------------------------- |
+| `studio` | `boolean` | `true`  | Whether the studio UI is visible |
+
+### Exports
+
+| Export   | Type                      | Description                                     |
+| -------- | ------------------------- | ----------------------------------------------- |
+| `studio` | `Signal<IStudio \| null>` | Theatre.js Studio instance (null while loading) |
+
+## Development Setup
+
+Typically, you want Studio enabled only during development:
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TheatreProject, TheatreSheet, TheatreStudio } from 'angular-three-theatre';
+import { environment } from '../environments/environment';
+
+@Component({
+	template: `
+		<theatre-project name="My Project" [studio]="isDevelopment">
+			<ng-container sheet="Scene">
+				<!-- sheet objects here -->
+			</ng-container>
+		</theatre-project>
+	`,
+	imports: [TheatreProject, TheatreSheet, TheatreStudio],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+	isDevelopment = !environment.production;
+}
+```
+
+## Studio Features
+
+When Studio is enabled, you get access to:
+
+- **Visual Timeline**: Drag and drop keyframes to create animations
+- **Property Editors**: Adjust values with sliders, color pickers, and input fields
+- **Selection**: Click objects to select them in the editor
+- **Scrubbing**: Drag the playhead to preview animations
+- **Export**: Save animation state as JSON
+
+## Selection Integration
+
+Sheet objects can integrate with Studio's selection system:
+
+```html
+<ng-template sheetObject="cube" [(sheetObjectSelected)]="isCubeSelected" let-select="select" let-deselect="deselect">
+	<ngt-mesh (click)="select()" (pointerout)="deselect()">
+		<ngt-box-geometry />
+		<ngt-mesh-standard-material [color]="isCubeSelected() ? 'yellow' : 'white'" />
+	</ngt-mesh>
+</ng-template>
+```
+
+## Saving Animation State
+
+To persist animations, export the state from Studio and load it via project config:
+
+```ts
+// 1. Export state from Studio (copy from browser console)
+// studio.createContentOfSaveFile('your-project-name')
+
+// 2. Save to a JSON file
+import savedState from './animation-state.json';
+
+@Component({
+	template: `
+		<theatre-project name="My Project" [config]="{ state: savedState }">
+			<!-- ... -->
+		</theatre-project>
+	`,
+})
+export class SceneGraph {
+	savedState = savedState;
+}
+```
+
+## THEATRE_STUDIO Token
+
+The `TheatreStudio` directive provides the studio instance via injection token:
+
+```ts
+import { inject } from '@angular/core';
+import { THEATRE_STUDIO } from 'angular-three-theatre';
+
+@Directive({
+	/* ... */
+})
+export class MyDirective {
+	private studio = inject(THEATRE_STUDIO, { optional: true });
+
+	doSomething() {
+		const studioInstance = this.studio?.();
+		if (studioInstance) {
+			// Access studio API
+			studioInstance.setSelection([
+				/* objects */
+			]);
+		}
+	}
+}
+```
+
+## Complete Example
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { TheatreProject, TheatreSheet, TheatreSheetObject, TheatreStudio } from 'angular-three-theatre';
+
+@Component({
+	template: `
+		<theatre-project name="Studio Demo" [studio]="studioEnabled()">
+			<ng-container sheet="Scene" [sequence]="{ autoplay: false }" #seq="sequence">
+				<div class="toolbar">
+					<label>
+						<input type="checkbox" [checked]="studioEnabled()" (change)="toggleStudio()" />
+						Show Studio
+					</label>
+					<button (click)="seq.play()">Play</button>
+				</div>
+
+				<ng-template sheetObject="light" [sheetObjectProps]="{ intensity: 1 }" let-values="values">
+					<ngt-directional-light [intensity]="values().intensity" [position]="[5, 5, 5]" />
+				</ng-template>
+
+				<ng-template sheetObject="cube">
+					<theatre-transform>
+						<ngt-mesh>
+							<ngt-box-geometry />
+							<ngt-mesh-standard-material color="coral" />
+						</ngt-mesh>
+					</theatre-transform>
+				</ng-template>
+			</ng-container>
+		</theatre-project>
+	`,
+	imports: [TheatreProject, TheatreSheet, TheatreSheetObject, TheatreStudio],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class StudioDemo {
+	studioEnabled = signal(true);
+
+	toggleStudio() {
+		this.studioEnabled.update((v) => !v);
+	}
+}
+```

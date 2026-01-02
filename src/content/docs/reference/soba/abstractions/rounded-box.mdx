@@ -1,0 +1,11 @@
+---
+title: NgtsRoundedBox
+description: angular-three-soba/abstractions NgtsRoundedBox API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import RoundedBox, { content, sceneGraphContent } from '@soba/abstractions/rounded-box/rounded-box?includeContent';
+
+<ReferenceWrapper path="soba/abstractions/rounded-box" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<RoundedBox client:only />
+</ReferenceWrapper>

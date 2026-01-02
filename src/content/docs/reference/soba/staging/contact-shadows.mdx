@@ -1,0 +1,14 @@
+---
+title: NgtsContactShadows
+description: angular-three-soba/staging NgtsContactShadows API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import ContactShadows, {
+	content,
+	sceneGraphContent,
+} from '@soba/staging/contact-shadows/contact-shadows?includeContent';
+
+<ReferenceWrapper path="soba/staging/contact-shadows" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<ContactShadows client:only />
+</ReferenceWrapper>

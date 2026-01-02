@@ -1,0 +1,11 @@
+---
+title: NgtsPoints
+description: angular-three-soba/performances NgtsPoints and NgtsPoint introduction
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Points, { content, sceneGraphContent } from '@soba/performances/points/points?includeContent';
+
+<ReferenceWrapper path="soba/performances/points" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Points client:only />
+</ReferenceWrapper>

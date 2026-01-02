@@ -1,0 +1,72 @@
+---
+title: NgtpOutline
+description: Outline post-processing effect
+---
+
+The outline effect draws an outline around selected objects, useful for highlighting or selection feedback.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpOutline } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngt-mesh #mesh>
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-outline [options]="{
+        selection: [meshRef],
+        edgeStrength: 3,
+        visibleEdgeColor: 0xffffff
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpOutline],
+})
+export class SceneGraph {
+  meshRef = viewChild<ElementRef<THREE.Mesh>>('mesh');
+}
+```
+
+## Options
+
+| Property           | Type         | Default    | Description                             |
+| ------------------ | ------------ | ---------- | --------------------------------------- |
+| `selection`        | `Object3D[]` | `[]`       | Objects to outline                      |
+| `edgeStrength`     | `number`     | `1`        | Strength of the outline                 |
+| `pulseSpeed`       | `number`     | `0`        | Speed of pulse animation (0 = no pulse) |
+| `visibleEdgeColor` | `number`     | `0xffffff` | Color of visible edges                  |
+| `hiddenEdgeColor`  | `number`     | `0x22090a` | Color of hidden edges                   |
+| `blur`             | `boolean`    | `false`    | Apply blur to outline                   |
+| `xRay`             | `boolean`    | `true`     | Show outline through objects            |
+
+## Example: Selection Highlight
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh #mesh (click)="selected.set(mesh)">
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      @if (selected()) {
+        <ngtp-outline [options]="{
+          selection: [selected()],
+          edgeStrength: 5,
+          visibleEdgeColor: 0x00ff00,
+          pulseSpeed: 0.5
+        }" />
+      }
+    </ngtp-effect-composer>
+  `,
+})
+export class SceneGraph {
+  selected = signal<THREE.Mesh | null>(null);
+}
+```

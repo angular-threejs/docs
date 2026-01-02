@@ -1,0 +1,65 @@
+---
+title: textureResource
+description: angular-three-soba/loaders textureResource API
+---
+
+Creates a resource for loading texture images. Loaded textures are automatically initialized with the WebGL renderer for optimal performance.
+
+## Usage
+
+```ts
+import { textureResource } from 'angular-three-soba/loaders';
+
+@Component({
+	template: `
+		@if (textures.value(); as textures) {
+			<ngt-mesh>
+				<ngt-mesh-physical-material [normalMap]="textures.normalMap" [roughnessMap]="textures.roughnessMap" />
+			</ngt-mesh>
+		}
+	`,
+})
+export class MyCmp {
+	// Load multiple textures as named map
+	textures = textureResource(() => ({
+		roughnessMap: 'roughness_floor.jpeg',
+		normalMap: 'NORM.jpg',
+	}));
+}
+```
+
+### Loading a single texture
+
+```ts
+@Component({...})
+export class MyCmp {
+	texture = textureResource(() => '/textures/diffuse.jpg');
+}
+```
+
+### Loading an array of textures
+
+```ts
+@Component({...})
+export class MyCmp {
+	textures = textureResource(() => ['/textures/a.jpg', '/textures/b.jpg']);
+}
+```
+
+## Static Methods
+
+- `textureResource.preload(input)` - Preloads textures into the cache.
+
+```ts
+// Preload a single texture
+textureResource.preload('/textures/diffuse.jpg');
+
+// Preload multiple textures
+textureResource.preload(['/textures/a.jpg', '/textures/b.jpg']);
+
+// Preload named textures
+textureResource.preload({
+	roughnessMap: 'roughness_floor.jpeg',
+	normalMap: 'NORM.jpg',
+});
+```

@@ -2,3 +2,67 @@
 title: Introduction
 description: angular-three-soba/staging introduction
 ---
+
+`angular-three-soba/staging` provides components for staging, environment, lighting, and visual effects in your 3D scenes.
+
+## Peer Dependencies
+
+| Package                | Required By               |
+| ---------------------- | ------------------------- |
+| `@pmndrs/vanilla`      | Various staging utilities |
+| `three-mesh-bvh`       | `NgtsCaustics`            |
+| `@monogrid/gainmap-js` | HDR environment maps      |
+
+```bash
+npm install @pmndrs/vanilla three-mesh-bvh @monogrid/gainmap-js
+# yarn add @pmndrs/vanilla three-mesh-bvh @monogrid/gainmap-js
+# pnpm add @pmndrs/vanilla three-mesh-bvh @monogrid/gainmap-js
+```
+
+## Shadows
+
+- [NgtsAccumulativeShadows](./accumulative-shadows) - Soft shadows with zero performance impact after accumulation
+- [NgtsRandomizedLights](./randomized-lights) - Randomized lights for realistic raycast-like shadows
+- [NgtsContactShadows](./contact-shadows) - Contact shadow implementation
+
+## Environment & Lighting
+
+- [NgtsEnvironment](./environment) - Global cubemap for scene environment and background
+- [NgtsLightformer](./lightformer) - Flat shapes mimicking light-formers for HDRI environments
+- [NgtsSky](./sky) - Procedural sky dome using atmospheric scattering
+- [NgtsSpotLight](./spot-light) - Enhanced spot light with volumetric lighting
+- [NgtsSpotLightShadow](./spot-light-shadow) - Shadow caster with texture patterns
+- [NgtsCaustics](./caustics) - Realistic caustic light patterns
+
+## Positioning & Layout
+
+- [NgtsCenter](./center) - Center children based on bounding box
+- [NgtsBBAnchor](./bb-anchor) - Offset children using AABB bounding boxes
+- [NgtsBounds](./bounds) - Calculate boundary box and center camera
+
+## Animation & Effects
+
+- [NgtsFloat](./float) - Simulate floating objects with up/down motion
+- [NgtsCameraShake](./camera-shake) - Configurable camera shake effect
+- [NgtsSparkles](./sparkles) - Animated sparkle particles
+
+## Clouds & Atmosphere
+
+- [NgtsCloud](./cloud) - Volumetric clouds using instanced billboarded sprites
+- [NgtsClouds](./clouds) - Container for multiple cloud instances
+
+## Textures
+
+- [matcapTextureResource](./matcap-texture) - Load matcap textures for realistic lighting without lights
+- [normalTextureResource](./normal-texture) - Load normal textures for surface detail
+- [NgtsRenderTexture](./render-texture) - Render a live scene into a texture
+
+## Masking
+
+- [NgtsMask](./mask) - Create stencil masks for selective rendering
+
+## Stage & Presentation
+
+- [NgtsStage](./stage) - Complete stage setup with lighting, shadows, and environment
+- [NgtsBackdrop](./backdrop) - Curved plane for studio-like backdrop
+- [NgtsShadow](./shadow) - Simple circular drop shadow

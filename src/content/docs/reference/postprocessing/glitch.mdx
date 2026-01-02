@@ -1,0 +1,45 @@
+---
+title: NgtpGlitch
+description: Glitch post-processing effect
+---
+
+The glitch effect creates digital distortion artifacts, simulating video signal interference or data corruption.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpGlitch } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-glitch [options]="{ delay: [1.5, 3.5], duration: [0.6, 1.0] }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpGlitch],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property   | Type               | Default      | Description                              |
+| ---------- | ------------------ | ------------ | ---------------------------------------- |
+| `delay`    | `[number, number]` | `[1.5, 3.5]` | Min/max delay between glitches (seconds) |
+| `duration` | `[number, number]` | `[0.6, 1.0]` | Min/max duration of glitches (seconds)   |
+| `strength` | `[number, number]` | `[0.3, 1.0]` | Min/max strength of the effect           |
+| `active`   | `boolean`          | `true`       | Whether the effect is active             |
+| `ratio`    | `number`           | `0.85`       | Ratio of glitch occurrence               |
+
+## Example: Intense Glitch
+
+```angular-html
+<ngtp-effect-composer>
+  <ngtp-glitch [options]="{
+    delay: [0.5, 1.0],
+    duration: [0.2, 0.5],
+    strength: [0.5, 1.0],
+    ratio: 0.9
+  }" />
+</ngtp-effect-composer>
+```

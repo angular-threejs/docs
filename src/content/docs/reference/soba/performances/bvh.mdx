@@ -1,0 +1,11 @@
+---
+title: NgtsBVH
+description: angular-three-soba/performances NgtsBVH introduction
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Bvh, { content, sceneGraphContent } from '@soba/performances/bvh/bvh?includeContent';
+
+<ReferenceWrapper path="soba/performances/bvh" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Bvh client:only />
+</ReferenceWrapper>

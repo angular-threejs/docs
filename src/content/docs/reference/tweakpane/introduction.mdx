@@ -1,0 +1,226 @@
+---
+title: Introduction
+description: angular-three-tweakpane Introduction API
+---
+
+[Tweakpane](https://tweakpane.github.io/docs/) integration for Angular Three, enabling easy creation of debug UI controls for tweaking parameters in your 3D scenes.
+
+## Installation
+
+```bash
+npm install angular-three-tweakpane tweakpane
+# yarn add angular-three-tweakpane tweakpane
+# pnpm add angular-three-tweakpane tweakpane
+```
+
+> Make sure to already have `angular-three` installed
+
+## Setup
+
+1. Add `tweakpaneAnchor` directive to your `ngt-canvas`
+2. Add `<tweakpane-pane>` somewhere in your scene
+3. Use `tweaks()` in any component within the canvas
+
+```ts
+import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtCanvas } from 'angular-three/dom';
+import { tweaks, TweakpaneAnchor, TweakpanePane } from 'angular-three-tweakpane';
+
+@Component({
+	template: `
+		<ngt-mesh [position]="[params.x(), params.y(), params.z()]">
+			<ngt-box-geometry />
+			<ngt-mesh-standard-material [color]="params.color()" />
+		</ngt-mesh>
+
+		<tweakpane-pane title="Controls" />
+	`,
+	imports: [TweakpanePane],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SceneGraph {
+	params = tweaks('Position', {
+		x: { value: 0, min: -5, max: 5 },
+		y: { value: 0, min: -5, max: 5 },
+		z: { value: 0, min: -5, max: 5 },
+		color: { value: '#ff0000', color: true },
+	});
+}
+
+@Component({
+	template: `
+		<ngt-canvas tweakpaneAnchor>
+			<app-scene-graph *canvasContent />
+		</ngt-canvas>
+	`,
+	imports: [NgtCanvas, TweakpaneAnchor, SceneGraph],
+})
+export class Experience {}
+```
+
+## tweaks()
+
+The `tweaks()` function creates Tweakpane controls declaratively from any component within an `ngt-canvas`. It provides component-level control with programmatic configuration.
+
+### Basic Usage
+
+```ts
+// Primitives (creates new signals internally)
+const controls = tweaks('Physics', {
+	gravity: 9.8,
+	debug: false,
+	name: 'World',
+});
+
+// Access values as signals
+controls.gravity(); // Signal<number>
+controls.debug(); // Signal<boolean>
+```
+
+### Config Objects
+
+Use config objects for more control over input behavior:
+
+```ts
+const controls = tweaks('Physics', {
+	gravity: { value: 9.8, min: 0, max: 20, step: 0.1 },
+	color: { value: '#ff0000', color: true },
+	mode: { value: 'normal', options: ['normal', 'debug', 'verbose'] },
+});
+```
+
+### Two-Way Binding
+
+Pass existing signals for two-way binding:
+
+```ts
+filteringEnabled = signal(true);
+gravity = signal(9.8);
+
+params = tweaks('Settings', {
+	filteringEnabled: this.filteringEnabled, // two-way binding
+	gravity: this.gravity,
+});
+```
+
+When the control value changes, your original signal is updated. The returned signal is a readonly view of the same value.
+
+### Nested Folders
+
+Organize controls into collapsible groups using `tweaks.folder()`:
+
+```ts
+params = tweaks('Settings', {
+	basic: 42,
+	position: tweaks.folder('Position', {
+		x: { value: 0, min: -5, max: 5 },
+		y: { value: 0, min: -5, max: 5 },
+		z: { value: 0, min: -5, max: 5 },
+	}),
+	material: tweaks.folder('Material', {
+		color: { value: '#ff0000', color: true },
+		metalness: { value: 0.5, min: 0, max: 1 },
+		roughness: { value: 0.5, min: 0, max: 1 },
+	}),
+});
+
+// Access nested values
+this.params.position.x(); // Signal<number>
+this.params.material.color(); // Signal<string>
+```
+
+### Buttons (Actions)
+
+Add clickable buttons that trigger callbacks:
+
+```ts
+params = tweaks('Actions', {
+	reset: { action: () => this.reset(), label: 'Reset All' },
+	randomize: { action: () => this.randomize() },
+});
+```
+
+Button configs don't produce signals in the result object.
+
+## API
+
+### tweaks()
+
+| Parameter          | Type          | Description                                         |
+| ------------------ | ------------- | --------------------------------------------------- |
+| `folderName`       | `string`      | Name of the folder to create in the pane            |
+| `config`           | `TweakConfig` | Configuration object defining controls              |
+| `options.expanded` | `boolean`     | Whether folder starts expanded (default: `false`)   |
+| `options.injector` | `Injector`    | Optional injector for use outside injection context |
+
+### Config Value Types
+
+| Config Type           | Description             | Example                                            |
+| --------------------- | ----------------------- | -------------------------------------------------- |
+| `number`              | Creates number input    | `gravity: 9.8`                                     |
+| `string`              | Creates text input      | `name: 'Object'`                                   |
+| `boolean`             | Creates checkbox        | `debug: false`                                     |
+| `WritableSignal<T>`   | Two-way binding         | `enabled: this.mySignal`                           |
+| `TweakNumberConfig`   | Number with constraints | `{ value: 0, min: -5, max: 5, step: 0.1 }`         |
+| `TweakColorConfig`    | Color picker            | `{ value: '#ff0000', color: true }`                |
+| `TweakCheckboxConfig` | Boolean toggle          | `{ value: true }`                                  |
+| `TweakTextConfig`     | Text input              | `{ value: 'hello' }`                               |
+| `TweakListConfig`     | Dropdown select         | `{ value: 'a', options: ['a', 'b', 'c'] }`         |
+| `TweakPointConfig`    | 2D/3D/4D point          | `{ value: [0, 0, 0] as [number, number, number] }` |
+| `TweakButtonConfig`   | Clickable button        | `{ action: () => reset() }`                        |
+| `TweakFolderConfig`   | Nested folder           | `tweaks.folder('Name', { ... })`                   |
+
+### TweakNumberConfig
+
+| Option  | Type                               | Description                                 |
+| ------- | ---------------------------------- | ------------------------------------------- |
+| `value` | `number \| WritableSignal<number>` | Initial value or signal for two-way binding |
+| `min`   | `number`                           | Minimum value (enables slider)              |
+| `max`   | `number`                           | Maximum value (enables slider)              |
+| `step`  | `number`                           | Step increment                              |
+
+### TweakColorConfig
+
+| Option  | Type                               | Description                                |
+| ------- | ---------------------------------- | ------------------------------------------ |
+| `value` | `string \| WritableSignal<string>` | Hex color value                            |
+| `color` | `true`                             | Required marker to identify as color input |
+
+### TweakListConfig
+
+| Option    | Type                       | Description                  |
+| --------- | -------------------------- | ---------------------------- |
+| `value`   | `T \| WritableSignal<T>`   | Currently selected value     |
+| `options` | `T[] \| Record<string, T>` | Array or label-value mapping |
+
+### TweakPointConfig
+
+| Option  | Type                                           | Description                 |
+| ------- | ---------------------------------------------- | --------------------------- |
+| `value` | `[number, number, ...] \| WritableSignal<...>` | Point tuple (2D, 3D, or 4D) |
+| `x`     | `{ min?, max?, step? }`                        | X-axis constraints          |
+| `y`     | `{ min?, max?, step? }`                        | Y-axis constraints          |
+| `z`     | `{ min?, max?, step? }`                        | Z-axis constraints (3D/4D)  |
+| `w`     | `{ min?, max?, step? }`                        | W-axis constraints (4D)     |
+
+### TweakButtonConfig
+
+| Option   | Type         | Description                     |
+| -------- | ------------ | ------------------------------- |
+| `action` | `() => void` | Callback when button is clicked |
+| `label`  | `string`     | Optional label next to button   |
+
+### tweaks.folder()
+
+Creates a nested folder configuration.
+
+```ts
+tweaks.folder(name: string, config: TweakConfig, options?: { expanded?: boolean })
+```
+
+| Parameter          | Type          | Description                    |
+| ------------------ | ------------- | ------------------------------ |
+| `name`             | `string`      | Display name of the folder     |
+| `config`           | `TweakConfig` | Controls within the folder     |
+| `options.expanded` | `boolean`     | Whether folder starts expanded |

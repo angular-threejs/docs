@@ -1,0 +1,122 @@
+---
+title: fbo
+description: angular-three-soba/misc fbo API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Fbo, { content, sceneGraphContent } from '@soba/misc/fbo/fbo?includeContent';
+
+<ReferenceWrapper path="soba/misc/fbo" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Fbo client:only />
+</ReferenceWrapper>
+
+Creates a `WebGLRenderTarget` (Frame Buffer Object) for off-screen rendering. The FBO is automatically sized to the canvas dimensions if width/height are not specified, and is disposed on component destroy.
+
+## Usage
+
+```ts
+import { fbo } from 'angular-three-soba/misc';
+import { beforeRender } from 'angular-three';
+
+@Component({...})
+class MyComponent {
+	// Basic usage - sized to canvas
+	renderTarget = fbo();
+
+	// Custom size with multisampling
+	target = fbo(() => ({
+		width: 512,
+		height: 512,
+		settings: { samples: 4 },
+	}));
+
+	constructor() {
+		// Render to FBO
+		beforeRender(({ gl, scene, camera }) => {
+			gl.setRenderTarget(this.target);
+			gl.render(scene, camera);
+			gl.setRenderTarget(null);
+		});
+	}
+}
+```
+
+## Signature
+
+```ts
+function fbo(
+	params: () => NgtsFBOParams = () => ({}),
+	{ injector }: { injector?: Injector } = {},
+): THREE.WebGLRenderTarget;
+```
+
+## Parameters
+
+| Parameter  | Type                  | Description                              |
+| ---------- | --------------------- | ---------------------------------------- |
+| `params`   | `() => NgtsFBOParams` | Signal of FBO configuration              |
+| `injector` | `Injector` (optional) | Custom injector for dependency injection |
+
+### NgtsFBOParams
+
+| Property   | Type                  | Description                                                      |
+| ---------- | --------------------- | ---------------------------------------------------------------- |
+| `width`    | `number`              | Width in pixels. Defaults to canvas width × device pixel ratio   |
+| `height`   | `number`              | Height in pixels. Defaults to canvas height × device pixel ratio |
+| `settings` | `RenderTargetOptions` | THREE.js render target options (see below)                       |
+
+### RenderTargetOptions
+
+| Property          | Type              | Default | Description                                   |
+| ----------------- | ----------------- | ------- | --------------------------------------------- |
+| `samples`         | `number`          | `0`     | Samples for MSAA. Set to 0 to disable         |
+| `depth`           | `boolean`         | `false` | Render scene depth into `buffer.depthTexture` |
+| `depthBuffer`     | `boolean`         | `true`  | Include a depth buffer                        |
+| `stencilBuffer`   | `boolean`         | `false` | Include a stencil buffer                      |
+| `generateMipmaps` | `boolean`         | `true`  | Generate mipmaps for the FBO texture          |
+| `wrapS`           | `Wrapping`        | -       | Wrapping mode for s-coordinate                |
+| `wrapT`           | `Wrapping`        | -       | Wrapping mode for t-coordinate                |
+| `magFilter`       | `TextureFilter`   | -       | Magnification filter                          |
+| `minFilter`       | `TextureFilter`   | -       | Minification filter                           |
+| `format`          | `PixelFormat`     | -       | Internal format of the color buffer           |
+| `type`            | `TextureDataType` | -       | Data type of the color buffer                 |
+| `anisotropy`      | `number`          | -       | Anisotropic filtering level                   |
+| `depthTexture`    | `DepthTexture`    | -       | Custom DepthTexture instance                  |
+| `colorSpace`      | `ColorSpace`      | -       | Color space of the FBO texture                |
+
+## Return Value
+
+Returns a `THREE.WebGLRenderTarget` that can be used for off-screen rendering.
+
+---
+
+## NgtsFBO Directive
+
+A structural directive that renders a part of your scene into an FBO using `ng-template`. Provides the created `WebGLRenderTarget` as implicit context to the template.
+
+### Usage
+
+```html
+<ng-template [fbo]="{ width: 512, height: 512 }" let-target>
+	<!-- target is the WebGLRenderTarget -->
+	<ngt-mesh>
+		<ngt-plane-geometry />
+		<ngt-mesh-basic-material [map]="target.texture" />
+	</ngt-mesh>
+</ng-template>
+```
+
+### With Multisampling
+
+```html
+<ng-template [fbo]="{ width: 1024, height: 1024, samples: 4 }" let-target>
+	<ngt-mesh>
+		<ngt-box-geometry />
+		<ngt-mesh-standard-material [map]="target.texture" />
+	</ngt-mesh>
+</ng-template>
+```
+
+:::note
+`injectFBO` is deprecated. Use `fbo` instead.
+:::

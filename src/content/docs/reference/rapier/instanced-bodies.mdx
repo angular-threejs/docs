@@ -1,0 +1,266 @@
+---
+title: NgtrInstancedRigidBodies
+description: angular-three-rapier Instanced Rigid Bodies API
+---
+
+`NgtrInstancedRigidBodies` creates multiple rigid bodies efficiently from a single `InstancedMesh`. This is highly optimized for scenes with many identical physics objects.
+
+## Usage
+
+Each instance gets its own rigid body while sharing the same geometry for rendering. The component automatically syncs instance matrices with the physics simulation.
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtArgs } from 'angular-three';
+import { NgtrPhysics, NgtrInstancedRigidBodies } from 'angular-three-rapier';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<ngt-object3D [instancedRigidBodies]="instances">
+					<ngt-instanced-mesh [count]="instances.length" castShadow receiveShadow>
+						<ngt-sphere-geometry *args="[0.5]" />
+						<ngt-mesh-standard-material color="orange" />
+					</ngt-instanced-mesh>
+				</ngt-object3D>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgtrInstancedRigidBodies, NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SpheresExample {
+	instances = Array.from({ length: 100 }, (_, i) => ({
+		key: i,
+		position: [Math.random() * 10 - 5, Math.random() * 10 + 5, Math.random() * 10 - 5] as [number, number, number],
+	}));
+}
+```
+
+## Instance Configuration
+
+Each instance in the array can have its own configuration:
+
+```ts
+interface NgtrInstancedRigidBodyOptions {
+	// Required: unique identifier for change tracking
+	key: string | number;
+
+	// Optional: rigid body type (default: 'dynamic')
+	type?: 'dynamic' | 'fixed' | 'kinematicPosition' | 'kinematicVelocity';
+
+	// Optional: initial transform
+	position?: [x: number, y: number, z: number];
+	rotation?: [x: number, y: number, z: number]; // Euler angles
+	scale?: [x: number, y: number, z: number];
+	quaternion?: [x: number, y: number, z: number, w: number];
+
+	// Optional: custom user data
+	userData?: Record<string, any>;
+
+	// Optional: per-instance physics options
+	options?: NgtrRigidBodyOptions;
+}
+```
+
+## Complete Example
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtArgs } from 'angular-three';
+import {
+	NgtrPhysics,
+	NgtrInstancedRigidBodies,
+	NgtrRigidBody,
+	NgtrInstancedRigidBodyOptions,
+} from 'angular-three-rapier';
+
+@Component({
+	template: `
+		<ngtr-physics [options]="{ debug: true }">
+			<ng-template>
+				<!-- Ground -->
+				<ngt-object3D rigidBody="fixed" [position]="[0, -1, 0]">
+					<ngt-mesh receiveShadow>
+						<ngt-box-geometry *args="[50, 1, 50]" />
+						<ngt-mesh-standard-material color="gray" />
+					</ngt-mesh>
+				</ngt-object3D>
+
+				<!-- Falling cubes -->
+				<ngt-object3D [instancedRigidBodies]="cubes">
+					<ngt-instanced-mesh [count]="cubes.length" castShadow>
+						<ngt-box-geometry />
+						<ngt-mesh-standard-material color="hotpink" />
+					</ngt-instanced-mesh>
+				</ngt-object3D>
+
+				<!-- Falling spheres with custom options -->
+				<ngt-object3D [instancedRigidBodies]="spheres" [options]="{ colliders: 'ball' }">
+					<ngt-instanced-mesh [count]="spheres.length" castShadow>
+						<ngt-sphere-geometry *args="[0.5]" />
+						<ngt-mesh-standard-material color="cyan" />
+					</ngt-instanced-mesh>
+				</ngt-object3D>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgtrInstancedRigidBodies, NgtrRigidBody, NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class InstancedExample {
+	cubes: NgtrInstancedRigidBodyOptions[] = Array.from({ length: 50 }, (_, i) => ({
+		key: `cube-${i}`,
+		position: [Math.random() * 10 - 5, Math.random() * 20 + 10, Math.random() * 10 - 5] as [number, number, number],
+		rotation: [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI] as [
+			number,
+			number,
+			number,
+		],
+	}));
+
+	spheres: NgtrInstancedRigidBodyOptions[] = Array.from({ length: 50 }, (_, i) => ({
+		key: `sphere-${i}`,
+		position: [Math.random() * 10 - 5, Math.random() * 20 + 30, Math.random() * 10 - 5] as [number, number, number],
+		options: {
+			restitution: 0.8, // Bouncy spheres
+		},
+	}));
+}
+```
+
+## Options
+
+The `options` input configures default physics behavior for all instances:
+
+```html
+<ngt-object3D
+	[instancedRigidBodies]="instances"
+	[options]="{
+    colliders: 'ball',
+    restitution: 0.5,
+    friction: 0.3
+  }"
+>
+	...
+</ngt-object3D>
+```
+
+See [NgtrRigidBody options](/reference/rapier/rigid-body#options) for all available options.
+
+## Per-Instance Options
+
+Override options for individual instances:
+
+```ts
+instances = [
+	{
+		key: 'bouncy',
+		position: [0, 10, 0],
+		options: {
+			restitution: 1.0, // Very bouncy
+		},
+	},
+	{
+		key: 'heavy',
+		position: [2, 10, 0],
+		options: {
+			gravityScale: 2.0, // Falls faster
+		},
+	},
+	{
+		key: 'static',
+		position: [4, 5, 0],
+		type: 'fixed', // Doesn't move
+	},
+];
+```
+
+## Custom Colliders
+
+Add custom colliders using the `data-colliders` attribute:
+
+```html
+<ngt-object3D [instancedRigidBodies]="instances" [options]="{ colliders: false }">
+	<!-- Custom collider applied to each instance -->
+	<ngt-object3D [ballCollider]="[0.5]" data-colliders />
+
+	<ngt-instanced-mesh [count]="instances.length">
+		<ngt-sphere-geometry *args="[0.5]" />
+		<ngt-mesh-standard-material />
+	</ngt-instanced-mesh>
+</ngt-object3D>
+```
+
+## Accessing Rigid Bodies
+
+Access individual rigid bodies via `rigidBodyRefs`:
+
+```ts
+@Component({
+	template: `
+		<ngt-object3D [instancedRigidBodies]="instances" #instanced="instancedRigidBodies">...</ngt-object3D>
+	`,
+})
+export class MyComponent {
+	instanced = viewChild.required<NgtrInstancedRigidBodies>('instanced');
+
+	applyImpulseToAll() {
+		const bodies = this.instanced().rigidBodyRefs();
+		bodies.forEach((bodyRef) => {
+			const rb = bodyRef.rigidBody();
+			if (rb) {
+				rb.applyImpulse({ x: 0, y: 10, z: 0 }, true);
+			}
+		});
+	}
+}
+```
+
+## Dynamic Updates
+
+Update instance positions by modifying the array:
+
+```ts
+@Component({...})
+export class DynamicInstancesExample {
+  instances = signal<NgtrInstancedRigidBodyOptions[]>([]);
+
+  addInstance() {
+    this.instances.update((prev) => [
+      ...prev,
+      {
+        key: Date.now(),
+        position: [0, 20, 0] as [number, number, number],
+      },
+    ]);
+  }
+
+  removeInstance(key: string | number) {
+    this.instances.update((prev) =>
+      prev.filter((instance) => instance.key !== key)
+    );
+  }
+}
+```
+
+## Performance Tips
+
+1. **Use instanced rigid bodies** for many identical objects (balls, cubes, etc.)
+2. **Set a reasonable count** - too many physics bodies can slow down the simulation
+3. **Consider using `colliders: 'ball'`** for spheres as it's the most efficient
+4. **Use simple collider shapes** when possible instead of trimesh
+5. **Enable sleeping** (default) to reduce computation for stationary objects
+
+## Transform Inputs
+
+The component accepts standard Object3D transform inputs:
+
+| Input        | Type           | Description                     |
+| ------------ | -------------- | ------------------------------- |
+| `position`   | `[x, y, z]`    | Position of the container       |
+| `rotation`   | `[x, y, z]`    | Euler rotation of the container |
+| `scale`      | `[x, y, z]`    | Scale of the container          |
+| `quaternion` | `[x, y, z, w]` | Quaternion rotation             |
+| `userData`   | `object`       | Custom user data                |

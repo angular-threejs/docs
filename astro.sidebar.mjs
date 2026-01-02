@@ -248,7 +248,7 @@ export function ngtSidebar() {
 			{
 				label: 'Soba',
 				link: '/reference/soba/introduction',
-				icon: 'puzzle',
+				icon: 'star',
 				items: [
 					{
 						label: 'angular-three-soba',
@@ -271,6 +271,10 @@ export function ngtSidebar() {
 								slug: 'reference/soba/abstractions/billboard',
 							},
 							{
+								label: 'NgtsRoundedBox',
+								slug: 'reference/soba/abstractions/rounded-box',
+							},
+							{
 								label: 'NgtsGrid',
 								slug: 'reference/soba/abstractions/grid',
 							},
@@ -285,6 +289,22 @@ export function ngtSidebar() {
 							{
 								label: 'NgtsText3D',
 								slug: 'reference/soba/abstractions/text-3d',
+							},
+							{
+								label: 'NgtsLine',
+								slug: 'reference/soba/abstractions/line',
+							},
+							{
+								label: 'NgtsEdges',
+								slug: 'reference/soba/abstractions/edges',
+							},
+							{
+								label: 'NgtsPrismGeometry',
+								slug: 'reference/soba/abstractions/prism-geometry',
+							},
+							{
+								label: 'helper',
+								slug: 'reference/soba/abstractions/helper',
 							},
 						],
 					},
@@ -320,6 +340,43 @@ export function ngtSidebar() {
 								label: 'NgtsCameraControls',
 								slug: 'reference/soba/controls/camera-controls',
 							},
+							{
+								label: 'NgtsOrbitControls',
+								slug: 'reference/soba/controls/orbit-controls',
+							},
+							{
+								label: 'NgtsPointerLockControls',
+								slug: 'reference/soba/controls/pointer-lock-controls',
+							},
+							{
+								label: 'NgtsScrollControls',
+								slug: 'reference/soba/controls/scroll-controls',
+							},
+							{
+								label: 'NgtsTrackballControls',
+								slug: 'reference/soba/controls/trackball-controls',
+							},
+						],
+					},
+					{
+						label: 'angular-three-soba/gizmos',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/soba/gizmos/introduction',
+							},
+							{
+								label: 'NgtsGizmoHelper',
+								slug: 'reference/soba/gizmos/gizmo-helper',
+							},
+							{
+								label: 'NgtsTransformControls',
+								slug: 'reference/soba/gizmos/transform-controls',
+							},
+							{
+								label: 'NgtsPivotControls',
+								slug: 'reference/soba/gizmos/pivot-controls',
+							},
 						],
 					},
 					{
@@ -333,6 +390,26 @@ export function ngtSidebar() {
 								label: 'gltfResource',
 								slug: 'reference/soba/loaders/gltf',
 							},
+							{
+								label: 'textureResource',
+								slug: 'reference/soba/loaders/texture-resource',
+							},
+							{
+								label: 'fontResource',
+								slug: 'reference/soba/loaders/font-resource',
+							},
+							{
+								label: 'fbxResource',
+								slug: 'reference/soba/loaders/fbx-resource',
+							},
+							{
+								label: 'progress',
+								slug: 'reference/soba/loaders/progress',
+							},
+							{
+								label: 'NgtsLoader',
+								slug: 'reference/soba/loaders/loader',
+							},
 						],
 					},
 					{
@@ -343,8 +420,36 @@ export function ngtSidebar() {
 								slug: 'reference/soba/materials/introduction',
 							},
 							{
+								label: 'NgtsCustomShaderMaterial',
+								slug: 'reference/soba/materials/custom-shader-material',
+							},
+							{
+								label: 'NgtsMeshDistortMaterial',
+								slug: 'reference/soba/materials/mesh-distort-material',
+							},
+							{
+								label: 'NgtsMeshPortalMaterial',
+								slug: 'reference/soba/materials/mesh-portal-material',
+							},
+							{
+								label: 'NgtsMeshReflectorMaterial',
+								slug: 'reference/soba/materials/mesh-reflector-material',
+							},
+							{
+								label: 'NgtsMeshRefractionMaterial',
+								slug: 'reference/soba/materials/mesh-refraction-material',
+							},
+							{
 								label: 'NgtsMeshTransmissionMaterial',
 								slug: 'reference/soba/materials/mesh-transmission-material',
+							},
+							{
+								label: 'NgtsMeshWobbleMaterial',
+								slug: 'reference/soba/materials/mesh-wobble-material',
+							},
+							{
+								label: 'NgtsPointMaterial',
+								slug: 'reference/soba/materials/point-material',
 							},
 						],
 					},
@@ -358,6 +463,34 @@ export function ngtSidebar() {
 							{
 								label: 'animations',
 								slug: 'reference/soba/misc/animations',
+							},
+							{
+								label: 'fbo',
+								slug: 'reference/soba/misc/fbo',
+							},
+							{
+								label: 'depthBuffer',
+								slug: 'reference/soba/misc/depth-buffer',
+							},
+							{
+								label: 'NgtsSampler / surfaceSampler',
+								slug: 'reference/soba/misc/sampler',
+							},
+							{
+								label: 'NgtsDecal',
+								slug: 'reference/soba/misc/decal',
+							},
+							{
+								label: 'NgtsHTML',
+								slug: 'reference/soba/misc/html',
+							},
+							{
+								label: 'intersect / NgtsIntersect',
+								slug: 'reference/soba/misc/intersect',
+							},
+							{
+								label: 'NgtsPreload',
+								slug: 'reference/soba/misc/preload',
 							},
 						],
 					},
@@ -376,6 +509,26 @@ export function ngtSidebar() {
 								label: 'NgtsAdaptiveDpr',
 								slug: 'reference/soba/performances/adaptive-dpr',
 							},
+							{
+								label: 'NgtsAdaptiveEvents',
+								slug: 'reference/soba/performances/adaptive-events',
+							},
+							{
+								label: 'NgtsBVH',
+								slug: 'reference/soba/performances/bvh',
+							},
+							{
+								label: 'NgtsInstances',
+								slug: 'reference/soba/performances/instances',
+							},
+							{
+								label: 'NgtsSegments',
+								slug: 'reference/soba/performances/segments',
+							},
+							{
+								label: 'NgtsPoints',
+								slug: 'reference/soba/performances/points',
+							},
 						],
 					},
 					{
@@ -386,8 +539,220 @@ export function ngtSidebar() {
 								slug: 'reference/soba/staging/introduction',
 							},
 							{
+								label: 'NgtsAccumulativeShadows',
+								slug: 'reference/soba/staging/accumulative-shadows',
+							},
+							{
+								label: 'NgtsRandomizedLights',
+								slug: 'reference/soba/staging/randomized-lights',
+							},
+							{
 								label: 'NgtsCenter',
 								slug: 'reference/soba/staging/center',
+							},
+							{
+								label: 'NgtsCloud',
+								slug: 'reference/soba/staging/cloud',
+							},
+							{
+								label: 'NgtsContactShadows',
+								slug: 'reference/soba/staging/contact-shadows',
+							},
+							{
+								label: 'NgtsEnvironment',
+								slug: 'reference/soba/staging/environment',
+							},
+							{
+								label: 'NgtsLightformer',
+								slug: 'reference/soba/staging/lightformer',
+							},
+							{
+								label: 'NgtsFloat',
+								slug: 'reference/soba/staging/float',
+							},
+							{
+								label: 'matcapTextureResource',
+								slug: 'reference/soba/staging/matcap-texture-resource',
+							},
+							{
+								label: 'NgtsMask',
+								slug: 'reference/soba/staging/mask',
+							},
+							{
+								label: 'normalTextureResource',
+								slug: 'reference/soba/staging/normal-texture-resource',
+							},
+							{
+								label: 'NgtsRenderTexture',
+								slug: 'reference/soba/staging/render-texture',
+							},
+							{
+								label: 'NgtsBounds',
+								slug: 'reference/soba/staging/bounds',
+							},
+							{
+								label: 'NgtsShadow',
+								slug: 'reference/soba/staging/shadow',
+							},
+							{
+								label: 'NgtsSparkles',
+								slug: 'reference/soba/staging/sparkles',
+							},
+							{
+								label: 'NgtsSky',
+								slug: 'reference/soba/staging/sky',
+							},
+							{
+								label: 'NgtsStage',
+								slug: 'reference/soba/staging/stage',
+							},
+							{
+								label: 'NgtsCaustics',
+								slug: 'reference/soba/staging/caustics',
+							},
+							{
+								label: 'NgtsSpotLight',
+								slug: 'reference/soba/staging/spot-light',
+							},
+							{
+								label: 'NgtsBackdrop',
+								slug: 'reference/soba/staging/backdrop',
+							},
+						],
+					},
+				],
+			},
+			{
+				label: 'Postprocessing',
+				link: '/reference/postprocessing/introduction',
+				icon: 'sun',
+				items: [
+					{
+						label: 'angular-three-postprocessing',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/postprocessing/introduction',
+							},
+							{
+								label: 'NgtpBloom',
+								slug: 'reference/postprocessing/bloom',
+							},
+							{
+								label: 'NgtpVignette',
+								slug: 'reference/postprocessing/vignette',
+							},
+							{
+								label: 'NgtpDepthOfField',
+								slug: 'reference/postprocessing/depth-of-field',
+							},
+							{
+								label: 'NgtpChromaticAberration',
+								slug: 'reference/postprocessing/chromatic-aberration',
+							},
+							{
+								label: 'NgtpGlitch',
+								slug: 'reference/postprocessing/glitch',
+							},
+							{
+								label: 'NgtpNoise',
+								slug: 'reference/postprocessing/noise',
+							},
+							{
+								label: 'NgtpOutline',
+								slug: 'reference/postprocessing/outline',
+							},
+							{
+								label: 'NgtpSMAA',
+								slug: 'reference/postprocessing/smaa',
+							},
+						],
+					},
+				],
+			},
+			{
+				label: 'Rapier',
+				link: '/reference/rapier/introduction',
+				icon: 'rocket',
+				items: [
+					{
+						label: 'angular-three-rapier',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/rapier/introduction',
+							},
+							{
+								label: 'NgtrRigidBody',
+								slug: 'reference/rapier/rigid-body',
+							},
+							{
+								label: 'Colliders',
+								slug: 'reference/rapier/colliders',
+							},
+							{
+								label: 'Joints',
+								slug: 'reference/rapier/joints',
+							},
+							{
+								label: 'NgtrInstancedRigidBodies',
+								slug: 'reference/rapier/instanced-bodies',
+							},
+							{
+								label: 'Hooks',
+								slug: 'reference/rapier/hooks',
+							},
+							{
+								label: 'NgtrAttractor',
+								slug: 'reference/rapier/attractor',
+							},
+						],
+					},
+				],
+			},
+			{
+				label: 'Theatre',
+				link: '/reference/theatre/introduction',
+				icon: 'pencil',
+				items: [
+					{
+						label: 'angular-three-theatre',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/theatre/introduction',
+							},
+							{
+								label: 'Sheet and Sequence',
+								slug: 'reference/theatre/sheet',
+							},
+							{
+								label: 'Sheet Object',
+								slug: 'reference/theatre/sheet-object',
+							},
+							{
+								label: 'Studio',
+								slug: 'reference/theatre/studio',
+							},
+						],
+					},
+				],
+			},
+			{
+				label: 'Tweakpane',
+				link: '/reference/tweakpane/introduction',
+				icon: 'setting',
+				items: [
+					{
+						label: 'angular-three-tweakpane',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/tweakpane/introduction',
+							},
+							{
+								label: 'Components',
+								slug: 'reference/tweakpane/components',
 							},
 						],
 					},

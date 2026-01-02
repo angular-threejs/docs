@@ -1,0 +1,103 @@
+---
+title: NgtsDecal
+description: angular-three-soba/misc NgtsDecal component
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Decal, { content, sceneGraphContent } from '@soba/misc/decal/decal?includeContent';
+
+<ReferenceWrapper path="soba/misc/decal" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Decal client:only />
+</ReferenceWrapper>
+
+Abstraction around THREE.js `DecalGeometry`. Projects textures onto mesh surfaces for effects like stickers, logos, or damage marks.
+
+The decal box must intersect the surface to be visible. If you don't specify a rotation, it will orient toward the parent's center point. You can also pass a single number as the rotation to spin the decal.
+
+## Usage
+
+### With Custom Material
+
+```html
+<ngt-mesh>
+	<ngt-sphere-geometry />
+	<ngt-mesh-basic-material />
+	<ngts-decal [options]="{ position: [0, 0, 0], rotation: [0, 0, 0], scale: 1, debug: true }">
+		<ngt-mesh-basic-material [map]="texture()" [polygonOffset]="true" [polygonOffsetFactor]="-1" />
+	</ngts-decal>
+</ngt-mesh>
+```
+
+### With Default Material
+
+If you don't specify a material, a transparent `MeshBasicMaterial` with `polygonOffsetFactor: -10` is created automatically:
+
+```html
+<ngt-mesh>
+	<ngt-sphere-geometry />
+	<ngt-mesh-basic-material />
+	<ngts-decal [options]="{ map: texture() }" />
+</ngt-mesh>
+```
+
+### With External Mesh Reference
+
+When declarative composition isn't possible, use the `mesh` input:
+
+```html
+<ngts-decal [mesh]="meshRef()" [options]="{ map: texture() }">
+	<ngt-mesh-basic-material [map]="texture()" [polygonOffset]="true" [polygonOffsetFactor]="-1" />
+</ngts-decal>
+```
+
+## Inputs
+
+| Property  | Description                                       | Default |
+| --------- | ------------------------------------------------- | ------- |
+| `mesh`    | External mesh to attach the decal to              | Parent  |
+| `options` | Decal configuration object (see NgtsDecalOptions) | -       |
+
+### NgtsDecalOptions
+
+| Property              | Description                                          | Default     |
+| --------------------- | ---------------------------------------------------- | ----------- |
+| `map`                 | The texture to use for the decal                     | `undefined` |
+| `debug`               | Makes the "bounding box" of the decal visible        | `false`     |
+| `depthTest`           | Whether to enable depth testing                      | `false`     |
+| `polygonOffsetFactor` | The factor by which the polygon offset is multiplied | `-10`       |
+| `position`            | Position of the decal `[x, y, z]`                    | `[0, 0, 0]` |
+| `rotation`            | Rotation of the decal `[x, y, z]` or single number   | -           |
+| `scale`               | Scale of the decal (uniform or `[x, y, z]`)          | `1`         |
+
+## Example: Multiple Decals on a Character
+
+```ts
+@Component({
+	template: `
+		<ngt-mesh>
+			<ngt-capsule-geometry *args="[0.5, 1, 16, 32]" />
+			<ngt-mesh-standard-material color="white" />
+
+			<!-- Badge decal -->
+			<ngts-decal [options]="{ position: [0, 0.5, 0.5], scale: 0.3, map: badgeTexture() }" />
+
+			<!-- Number decal -->
+			<ngts-decal [options]="{ position: [0, -0.2, 0.5], scale: 0.2, map: numberTexture() }" />
+		</ngt-mesh>
+	`,
+})
+class Character {
+	badgeTexture = textureResource(() => 'badge.png');
+	numberTexture = textureResource(() => 'number.png');
+}
+```
+
+## Debug Mode
+
+Set `debug: true` to visualize the decal's bounding box:
+
+```html
+<ngts-decal [options]="{ debug: true, position: [0, 0, 1], scale: 0.5 }">
+	<ngt-mesh-basic-material color="red" />
+</ngts-decal>
+```

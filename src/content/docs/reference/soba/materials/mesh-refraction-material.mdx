@@ -1,0 +1,18 @@
+---
+title: NgtsMeshRefractionMaterial
+description: angular-three-soba/materials NgtsMeshRefractionMaterial API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import MeshRefractionMaterial, {
+	content,
+	sceneGraphContent,
+} from '@soba/materials/mesh-refraction-material/mesh-refraction-material?includeContent';
+
+<ReferenceWrapper
+	path="soba/materials/mesh-refraction-material"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<MeshRefractionMaterial client:only />
+</ReferenceWrapper>

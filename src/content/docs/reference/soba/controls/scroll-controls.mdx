@@ -1,0 +1,14 @@
+---
+title: NgtsScrollControls
+description: angular-three-soba/controls NgtsScrollControls API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import ScrollControls, {
+	content,
+	sceneGraphContent,
+} from '@soba/controls/scroll-controls/scroll-controls?includeContent';
+
+<ReferenceWrapper path="soba/controls/scroll-controls" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<ScrollControls client:only />
+</ReferenceWrapper>

@@ -8,17 +8,17 @@ Once the SDFs are generated, it assembles a geometry that positions all the glyp
 
 ## Demos
 
-* [With the Troika scene management framework](https://troika-examples.netlify.com/#text)
-* [With react-three-fiber](https://codesandbox.io/embed/troika-3d-text-via-react-three-fiber-ntfx2?fontsize=14)
-* [With a video texture](https://bfplr.csb.app/)
-* [With the Material Icons font](https://codesandbox.io/s/material-icons-in-troika-three-text-t2mu7?file=/src/index.js)
-* [With in-place editing](https://stackblitz.com/edit/vitejs-vite-xq3mug?file=src%2Fmain.js)
+- [With the Troika scene management framework](https://troika-examples.netlify.com/#text)
+- [With react-three-fiber](https://codesandbox.io/embed/troika-3d-text-via-react-three-fiber-ntfx2?fontsize=14)
+- [With a video texture](https://bfplr.csb.app/)
+- [With the Material Icons font](https://codesandbox.io/s/material-icons-in-troika-three-text-t2mu7?file=/src/index.js)
+- [With in-place editing](https://stackblitz.com/edit/vitejs-vite-xq3mug?file=src%2Fmain.js)
 
 ## With Other Frameworks
 
-* [In the `drei` utilities for react-three-fiber](https://github.com/pmndrs/drei#text)
-* [As an A-Frame component](https://github.com/lojjic/aframe-troika-text)
-* [As a Web Component in three-elements](https://www.npmjs.com/package/@three-elements/text)
+- [In the `drei` utilities for react-three-fiber](https://github.com/pmndrs/drei#text)
+- [As an A-Frame component](https://github.com/lojjic/aframe-troika-text)
+- [As a Web Component in three-elements](https://www.npmjs.com/package/@three-elements/text)
 
 ## Screenshots
 
@@ -49,24 +49,24 @@ npm install three
 ## Usage
 
 ```js
-import {Text} from 'troika-three-text'
+import { Text } from 'troika-three-text';
 ```
 
 You can then use the `Text` class like any other Three.js mesh:
 
 ```js
 // Create:
-const myText = new Text()
-myScene.add(myText)
+const myText = new Text();
+myScene.add(myText);
 
 // Set properties to configure:
-myText.text = 'Hello world!'
-myText.fontSize = 0.2
-myText.position.z = -2
-myText.color = 0x9966FF
+myText.text = 'Hello world!';
+myText.fontSize = 0.2;
+myText.position.z = -2;
+myText.color = 0x9966ff;
 
 // Update the rendering:
-myText.sync()
+myText.sync();
 ```
 
 It's a good idea to call the `.sync()` method after changing any properties that would affect the text's layout. If you don't, it will be called automatically on the next render frame, but calling it yourself can get the result sooner.
@@ -74,8 +74,8 @@ It's a good idea to call the `.sync()` method after changing any properties that
 When you're done with the `Text` instance, be sure to call `dispose` on it to prevent a memory leak:
 
 ```js
-myScene.remove(myText)
-myText.dispose()
+myScene.remove(myText);
+myText.dispose();
 ```
 
 ## Supported properties
@@ -145,11 +145,12 @@ Default: `1`
 ### `font`
 
 The URL of a custom font file to be used. Supported font formats are:
-* .ttf
-* .otf
-* .woff (.woff2 is _not_ supported)
 
-Default: The *Roboto* font loaded from Google Fonts CDN
+- .ttf
+- .otf
+- .woff (.woff2 is _not_ supported)
+
+Default: The _Roboto_ font loaded from Google Fonts CDN
 
 ### `fontSize`
 
@@ -205,12 +206,12 @@ Note that because your material instance is _replaced_ by a derived material ins
 
 ```js
 // Bad:
-text.material = myOrigMaterial
-myOrigMaterial.opacity = 0.5
+text.material = myOrigMaterial;
+myOrigMaterial.opacity = 0.5;
 
 // Good:
-text.material = myOrigMaterial
-text.material.opacity = 0.5
+text.material = myOrigMaterial;
+text.material.opacity = 0.5;
 ```
 
 Default: a `MeshBasicMaterial` instance
@@ -237,7 +238,7 @@ Default: black
 
 ### `outlineOffsetX`, `outlineOffsetY`
 
-These define a horizontal and vertical offset of the text outline. Using an offset with `outlineWidth: 0` creates a drop-shadow effect like CSS's `text-shadow`; also see `outlineBlur`. 
+These define a horizontal and vertical offset of the text outline. Using an offset with `outlineWidth: 0` creates a drop-shadow effect like CSS's `text-shadow`; also see `outlineBlur`.
 
 The offsets can be specified as either an absolute number in local units, or as a percentage string e.g. `"12%"` which is treated as a percentage of the `fontSize`.
 
@@ -251,7 +252,7 @@ Default: `1`
 
 ### `outlineWidth`
 
-The width of an outline/halo to be drawn around each text glyph using the `outlineColor` and `outlineOpacity`. This can help improve readability when the text is displayed against a background of low or varying contrast. 
+The width of an outline/halo to be drawn around each text glyph using the `outlineColor` and `outlineOpacity`. This can help improve readability when the text is displayed against a background of low or varying contrast.
 
 The width can be specified as either an absolute number in local units, or as a percentage string e.g. `"10%"` which is interpreted as a percentage of the `fontSize`.
 
@@ -327,17 +328,18 @@ To self-host the files:
 - Copy the contents of the `packages/data/` directory to your server where you want to host it.
 - Configure troika-three-text to load from that server URL:
     - Per Text instance:
-      ```js
-      text.unicodeFontsURL = 'https://my.host/unicode-fonts-data'
-      ```
+        ```js
+        text.unicodeFontsURL = 'https://my.host/unicode-fonts-data';
+        ```
     - Globally:
-      ```js
-      import {configureTextBuilder} from 'troika-three-text'
 
-      configureTextBuilder({
-        unicodeFontsURL: 'https://my.host/unicode-fonts-data'
-      })
-      ```
+        ```js
+        import { configureTextBuilder } from 'troika-three-text';
+
+        configureTextBuilder({
+        	unicodeFontsURL: 'https://my.host/unicode-fonts-data',
+        });
+        ```
 
 ## Handling Asynchronous Updates
 
@@ -347,22 +349,22 @@ Since the text processing occurs in a web worker, it is by definition asynchrono
 
     ```js
     myText.sync(() => {
-      // code to execute after sync completes...
-    })
+    	// code to execute after sync completes...
+    });
     ```
-   
+
     This is best when you want to only react to _that specific_ sync call. Keep in mind that the callback will not execute if the text is already fully synced.
-   
+
 2. Add a listener for the `synccomplete` event:
 
     ```js
     myText.addEventListener('synccomplete', () => {
-      // code to execute after sync completes...
-    })
+    	// code to execute after sync completes...
+    });
     ```
 
     This will fire after _every_ sync, no matter who invoked it. This is best if you need to react to all syncs, for example to trigger a manual canvas render.
-    
+
     You can also listen for the `syncstart` event if you need to react to the initiation of a sync call, e.g. to set some sort of "waiting" state while the text is being processed.
 
 ### Disabling web worker
@@ -370,11 +372,11 @@ Since the text processing occurs in a web worker, it is by definition asynchrono
 Some environments don't allow evaluating JS strings for security reasons, like those with a restrictive [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), which blocks how troika-three-text creates its web worker. Or you may want to avoid using a worker for some other reason. You can force it to run on the main thread instead (although still asynchronously) by configuring it prior to creating any Text instances:
 
 ```js
-import {configureTextBuilder} from 'troika-three-text'
+import { configureTextBuilder } from 'troika-three-text';
 
 configureTextBuilder({
-  useWorker: false
-})
+	useWorker: false,
+});
 ```
 
 ## Preloading
@@ -382,44 +384,40 @@ configureTextBuilder({
 To avoid long pauses when first displaying a piece of text in your scene, you can preload fonts and optionally pre-generate the SDF textures for particular glyphs up front:
 
 ```js
-import {preloadFont} from 'troika-three-text'
+import { preloadFont } from 'troika-three-text';
 
-myApp.showLoadingScreen()
+myApp.showLoadingScreen();
 
 preloadFont(
-  {
-    font: 'path/to/myfontfile.woff', 
-    characters: 'abcdefghijklmnopqrstuvwxyz'
-  },
-  () => {
-    myApp.showScene()
-  }
-)
+	{
+		font: 'path/to/myfontfile.woff',
+		characters: 'abcdefghijklmnopqrstuvwxyz',
+	},
+	() => {
+		myApp.showScene();
+	},
+);
 ```
 
 The arguments are:
 
 - `options`
-  
-  - `options.font` - The URL of the font file to preload. If `null` is passed, this will preload the default font.
-  
-  - `options.characters` - A string or array of string character sequences for which to pre-generate glyph SDF textures. Note that this _will_ honor ligature substitution, so you may need to specify ligature sequences in addition to their individual characters to get all possible glyphs, e.g. `["t", "h", "th"]` to get the "t" and "h" glyphs plus the "th" glyph.
+    - `options.font` - The URL of the font file to preload. If `null` is passed, this will preload the default font.
+    - `options.characters` - A string or array of string character sequences for which to pre-generate glyph SDF textures. Note that this _will_ honor ligature substitution, so you may need to specify ligature sequences in addition to their individual characters to get all possible glyphs, e.g. `["t", "h", "th"]` to get the "t" and "h" glyphs plus the "th" glyph.
 
-  - `options.sdfGlyphSize` - The size at which to prerender the SDFs for the `characters` glyphs. See the `sdfGlyphSize` config property on `Text` for details about SDF sizes. If not specified, will use the default SDF size.
+    - `options.sdfGlyphSize` - The size at which to prerender the SDFs for the `characters` glyphs. See the `sdfGlyphSize` config property on `Text` for details about SDF sizes. If not specified, will use the default SDF size.
 
 - `callback` - A function that will be called when the preloading is complete.
-
 
 ## Postprocessing
 
 It is possible to use `Text` within scenes that utilize the [postprocessing](https://github.com/vanruesc/postprocessing) library for applying image effects. However, you must enable a special mode in that library that allows `Text`'s custom material to be honored. Just do the following once somewhere in your code:
 
 ```js
-import { OverrideMaterialManager } from 'postprocessing'
+import { OverrideMaterialManager } from 'postprocessing';
 
-OverrideMaterialManager.workaroundEnabled = true
+OverrideMaterialManager.workaroundEnabled = true;
 ```
-
 
 ## Carets and Selection Ranges
 

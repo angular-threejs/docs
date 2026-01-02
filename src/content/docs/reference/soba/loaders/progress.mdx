@@ -1,0 +1,68 @@
+---
+title: progress
+description: angular-three-soba/loaders progress API
+---
+
+Creates a reactive state object that tracks Three.js asset loading progress. Hooks into `THREE.DefaultLoadingManager` to monitor all asset loading operations.
+
+## Usage
+
+```ts
+import { progress } from 'angular-three-soba/loaders';
+
+@Component({...})
+class MyComponent {
+	loadingState = progress();
+
+	constructor() {
+		effect(() => {
+			if (this.loadingState.active()) {
+				console.log(`Loading: ${this.loadingState.progress()}%`);
+			}
+		});
+
+		// Check for errors
+		effect(() => {
+			const errors = this.loadingState.errors();
+			if (errors.length > 0) {
+				console.error('Failed to load:', errors);
+			}
+		});
+	}
+}
+```
+
+## Return Value
+
+Returns a signal state object with the following properties:
+
+| Property   | Type               | Description                         |
+| ---------- | ------------------ | ----------------------------------- |
+| `errors`   | `Signal<string[]>` | Array of URLs that failed to load   |
+| `active`   | `Signal<boolean>`  | Whether loading is in progress      |
+| `progress` | `Signal<number>`   | Loading progress percentage (0-100) |
+| `item`     | `Signal<string>`   | URL of the currently loading item   |
+| `loaded`   | `Signal<number>`   | Number of items loaded              |
+| `total`    | `Signal<number>`   | Total number of items to load       |
+
+## Example: Custom Loading Indicator
+
+```ts
+@Component({
+	selector: 'app-loading',
+	template: `
+		@if (loading.active()) {
+			<div class="loading-overlay">
+				<div class="progress-bar">
+					<div class="progress-fill" [style.width.%]="loading.progress()"></div>
+				</div>
+				<p>Loading {{ loading.item() }}...</p>
+				<p>{{ loading.loaded() }} / {{ loading.total() }}</p>
+			</div>
+		}
+	`,
+})
+class LoadingIndicator {
+	loading = progress();
+}
+```

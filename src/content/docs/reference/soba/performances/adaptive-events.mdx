@@ -1,0 +1,18 @@
+---
+title: NgtsAdaptiveEvents
+description: angular-three-soba/performances NgtsAdaptiveEvents introduction
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import AdaptiveEvents, {
+	content,
+	sceneGraphContent,
+} from '@soba/performances/adaptive-events/adaptive-events?includeContent';
+
+<ReferenceWrapper
+	path="soba/performances/adaptive-events"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<AdaptiveEvents client:only />
+</ReferenceWrapper>

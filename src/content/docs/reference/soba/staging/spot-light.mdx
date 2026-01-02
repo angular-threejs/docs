@@ -1,0 +1,11 @@
+---
+title: NgtsSpotLight
+description: angular-three-soba/staging NgtsSpotLight and NgtsSpotLightShadow API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import SpotLight, { content, sceneGraphContent } from '@soba/staging/spot-light/spot-light?includeContent';
+
+<ReferenceWrapper path="soba/staging/spot-light" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<SpotLight client:only />
+</ReferenceWrapper>

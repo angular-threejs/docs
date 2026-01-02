@@ -1,0 +1,11 @@
+---
+title: NgtsPivotControls
+description: angular-three-soba/gizmos NgtsPivotControls API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import PivotControls, { content, sceneGraphContent } from '@soba/gizmos/pivot-controls/pivot-controls?includeContent';
+
+<ReferenceWrapper path="soba/gizmos/pivot-controls" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<PivotControls client:only />
+</ReferenceWrapper>

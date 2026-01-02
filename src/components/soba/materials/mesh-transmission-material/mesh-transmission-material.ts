@@ -1,6 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal } from '@angular/core';
 import { SobaWrapper } from '@soba/wrapper';
-import { TweakpaneCheckbox, TweakpaneColor, TweakpaneFolder, TweakpaneNumber, TweakpanePane } from 'angular-three-tweakpane';
+import {
+	TweakpaneCheckbox,
+	TweakpaneColor,
+	TweakpaneFolder,
+	TweakpaneNumber,
+	TweakpanePane,
+} from 'angular-three-tweakpane';
 import { NgtCanvas, provideNgtRenderer } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 

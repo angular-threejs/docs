@@ -1,0 +1,18 @@
+---
+title: NgtsCustomShaderMaterial
+description: angular-three-soba/materials NgtsCustomShaderMaterial API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import CustomShaderMaterial, {
+	content,
+	sceneGraphContent,
+} from '@soba/materials/custom-shader-material/custom-shader-material?includeContent';
+
+<ReferenceWrapper
+	path="soba/materials/custom-shader-material"
+	demoContent={content}
+	demoSceneGraphContent={sceneGraphContent}
+>
+	<CustomShaderMaterial client:only />
+</ReferenceWrapper>

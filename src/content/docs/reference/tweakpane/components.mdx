@@ -1,0 +1,404 @@
+---
+title: Components
+description: angular-three-tweakpane Components API
+---
+
+Component-based API for Tweakpane provides fine-grained control through Angular directives. Use these when you need more control over the UI structure or want to leverage Angular's template features like control flow.
+
+## TweakpanePane
+
+Main container directive that creates the root Tweakpane panel.
+
+```ts
+import { TweakpanePane } from 'angular-three-tweakpane';
+
+@Component({
+	template: `
+		<tweakpane-pane title="Controls">
+			<tweakpane-number label="Speed" [(value)]="speed" />
+		</tweakpane-pane>
+	`,
+	imports: [TweakpanePane, TweakpaneNumber],
+})
+export class Controls {
+	speed = signal(1);
+}
+```
+
+### Positioning
+
+```html
+<!-- Default position (top-right) -->
+<tweakpane-pane title="Debug" />
+
+<!-- Custom position -->
+<tweakpane-pane title="Debug" left="8px" bottom="8px" [right]="undefined" />
+
+<!-- Embedded in container -->
+<div #container></div>
+<tweakpane-pane [container]="container" title="Embedded" />
+```
+
+### API
+
+| Input       | Type                        | Default   | Description                  |
+| ----------- | --------------------------- | --------- | ---------------------------- |
+| `title`     | `string`                    | -         | Pane title                   |
+| `top`       | `string \| number`          | `'8px'`   | CSS top position             |
+| `right`     | `string \| number`          | `'8px'`   | CSS right position           |
+| `left`      | `string \| number`          | -         | CSS left position            |
+| `bottom`    | `string \| number`          | -         | CSS bottom position          |
+| `width`     | `string \| number`          | `'256px'` | CSS width                    |
+| `container` | `HTMLElement \| ElementRef` | -         | Container to embed pane into |
+| `expanded`  | `boolean`                   | `false`   | Whether pane starts expanded |
+
+| Output           | Type      | Description                       |
+| ---------------- | --------- | --------------------------------- |
+| `expandedChange` | `boolean` | Emits when expanded state changes |
+
+## TweakpaneAnchor
+
+Directive that provides an anchor point for the `tweaks()` function. Add to your `ngt-canvas` to enable declarative controls.
+
+```html
+<ngt-canvas tweakpaneAnchor>
+	<app-scene-graph *canvasContent />
+</ngt-canvas>
+```
+
+This directive is required when using the `tweaks()` function but not needed for the component-based API.
+
+## TweakpaneFolder
+
+Creates collapsible folders to organize controls.
+
+```ts
+import { TweakpanePane, TweakpaneFolder, TweakpaneNumber } from 'angular-three-tweakpane';
+
+@Component({
+	template: `
+		<tweakpane-pane title="Settings">
+			<tweakpane-folder title="Physics" [expanded]="true">
+				<tweakpane-number label="Gravity" [(value)]="gravity" />
+				<tweakpane-number label="Friction" [(value)]="friction" />
+			</tweakpane-folder>
+
+			<tweakpane-folder title="Appearance">
+				<tweakpane-color label="Color" [(value)]="color" />
+			</tweakpane-folder>
+		</tweakpane-pane>
+	`,
+	imports: [TweakpanePane, TweakpaneFolder, TweakpaneNumber, TweakpaneColor],
+})
+export class Controls {
+	gravity = signal(9.8);
+	friction = signal(0.5);
+	color = signal('#ff0000');
+}
+```
+
+### API
+
+| Input      | Type      | Default | Description                    |
+| ---------- | --------- | ------- | ------------------------------ |
+| `title`    | `string`  | -       | Folder title                   |
+| `expanded` | `boolean` | `false` | Whether folder starts expanded |
+| `hidden`   | `boolean` | `false` | Whether folder is hidden       |
+| `disabled` | `boolean` | `false` | Whether folder is disabled     |
+
+| Output           | Type      | Description                       |
+| ---------------- | --------- | --------------------------------- |
+| `expandedChange` | `boolean` | Emits when expanded state changes |
+
+## TweakpaneNumber
+
+Numeric input with optional slider.
+
+```html
+<!-- Simple number input -->
+<tweakpane-number label="Count" [(value)]="count" />
+
+<!-- With slider (min/max) -->
+<tweakpane-number label="Speed" [(value)]="speed" [params]="{ min: 0, max: 100, step: 0.1 }" />
+
+<!-- With custom format -->
+<tweakpane-number label="Angle" [(value)]="angle" [params]="{ min: 0, max: 360, format: formatDegrees }" />
+```
+
+### API
+
+| Input      | Type                | Default | Description                                              |
+| ---------- | ------------------- | ------- | -------------------------------------------------------- |
+| `label`    | `string`            | -       | Input label                                              |
+| `value`    | `number`            | -       | Current value (two-way bindable)                         |
+| `params`   | `NumberInputParams` | `{}`    | Tweakpane number params (`min`, `max`, `step`, `format`) |
+| `hidden`   | `boolean`           | `false` | Whether input is hidden                                  |
+| `disabled` | `boolean`           | `false` | Whether input is disabled                                |
+
+| Output        | Type     | Description              |
+| ------------- | -------- | ------------------------ |
+| `valueChange` | `number` | Emits when value changes |
+
+## TweakpaneColor
+
+Color picker control.
+
+```html
+<tweakpane-color label="Background" [(value)]="backgroundColor" />
+
+<!-- With alpha -->
+<tweakpane-color label="Accent" [(value)]="accentColor" [params]="{ alpha: true }" />
+```
+
+### API
+
+| Input      | Type               | Default | Description                            |
+| ---------- | ------------------ | ------- | -------------------------------------- |
+| `label`    | `string`           | -       | Input label                            |
+| `value`    | `string`           | -       | Hex color value (two-way bindable)     |
+| `params`   | `ColorInputParams` | `{}`    | Tweakpane color params (`alpha`, etc.) |
+| `hidden`   | `boolean`          | `false` | Whether input is hidden                |
+| `disabled` | `boolean`          | `false` | Whether input is disabled              |
+
+| Output        | Type     | Description              |
+| ------------- | -------- | ------------------------ |
+| `valueChange` | `string` | Emits when color changes |
+
+## TweakpaneCheckbox
+
+Boolean toggle control.
+
+```html
+<tweakpane-checkbox label="Debug Mode" [(value)]="debugMode" />
+
+<!-- Conditionally disabled -->
+<tweakpane-checkbox label="Wireframe" [(value)]="showWireframe" [disabled]="!debugMode()" />
+```
+
+### API
+
+| Input      | Type                 | Default | Description                      |
+| ---------- | -------------------- | ------- | -------------------------------- |
+| `label`    | `string`             | -       | Input label                      |
+| `value`    | `boolean`            | -       | Current value (two-way bindable) |
+| `params`   | `BooleanInputParams` | `{}`    | Tweakpane boolean params         |
+| `hidden`   | `boolean`            | `false` | Whether input is hidden          |
+| `disabled` | `boolean`            | `false` | Whether input is disabled        |
+
+| Output        | Type      | Description              |
+| ------------- | --------- | ------------------------ |
+| `valueChange` | `boolean` | Emits when value changes |
+
+## TweakpaneButton
+
+Clickable button for triggering actions.
+
+```html
+<tweakpane-button title="Reset" (click)="onReset()" />
+
+<tweakpane-button title="Randomize" label="Action" (click)="onRandomize()" />
+
+<tweakpane-button title="Save" [disabled]="!canSave()" (click)="onSave()" />
+```
+
+### API
+
+| Input      | Type      | Default | Description                |
+| ---------- | --------- | ------- | -------------------------- |
+| `title`    | `string`  | -       | Button text                |
+| `label`    | `string`  | -       | Label next to button       |
+| `hidden`   | `boolean` | `false` | Whether button is hidden   |
+| `disabled` | `boolean` | `false` | Whether button is disabled |
+
+| Output  | Type                      | Description                  |
+| ------- | ------------------------- | ---------------------------- |
+| `click` | `TpMouseEvent<ButtonApi>` | Emits when button is clicked |
+
+## TweakpaneText
+
+Text input control.
+
+```html
+<tweakpane-text label="Name" [(value)]="objectName" />
+<tweakpane-text label="Description" [(value)]="description" />
+```
+
+### API
+
+| Input      | Type                | Default | Description                      |
+| ---------- | ------------------- | ------- | -------------------------------- |
+| `label`    | `string`            | -       | Input label                      |
+| `value`    | `string`            | -       | Current value (two-way bindable) |
+| `params`   | `StringInputParams` | `{}`    | Tweakpane string params          |
+| `hidden`   | `boolean`           | `false` | Whether input is hidden          |
+| `disabled` | `boolean`           | `false` | Whether input is disabled        |
+
+| Output        | Type     | Description              |
+| ------------- | -------- | ------------------------ |
+| `valueChange` | `string` | Emits when value changes |
+
+## TweakpaneList
+
+Dropdown select control.
+
+```html
+<!-- Options as array -->
+<tweakpane-list label="Mode" [(value)]="mode" [options]="['normal', 'debug', 'performance']" />
+
+<!-- Options as object (label: value mapping) -->
+<tweakpane-list label="Quality" [(value)]="quality" [options]="{ 'Low': 1, 'Medium': 2, 'High': 3, 'Ultra': 4 }" />
+```
+
+### API
+
+| Input      | Type                       | Default | Description                                 |
+| ---------- | -------------------------- | ------- | ------------------------------------------- |
+| `label`    | `string`                   | -       | Input label                                 |
+| `value`    | `T`                        | -       | Currently selected value (two-way bindable) |
+| `options`  | `T[] \| Record<string, T>` | -       | Options array or label-value mapping        |
+| `debounce` | `number`                   | -       | Debounce delay in ms                        |
+| `hidden`   | `boolean`                  | `false` | Whether input is hidden                     |
+| `disabled` | `boolean`                  | `false` | Whether input is disabled                   |
+
+| Output        | Type | Description                  |
+| ------------- | ---- | ---------------------------- |
+| `valueChange` | `T`  | Emits when selection changes |
+
+## TweakpanePoint
+
+2D/3D/4D point input control.
+
+```html
+<!-- 2D point -->
+<tweakpane-point label="Position" [(value)]="position2D" />
+
+<!-- 3D point with custom ranges -->
+<tweakpane-point
+	label="Position"
+	[(value)]="position3D"
+	[params]="{
+    x: { min: -10, max: 10 },
+    y: { min: 0, max: 100 },
+    z: { min: -10, max: 10 }
+  }"
+/>
+
+<!-- 4D point (e.g., quaternion) -->
+<tweakpane-point label="Rotation" [(value)]="quaternion" />
+```
+
+Values are accepted as tuple arrays `[x, y, z?, w?]`.
+
+### API
+
+| Input      | Type                                 | Default | Description                          |
+| ---------- | ------------------------------------ | ------- | ------------------------------------ |
+| `label`    | `string`                             | -       | Input label                          |
+| `value`    | `[number, number, number?, number?]` | -       | Point tuple (two-way bindable)       |
+| `params`   | `Point2d/3d/4dInputParams`           | `{}`    | Per-axis config (`x`, `y`, `z`, `w`) |
+| `hidden`   | `boolean`                            | `false` | Whether input is hidden              |
+| `disabled` | `boolean`                            | `false` | Whether input is disabled            |
+
+| Output        | Type            | Description              |
+| ------------- | --------------- | ------------------------ |
+| `valueChange` | `[number, ...]` | Emits when point changes |
+
+## Using with Angular Control Flow
+
+The component-based API works seamlessly with Angular's control flow:
+
+```ts
+@Component({
+	template: `
+		<tweakpane-pane title="Dynamic Controls">
+			@if (showAdvanced()) {
+				<tweakpane-folder title="Advanced">
+					<tweakpane-number label="Iterations" [(value)]="iterations" />
+				</tweakpane-folder>
+			}
+
+			@for (item of items(); track item.id) {
+				<tweakpane-number [label]="item.name" [(value)]="item.value" />
+			}
+		</tweakpane-pane>
+	`,
+})
+export class DynamicControls {
+	showAdvanced = signal(false);
+	iterations = signal(4);
+	items = signal([
+		{ id: 1, name: 'Item 1', value: signal(0) },
+		{ id: 2, name: 'Item 2', value: signal(0) },
+	]);
+}
+```
+
+## Full Example
+
+```ts
+import { Component, signal } from '@angular/core';
+import {
+	TweakpanePane,
+	TweakpaneFolder,
+	TweakpaneNumber,
+	TweakpaneColor,
+	TweakpaneCheckbox,
+	TweakpaneButton,
+	TweakpaneList,
+} from 'angular-three-tweakpane';
+
+@Component({
+	template: `
+		<tweakpane-pane title="Scene Controls">
+			<tweakpane-folder title="Transform" [expanded]="true">
+				<tweakpane-number label="X" [(value)]="x" [params]="{ min: -5, max: 5, step: 0.1 }" />
+				<tweakpane-number label="Y" [(value)]="y" [params]="{ min: -5, max: 5, step: 0.1 }" />
+				<tweakpane-number label="Z" [(value)]="z" [params]="{ min: -5, max: 5, step: 0.1 }" />
+			</tweakpane-folder>
+
+			<tweakpane-folder title="Material">
+				<tweakpane-color label="Color" [(value)]="color" />
+				<tweakpane-number label="Metalness" [(value)]="metalness" [params]="{ min: 0, max: 1 }" />
+				<tweakpane-checkbox label="Wireframe" [(value)]="wireframe" />
+			</tweakpane-folder>
+
+			<tweakpane-folder title="Rendering">
+				<tweakpane-list label="Quality" [(value)]="quality" [options]="{ Low: 0.5, Medium: 1, High: 2 }" />
+				<tweakpane-checkbox label="Shadows" [(value)]="shadows" />
+			</tweakpane-folder>
+
+			<tweakpane-button title="Reset All" (click)="reset()" />
+		</tweakpane-pane>
+	`,
+	imports: [
+		TweakpanePane,
+		TweakpaneFolder,
+		TweakpaneNumber,
+		TweakpaneColor,
+		TweakpaneCheckbox,
+		TweakpaneButton,
+		TweakpaneList,
+	],
+})
+export class Controls {
+	x = signal(0);
+	y = signal(0);
+	z = signal(0);
+	color = signal('#ff0000');
+	metalness = signal(0.5);
+	wireframe = signal(false);
+	quality = signal(1);
+	shadows = signal(true);
+
+	reset() {
+		this.x.set(0);
+		this.y.set(0);
+		this.z.set(0);
+		this.color.set('#ff0000');
+		this.metalness.set(0.5);
+		this.wireframe.set(false);
+		this.quality.set(1);
+		this.shadows.set(true);
+	}
+}
+```

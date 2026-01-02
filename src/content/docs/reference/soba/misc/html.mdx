@@ -1,0 +1,139 @@
+---
+title: NgtsHTML
+description: angular-three-soba/misc NgtsHTML component
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Html, { content, sceneGraphContent } from '@soba/misc/html/html?includeContent';
+
+<ReferenceWrapper path="soba/misc/html" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Html client:only />
+</ReferenceWrapper>
+
+A component for rendering HTML content positioned in 3D space. Creates a THREE.Group anchor point in the scene and projects HTML onto the canvas using CSS positioning or CSS 3D transforms.
+
+## Usage
+
+Import `NgtsHTML` which includes both `NgtsHTMLImpl` (the 3D anchor) and `NgtsHTMLContent` (the HTML container).
+
+```ts
+import { NgtsHTML } from 'angular-three-soba/misc';
+
+@Component({
+	imports: [NgtsHTML],
+	template: `
+		<ngt-mesh [position]="[0, 2, 0]">
+			<ngts-html [options]="{ transform: true }">
+				<div [htmlContent]="{ distanceFactor: 10 }">Label</div>
+			</ngts-html>
+		</ngt-mesh>
+	`,
+})
+class MyComponent {}
+```
+
+## NgtsHTMLOptions (for `ngts-html`)
+
+| Property        | Description                                                                               | Default |
+| --------------- | ----------------------------------------------------------------------------------------- | ------- |
+| `occlude`       | Controls occlusion: `false`, `true`, `'raycast'`, `'blending'`, or array of Object3D refs | `false` |
+| `transform`     | When `true`, uses CSS 3D transforms. When `false`, projects to 2D screen coordinates      | `false` |
+| `castShadow`    | Forward shadow casting to occlusion mesh (blending mode only)                             | `false` |
+| `receiveShadow` | Forward shadow receiving to occlusion mesh (blending mode only)                           | `false` |
+
+## NgtsHTMLContentOptions (for `div[htmlContent]`)
+
+| Property            | Description                                                | Default                    |
+| ------------------- | ---------------------------------------------------------- | -------------------------- |
+| `eps`               | Epsilon for position/zoom change detection                 | `0.001`                    |
+| `zIndexRange`       | Range for automatic z-index calculation `[max, min]`       | `[16777271, 0]`            |
+| `center`            | Centers the HTML element on the projected point            | `false`                    |
+| `prepend`           | Prepends to parent instead of appending                    | `false`                    |
+| `fullscreen`        | Makes the container fill the entire canvas size            | `false`                    |
+| `containerClass`    | CSS class applied to the inner container div               | `''`                       |
+| `containerStyle`    | Inline styles applied to the inner container div           | `{}`                       |
+| `pointerEvents`     | CSS `pointer-events` value                                 | `'auto'`                   |
+| `calculatePosition` | Custom function to calculate screen position               | `defaultCalculatePosition` |
+| `sprite`            | When `true` (with transform), HTML always faces the camera | `false`                    |
+| `distanceFactor`    | Scales HTML based on distance from camera                  | `undefined`                |
+| `parent`            | Custom parent element for the HTML content                 | `undefined`                |
+
+## Outputs
+
+| Output     | Description                                                             |
+| ---------- | ----------------------------------------------------------------------- |
+| `occluded` | Emits when occlusion state changes (`true` = hidden, `false` = visible) |
+
+## Examples
+
+### Basic Label
+
+```html
+<ngt-mesh [position]="[0, 1, 0]">
+	<ngt-box-geometry />
+	<ngt-mesh-standard-material />
+	<ngts-html>
+		<div [htmlContent]="{ center: true }">
+			<span class="label">Hello World</span>
+		</div>
+	</ngts-html>
+</ngt-mesh>
+```
+
+### 3D Transform Mode
+
+```html
+<ngts-html [options]="{ transform: true }">
+	<div [htmlContent]="{ distanceFactor: 10, sprite: true }">
+		<div class="card">
+			<h2>Title</h2>
+			<p>Description text</p>
+		</div>
+	</div>
+</ngts-html>
+```
+
+### Occlusion Handling
+
+```html
+<ngts-html [options]="{ occlude: true }">
+	<div [htmlContent]="{}" (occluded)="isHidden = $event" [class.faded]="isHidden">
+		Content with custom occlusion handling
+	</div>
+</ngts-html>
+```
+
+### Occlusion with Specific Objects
+
+```html
+<ngts-html [options]="{ occlude: [wallRef(), floorRef()] }">
+	<div [htmlContent]="{}">Hidden when wall or floor blocks view</div>
+</ngts-html>
+```
+
+### Fullscreen Overlay
+
+```html
+<ngts-html>
+	<div [htmlContent]="{ fullscreen: true, pointerEvents: 'none' }">
+		<div class="hud">
+			<div class="score">Score: 100</div>
+		</div>
+	</div>
+</ngts-html>
+```
+
+### Custom Position Calculation
+
+```ts
+const customCalculatePosition = (el, camera, size) => {
+	// Custom positioning logic
+	return [x, y];
+};
+```
+
+```html
+<ngts-html>
+	<div [htmlContent]="{ calculatePosition: customCalculatePosition }">Custom positioned content</div>
+</ngts-html>
+```

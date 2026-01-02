@@ -1,0 +1,11 @@
+---
+title: NgtsStage
+description: angular-three-soba/staging NgtsStage API
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import Stage, { content, sceneGraphContent } from '@soba/staging/stage/stage?includeContent';
+
+<ReferenceWrapper path="soba/staging/stage" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<Stage client:only />
+</ReferenceWrapper>
