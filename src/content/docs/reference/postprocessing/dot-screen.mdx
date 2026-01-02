@@ -3,6 +3,24 @@ title: NgtpDotScreen
 description: Dot screen halftone effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import DotScreen, { content, sceneGraphContent } from '@postprocessing/dot-screen/dot-screen?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<DotScreen client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The dot screen effect creates a halftone pattern similar to printed media, converting the image into a pattern of dots.
 
 ## Usage

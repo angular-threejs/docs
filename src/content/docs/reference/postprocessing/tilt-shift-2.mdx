@@ -3,6 +3,24 @@ title: NgtpTiltShift2
 description: Advanced tilt-shift effect with line-based focus
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import TiltShift2, { content, sceneGraphContent } from '@postprocessing/tilt-shift-2/tilt-shift-2?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<TiltShift2 client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 TiltShift2 is an alternative tilt-shift implementation that provides more control over the focus area using start and end points in screen space.
 
 ## Usage

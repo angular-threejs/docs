@@ -3,6 +3,24 @@ title: NgtpN8AO
 description: High-quality screen-space ambient occlusion
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import N8AO, { content, sceneGraphContent } from '@postprocessing/n8ao/n8ao?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<N8AO client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 N8AO (N8 Ambient Occlusion) is a high-quality screen-space ambient occlusion effect that adds realistic shadowing to crevices, corners, and areas where objects meet.
 
 ## Installation
@@ -35,70 +53,19 @@ export class SceneGraph {}
 
 ## Options
 
-| Property               | Type                                                      | Default   | Description                        |
-| ---------------------- | --------------------------------------------------------- | --------- | ---------------------------------- |
-| `quality`              | `'performance' \| 'low' \| 'medium' \| 'high' \| 'ultra'` | -         | Quality preset                     |
-| `intensity`            | `number`                                                  | `5`       | Strength of AO effect              |
-| `aoRadius`             | `number`                                                  | `5.0`     | Radius in world units              |
-| `aoSamples`            | `number`                                                  | `16`      | Samples for AO calculation         |
-| `aoTones`              | `number`                                                  | `0.0`     | Tones for AO gradient              |
-| `distanceFalloff`      | `number`                                                  | `1.0`     | Falloff with distance              |
-| `color`                | `ColorRepresentation`                                     | `'black'` | AO shadow color                    |
-| `denoiseSamples`       | `number`                                                  | `8`       | Denoising samples                  |
-| `denoiseRadius`        | `number`                                                  | `12`      | Denoising filter radius            |
-| `denoiseIterations`    | `number`                                                  | `2.0`     | Denoising iterations               |
-| `halfRes`              | `boolean`                                                 | `false`   | Render at half resolution          |
-| `depthAwareUpsampling` | `boolean`                                                 | `true`    | Depth-aware upsampling             |
-| `screenSpaceRadius`    | `boolean`                                                 | `false`   | Screen-space vs world-space radius |
-| `renderMode`           | `0 \| 1 \| 2 \| 3 \| 4`                                   | `0`       | Debug render mode                  |
-| `transparencyAware`    | `boolean`                                                 | `false`   | Handle transparent objects         |
-| `accumulate`           | `boolean`                                                 | `false`   | Accumulate samples over frames     |
-
-## Example: Realistic Scene
-
-```angular-ts
-import { NgtpEffectComposer } from 'angular-three-postprocessing';
-import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
-
-@Component({
-  template: `
-    <!-- Ground plane -->
-    <ngt-mesh [rotation]="[-Math.PI / 2, 0, 0]" [position]="[0, -1, 0]">
-      <ngt-plane-geometry *args="[10, 10]" />
-      <ngt-mesh-standard-material color="white" />
-    </ngt-mesh>
-
-    <!-- Objects that will show AO -->
-    <ngt-mesh [position]="[0, 0, 0]">
-      <ngt-box-geometry />
-      <ngt-mesh-standard-material color="white" />
-    </ngt-mesh>
-
-    <ngt-mesh [position]="[1.5, 0, 0]">
-      <ngt-sphere-geometry *args="[0.5, 32, 32]" />
-      <ngt-mesh-standard-material color="white" />
-    </ngt-mesh>
-
-    <ngtp-effect-composer>
-      <ngtp-n8ao [options]="{
-        aoRadius: 1,
-        intensity: 2,
-        aoSamples: 16,
-        denoiseSamples: 8
-      }" />
-    </ngtp-effect-composer>
-  `,
-  imports: [NgtpEffectComposer, NgtpN8AO, NgtArgs],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneGraph {
-  protected Math = Math;
-}
-```
+| Property            | Type                                                      | Default   | Description                        |
+| ------------------- | --------------------------------------------------------- | --------- | ---------------------------------- |
+| `quality`           | `'performance' \| 'low' \| 'medium' \| 'high' \| 'ultra'` | -         | Quality preset                     |
+| `intensity`         | `number`                                                  | `5`       | Strength of AO effect              |
+| `aoRadius`          | `number`                                                  | `5.0`     | Radius in world units              |
+| `aoSamples`         | `number`                                                  | `16`      | Samples for AO calculation         |
+| `denoiseSamples`    | `number`                                                  | `8`       | Denoising samples                  |
+| `denoiseRadius`     | `number`                                                  | `12`      | Denoising filter radius            |
+| `halfRes`           | `boolean`                                                 | `false`   | Render at half resolution          |
+| `screenSpaceRadius` | `boolean`                                                 | `false`   | Screen-space vs world-space radius |
+| `color`             | `ColorRepresentation`                                     | `'black'` | AO shadow color                    |
 
 ## Quality Presets
-
-Using the `quality` option automatically configures multiple settings:
 
 ```angular-ts
 // Performance preset - fastest, lowest quality
@@ -108,22 +75,10 @@ Using the `quality` option automatically configures multiple settings:
 <ngtp-n8ao [options]="{ quality: 'ultra' }" />
 ```
 
-## Debug Render Modes
-
-| Mode | Description                 |
-| ---- | --------------------------- |
-| `0`  | Combined (default)          |
-| `1`  | AO only                     |
-| `2`  | No AO                       |
-| `3`  | Split (half AO, half no AO) |
-| `4`  | Split (AO only vs combined) |
-
 ## Tips
 
 - Use `halfRes: true` for better performance on lower-end devices
 - Increase `aoRadius` for larger, softer shadows
 - Use `color` to tint AO shadows (e.g., slight blue for outdoor scenes)
-- Enable `accumulate` for static scenes to improve quality over time
 - `screenSpaceRadius: true` makes AO consistent regardless of camera distance
-- Combine with `NgtpToneMapping` for proper HDR handling
 - N8AO is more performant than traditional SSAO while providing better quality

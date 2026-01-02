@@ -4,11 +4,11 @@ import { NgtpEffectComposer, NgtpLUT } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { textureResource } from 'angular-three-soba/loaders';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
-import { LUTCubeLoader } from 'postprocessing';
 import * as THREE from 'three';
+import { LUTCubeLoader } from 'three-stdlib';
 
-import cubicleCube from './cubicle-99.CUBE' with { loader: 'file' };
-import terrazoUrl from './terrazo.png' with { loader: 'file' };
+import cubicleCube from '@common-assets/cubicle-99.CUBE' with { loader: 'file' };
+import terrazoUrl from '@common-assets/terrazo.png' with { loader: 'file' };
 
 @Component({
 	selector: 'app-grading',

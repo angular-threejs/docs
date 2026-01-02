@@ -3,6 +3,24 @@ title: NgtpLensFlare
 description: Lens flare effect with occlusion
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import LensFlare, { content, sceneGraphContent } from '@postprocessing/lens-flare/lens-flare?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<LensFlare client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The lens flare effect simulates camera lens artifacts including glare, ghosts, and anamorphic streaks. It automatically fades when the light source is occluded by scene objects.
 
 ## Usage

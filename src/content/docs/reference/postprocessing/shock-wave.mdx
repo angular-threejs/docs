@@ -3,6 +3,24 @@ title: NgtpShockWave
 description: Shock wave distortion effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import ShockWave, { content, sceneGraphContent } from '@postprocessing/shock-wave/shock-wave?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<ShockWave client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The shock wave effect creates an expanding ring of distortion, simulating the visual impact of an explosion or energy pulse.
 
 ## Usage

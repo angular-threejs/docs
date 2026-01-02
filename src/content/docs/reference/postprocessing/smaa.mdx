@@ -3,6 +3,24 @@ title: NgtpSMAA
 description: Subpixel Morphological Anti-Aliasing post-processing effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import SMAA, { content, sceneGraphContent } from '@postprocessing/smaa/smaa?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<SMAA client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 SMAA (Subpixel Morphological Anti-Aliasing) is a high-quality anti-aliasing technique that smooths jagged edges in the rendered scene.
 
 ## Usage

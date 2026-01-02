@@ -3,6 +3,27 @@ title: NgtpChromaticAberration
 description: Chromatic aberration post-processing effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import ChromaticAberration, {
+	content,
+	sceneGraphContent,
+} from '@postprocessing/chromatic-aberration/chromatic-aberration?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<ChromaticAberration client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 Chromatic aberration simulates the color fringing that occurs in real camera lenses, where different wavelengths of light are focused at slightly different points.
 
 ## Usage

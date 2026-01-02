@@ -3,6 +3,24 @@ title: NgtpVignette
 description: Vignette darkening post-processing effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Vignette, { content, sceneGraphContent } from '@postprocessing/vignette/vignette?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Vignette client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The vignette effect darkens the edges of the screen, drawing focus to the center of the scene.
 
 ## Usage

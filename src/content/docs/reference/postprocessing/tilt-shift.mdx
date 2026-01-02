@@ -3,6 +3,24 @@ title: NgtpTiltShift
 description: Tilt-shift blur effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import TiltShift, { content, sceneGraphContent } from '@postprocessing/tilt-shift/tilt-shift?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<TiltShift client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The tilt-shift effect simulates the shallow depth of field of tilt-shift photography, creating a "miniature" appearance by blurring areas outside a focus band.
 
 ## Usage
@@ -45,11 +63,6 @@ export class SceneGraph {}
     <ngt-mesh [position]="[0, 0, 0]">
       <ngt-box-geometry *args="[1, 3, 1]" />
       <ngt-mesh-standard-material color="blue" />
-    </ngt-mesh>
-
-    <ngt-mesh [position]="[2, 0, 0]">
-      <ngt-box-geometry *args="[1, 1.5, 1]" />
-      <ngt-mesh-standard-material color="green" />
     </ngt-mesh>
 
     <ngtp-effect-composer>

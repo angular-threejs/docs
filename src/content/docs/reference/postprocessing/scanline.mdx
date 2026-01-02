@@ -3,6 +3,24 @@ title: NgtpScanline
 description: CRT scanline effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Scanline, { content, sceneGraphContent } from '@postprocessing/scanline/scanline?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Scanline client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The scanline effect simulates the horizontal lines visible on CRT monitors and old televisions, adding a retro aesthetic to your scene.
 
 ## Usage

@@ -3,6 +3,24 @@ title: NgtpColorAverage
 description: Color averaging effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import ColorAverage, { content, sceneGraphContent } from '@postprocessing/color-average/color-average?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<ColorAverage client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The color average effect converts the scene to grayscale by averaging the RGB channels, creating a desaturated look.
 
 ## Usage

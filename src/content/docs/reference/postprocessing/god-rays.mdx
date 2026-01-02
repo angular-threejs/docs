@@ -3,6 +3,24 @@ title: NgtpGodRays
 description: Volumetric light rays effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import GodRays, { content, sceneGraphContent } from '@postprocessing/god-rays/god-rays?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<GodRays client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The god rays effect creates volumetric light shafts emanating from a light source, simulating how light scatters through atmosphere or dust particles.
 
 ## Usage
@@ -44,18 +62,10 @@ export class SceneGraph {}
 
 ```angular-ts
 @Component({
-  selector: 'app-scene-graph',
   template: `
-    <!-- Sun mesh - this is the light source -->
     <ngt-mesh #sunMesh [position]="[5, 3, -15]">
       <ngt-sphere-geometry *args="[2, 32, 32]" />
       <ngt-mesh-basic-material color="#ffaa00" />
-    </ngt-mesh>
-
-    <!-- Scene objects that will cast shadows in the rays -->
-    <ngt-mesh [position]="[0, 0, 0]">
-      <ngt-box-geometry *args="[2, 4, 0.5]" />
-      <ngt-mesh-standard-material color="#333" />
     </ngt-mesh>
 
     <ngtp-effect-composer>
@@ -77,8 +87,7 @@ export class SceneGraph {}
 
 ## Tips
 
-- The sun mesh should use `MeshBasicMaterial` for best results (it should be bright/emissive)
+- The sun mesh should use `MeshBasicMaterial` for best results
 - Objects between the camera and sun will create shadows in the light rays
 - Higher `samples` values improve quality but reduce performance
 - Adjust `density` and `decay` together for different ray lengths
-- Works best when the sun is partially visible or at the edge of the frame

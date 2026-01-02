@@ -3,6 +3,24 @@ title: NgtpWater
 description: Water/ripple distortion effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Water, { content, sceneGraphContent } from '@postprocessing/water/water?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Water client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The water effect creates animated underwater-like distortion, simulating the visual effect of looking through water or heat haze.
 
 ## Usage
@@ -26,29 +44,6 @@ export class SceneGraph {}
 | Property | Type     | Default | Description                          |
 | -------- | -------- | ------- | ------------------------------------ |
 | `factor` | `number` | `0`     | Distortion intensity (0 = no effect) |
-
-## Example: Underwater Scene
-
-```angular-ts
-@Component({
-  template: `
-    <ngt-mesh>
-      <ngt-torus-knot-geometry *args="[1, 0.3, 128, 32]" />
-      <ngt-mesh-standard-material color="coral" />
-    </ngt-mesh>
-
-    <ngtp-effect-composer>
-      <ngtp-water [options]="{ factor: 0.3 }" />
-      <!-- Add blue tint for underwater feel -->
-      <ngtp-hue-saturation [options]="{ hue: 0.5 }" />
-      <ngtp-vignette [options]="{ darkness: 0.4 }" />
-    </ngtp-effect-composer>
-  `,
-  imports: [NgtpEffectComposer, NgtpWater, NgtpHueSaturation, NgtpVignette, NgtArgs],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneGraph {}
-```
 
 ## Example: Heat Haze
 

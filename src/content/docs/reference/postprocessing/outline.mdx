@@ -3,6 +3,24 @@ title: NgtpOutline
 description: Outline post-processing effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Outline, { content, sceneGraphContent } from '@postprocessing/outline/outline?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Outline client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The outline effect draws an outline around selected objects, useful for highlighting or selection feedback.
 
 ## Usage

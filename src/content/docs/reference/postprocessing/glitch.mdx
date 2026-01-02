@@ -3,6 +3,24 @@ title: NgtpGlitch
 description: Glitch post-processing effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Glitch, { content, sceneGraphContent } from '@postprocessing/glitch/glitch?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Glitch client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The glitch effect creates digital distortion artifacts, simulating video signal interference or data corruption.
 
 ## Usage

@@ -3,6 +3,24 @@ title: NgtpDepth
 description: Depth visualization effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Depth, { content, sceneGraphContent } from '@postprocessing/depth/depth?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Depth client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The depth effect visualizes the scene's depth buffer, useful for debugging or creating stylized depth-based visuals.
 
 ## Usage

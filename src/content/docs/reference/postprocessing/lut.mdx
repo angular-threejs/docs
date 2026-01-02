@@ -3,6 +3,24 @@ title: NgtpLUT
 description: LUT (Look-Up Table) color grading effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import LUT, { content, sceneGraphContent } from '@postprocessing/lut/lut?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<LUT client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The LUT effect applies a 3D Look-Up Table for professional color grading, allowing you to apply complex color transformations used in film and photography.
 
 ## Usage

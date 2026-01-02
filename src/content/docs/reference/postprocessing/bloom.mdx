@@ -3,6 +3,24 @@ title: NgtpBloom
 description: Bloom/glow post-processing effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Bloom, { content, sceneGraphContent } from '@postprocessing/bloom/bloom?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Bloom client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The bloom effect creates a glow around bright areas of the scene, simulating how bright lights appear to bleed into surrounding areas.
 
 ## Usage

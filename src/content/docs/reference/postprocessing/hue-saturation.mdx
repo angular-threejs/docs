@@ -3,6 +3,27 @@ title: NgtpHueSaturation
 description: Hue and saturation adjustment effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import HueSaturation, {
+	content,
+	sceneGraphContent,
+} from '@postprocessing/hue-saturation/hue-saturation?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<HueSaturation client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The hue/saturation effect allows you to shift colors and adjust color intensity across the entire scene.
 
 ## Usage
@@ -30,32 +51,6 @@ export class SceneGraph {}
 | ------------ | -------- | ------- | ----------------------------------- |
 | `hue`        | `number` | `0`     | Hue rotation in radians (-PI to PI) |
 | `saturation` | `number` | `0`     | Saturation adjustment (-1 to 1)     |
-
-## Example: Color Shift
-
-```angular-ts
-@Component({
-  template: `
-    <ngt-mesh>
-      <ngt-sphere-geometry *args="[1, 32, 32]" />
-      <ngt-mesh-standard-material color="red" />
-    </ngt-mesh>
-
-    <ngtp-effect-composer>
-      <!-- Shift red to blue (approximately PI radians) -->
-      <ngtp-hue-saturation [options]="{
-        hue: Math.PI * 0.66,
-        saturation: 0.3
-      }" />
-    </ngtp-effect-composer>
-  `,
-  imports: [NgtpEffectComposer, NgtpHueSaturation, NgtArgs],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneGraph {
-  protected Math = Math;
-}
-```
 
 ## Example: Desaturated Look
 

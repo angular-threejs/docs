@@ -3,6 +3,24 @@ title: NgtpToneMapping
 description: HDR to LDR tone mapping effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import ToneMapping, { content, sceneGraphContent } from '@postprocessing/tone-mapping/tone-mapping?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<ToneMapping client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The tone mapping effect converts High Dynamic Range (HDR) values to Low Dynamic Range (LDR) for display. This is essential when using HDR rendering or physically-based lighting.
 
 ## Usage

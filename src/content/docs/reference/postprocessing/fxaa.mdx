@@ -3,6 +3,24 @@ title: NgtpFXAA
 description: Fast Approximate Anti-Aliasing effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import FXAA, { content, sceneGraphContent } from '@postprocessing/fxaa/fxaa?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<FXAA client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 FXAA (Fast Approximate Anti-Aliasing) is a screen-space anti-aliasing technique that smooths jagged edges with minimal performance impact.
 
 ## Usage

@@ -3,6 +3,24 @@ title: NgtpGrid
 description: Grid overlay effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Grid, { content, sceneGraphContent } from '@postprocessing/grid/grid?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Grid client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The grid effect overlays a grid pattern on the scene, useful for technical visualizations, retro aesthetics, or debugging.
 
 ## Usage

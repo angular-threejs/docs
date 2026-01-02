@@ -3,6 +3,24 @@ title: NgtpDepthOfField
 description: Depth of field post-processing effect
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import DepthOfField, { content, sceneGraphContent } from '@postprocessing/depth-of-field/depth-of-field?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<DepthOfField client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The depth of field effect simulates camera focus, blurring objects that are not at the focal distance.
 
 ## Usage

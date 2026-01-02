@@ -3,6 +3,27 @@ title: NgtpSelectiveBloom
 description: Bloom effect for selected objects only
 ---
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import SelectiveBloom, {
+	content,
+	sceneGraphContent,
+} from '@postprocessing/selective-bloom/selective-bloom?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<SelectiveBloom client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
 The selective bloom effect applies bloom only to specific objects in your scene, giving you precise control over which elements glow.
 
 ## Usage
