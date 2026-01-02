@@ -1,0 +1,63 @@
+---
+title: NgtpGrid
+description: Grid overlay effect
+---
+
+The grid effect overlays a grid pattern on the scene, useful for technical visualizations, retro aesthetics, or debugging.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpGrid } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-grid [options]="{
+        scale: 1.0,
+        lineWidth: 0.5
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpGrid],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property    | Type     | Default | Description               |
+| ----------- | -------- | ------- | ------------------------- |
+| `scale`     | `number` | `1.0`   | Scale of the grid pattern |
+| `lineWidth` | `number` | `0.0`   | Width of grid lines       |
+
+## Example: Cyberpunk Grid
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-torus-knot-geometry *args="[1, 0.3, 128, 32]" />
+      <ngt-mesh-standard-material color="#ff00ff" [emissive]="'#ff00ff'" [emissiveIntensity]="0.5" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-grid [options]="{
+        scale: 0.5,
+        lineWidth: 0.3
+      }" />
+      <ngtp-bloom [options]="{ intensity: 0.5 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpGrid, NgtpBloom, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Smaller `scale` values create a finer grid
+- Combine with bloom for a glowing grid effect
+- Works well with neon/cyberpunk color schemes
+- Can be used for technical or scientific visualizations

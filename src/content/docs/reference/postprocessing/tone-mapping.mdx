@@ -1,0 +1,89 @@
+---
+title: NgtpToneMapping
+description: HDR to LDR tone mapping effect
+---
+
+The tone mapping effect converts High Dynamic Range (HDR) values to Low Dynamic Range (LDR) for display. This is essential when using HDR rendering or physically-based lighting.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpToneMapping } from 'angular-three-postprocessing';
+import { ToneMappingMode } from 'postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-tone-mapping [options]="{ mode: ToneMappingMode.ACES_FILMIC }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpToneMapping],
+})
+export class SceneGraph {
+  protected ToneMappingMode = ToneMappingMode;
+}
+```
+
+## Options
+
+| Property | Type              | Default                       | Description            |
+| -------- | ----------------- | ----------------------------- | ---------------------- |
+| `mode`   | `ToneMappingMode` | `ToneMappingMode.ACES_FILMIC` | Tone mapping algorithm |
+
+## Tone Mapping Modes
+
+```ts
+import { ToneMappingMode } from 'postprocessing';
+
+// Available modes:
+ToneMappingMode.LINEAR; // No tone mapping
+ToneMappingMode.REINHARD; // Simple Reinhard
+ToneMappingMode.REINHARD2; // Modified Reinhard
+ToneMappingMode.REINHARD2_ADAPTIVE; // Adaptive Reinhard
+ToneMappingMode.UNCHARTED2; // Uncharted 2 filmic
+ToneMappingMode.OPTIMIZED_CINEON; // Optimized cineon
+ToneMappingMode.ACES_FILMIC; // ACES filmic (default)
+ToneMappingMode.AGX; // AgX tone mapping
+ToneMappingMode.NEUTRAL; // Neutral tone mapping
+```
+
+## Example: Cinematic Look
+
+```angular-ts
+import { ToneMappingMode } from 'postprocessing';
+
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-sphere-geometry *args="[1, 64, 64]" />
+      <ngt-mesh-standard-material
+        color="white"
+        [metalness]="1"
+        [roughness]="0"
+      />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-tone-mapping [options]="{ mode: ToneMappingMode.ACES_FILMIC }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpToneMapping, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+  protected ToneMappingMode = ToneMappingMode;
+}
+```
+
+## Important Note
+
+When using the effect composer, Three.js's built-in tone mapping is automatically disabled. Use this effect to re-enable tone mapping within the post-processing pipeline.
+
+## Tips
+
+- `ACES_FILMIC` is the most popular choice for cinematic looks
+- `AGX` provides good results for high-contrast scenes
+- `REINHARD` is computationally cheaper but less sophisticated
+- `LINEAR` disables tone mapping (useful for specific artistic effects)
+- Tone mapping should typically be one of the last effects in the chain
+- Essential when using HDR environment maps or high-intensity lights

@@ -1,0 +1,66 @@
+---
+title: NgtpScanline
+description: CRT scanline effect
+---
+
+The scanline effect simulates the horizontal lines visible on CRT monitors and old televisions, adding a retro aesthetic to your scene.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpScanline } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-scanline [options]="{ density: 1.25 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpScanline],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property  | Type     | Default | Description          |
+| --------- | -------- | ------- | -------------------- |
+| `density` | `number` | `1.25`  | Density of scanlines |
+
+## Example: CRT Monitor Effect
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material color="cyan" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <!-- Combine effects for authentic CRT look -->
+      <ngtp-scanline [options]="{ density: 1.5 }" />
+      <ngtp-noise [options]="{ opacity: 0.1 }" />
+      <ngtp-vignette [options]="{ darkness: 0.6 }" />
+      <ngtp-chromatic-aberration [options]="{ offset: [0.001, 0.001] }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [
+    NgtpEffectComposer,
+    NgtpScanline,
+    NgtpNoise,
+    NgtpVignette,
+    NgtpChromaticAberration
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Higher `density` values create more visible scanlines
+- Combine with `NgtpNoise` for static/grain effect
+- Add `NgtpVignette` for CRT edge darkening
+- Use `NgtpChromaticAberration` for color fringing typical of old monitors
+- Works great with `NgtpPixelation` for retro game aesthetics

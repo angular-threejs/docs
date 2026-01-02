@@ -1,0 +1,66 @@
+---
+title: NgtpDotScreen
+description: Dot screen halftone effect
+---
+
+The dot screen effect creates a halftone pattern similar to printed media, converting the image into a pattern of dots.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpDotScreen } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-dot-screen [options]="{
+        scale: 1.0,
+        angle: Math.PI * 0.5
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpDotScreen],
+})
+export class SceneGraph {
+  protected Math = Math;
+}
+```
+
+## Options
+
+| Property | Type     | Default | Description                              |
+| -------- | -------- | ------- | ---------------------------------------- |
+| `scale`  | `number` | `1.0`   | Scale of the dot pattern                 |
+| `angle`  | `number` | `1.57`  | Rotation angle of the pattern in radians |
+
+## Example: Comic Book Style
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-torus-geometry *args="[1, 0.4, 16, 32]" />
+      <ngt-mesh-standard-material color="yellow" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-dot-screen [options]="{
+        scale: 0.8,
+        angle: 0.5
+      }" />
+      <!-- Add contrast for bolder dots -->
+      <ngtp-brightness-contrast [options]="{ contrast: 0.2 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpDotScreen, NgtpBrightnessContrast, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Smaller `scale` values create finer dot patterns
+- Adjust `angle` to change the orientation of the dot grid
+- Combine with high contrast for a bold comic book or pop art look
+- Works well with `NgtpColorAverage` for black-and-white halftone

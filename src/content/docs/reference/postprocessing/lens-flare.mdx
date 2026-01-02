@@ -1,0 +1,108 @@
+---
+title: NgtpLensFlare
+description: Lens flare effect with occlusion
+---
+
+The lens flare effect simulates camera lens artifacts including glare, ghosts, and anamorphic streaks. It automatically fades when the light source is occluded by scene objects.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpLensFlare } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-lens-flare [options]="{
+        position: [5, 5, -10],
+        glareSize: 0.5
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpLensFlare],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property           | Type         | Default     | Description                        |
+| ------------------ | ------------ | ----------- | ---------------------------------- |
+| `position`         | `NgtVector3` | `[0, 0, 0]` | Light source position              |
+| `followMouse`      | `boolean`    | `false`     | Follow mouse cursor position       |
+| `smoothTime`       | `number`     | `0.07`      | Smoothing time for mouse following |
+| `glareSize`        | `number`     | `0.35`      | Size of the main glare             |
+| `starPoints`       | `number`     | `6`         | Number of star burst points        |
+| `flareSize`        | `number`     | `0.005`     | Size of secondary flares           |
+| `flareSpeed`       | `number`     | `0.4`       | Animation speed of flares          |
+| `flareShape`       | `number`     | `0.1`       | Shape factor of flares             |
+| `animated`         | `boolean`    | `true`      | Enable flare animation             |
+| `anamorphic`       | `boolean`    | `false`     | Enable anamorphic streak effect    |
+| `colorGain`        | `Color`      | `undefined` | Color tint for the flare           |
+| `lensDirtTexture`  | `Texture`    | `undefined` | Lens dirt texture overlay          |
+| `haloScale`        | `number`     | `0.5`       | Scale of the halo effect           |
+| `secondaryGhosts`  | `boolean`    | `true`      | Enable secondary ghost flares      |
+| `aditionalStreaks` | `boolean`    | `true`      | Enable additional streak effects   |
+| `ghostScale`       | `number`     | `0.3`       | Scale of ghost flares              |
+| `opacity`          | `number`     | `1.0`       | Overall opacity                    |
+| `starBurst`        | `boolean`    | `true`      | Enable star burst effect           |
+
+## Example: Cinematic Lens Flare
+
+```angular-ts
+@Component({
+  template: `
+    <!-- Sun/light source -->
+    <ngt-mesh [position]="[10, 8, -20]">
+      <ngt-sphere-geometry *args="[2, 32, 32]" />
+      <ngt-mesh-basic-material color="#ffffaa" />
+    </ngt-mesh>
+
+    <!-- Scene objects -->
+    <ngt-mesh [position]="[0, 0, 0]">
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material color="gray" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-lens-flare [options]="{
+        position: [10, 8, -20],
+        glareSize: 0.6,
+        starPoints: 8,
+        anamorphic: true,
+        secondaryGhosts: true
+      }" />
+      <ngtp-bloom [options]="{ intensity: 0.3 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpLensFlare, NgtpBloom, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Example: Interactive Mouse Flare
+
+```angular-ts
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-lens-flare [options]="{
+        followMouse: true,
+        smoothTime: 0.1,
+        glareSize: 0.4
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpLensFlare],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- The flare automatically fades when occluded by scene geometry
+- Enable `anamorphic` for horizontal streak effects common in cinema
+- Use `lensDirtTexture` for realistic dirty lens simulation
+- Combine with bloom for enhanced glow around the light source
+- Position should match your actual light source for realistic occlusion

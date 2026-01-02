@@ -1,0 +1,76 @@
+---
+title: NgtpSepia
+description: Sepia tone vintage effect
+---
+
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Sepia, { content, sceneGraphContent } from '@postprocessing/sepia/sepia?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Sepia client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
+The sepia effect applies a warm, brownish tone to your scene, creating a vintage photograph appearance.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpSepia } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-sepia [options]="{ intensity: 0.5 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpSepia],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property    | Type     | Default | Description                         |
+| ----------- | -------- | ------- | ----------------------------------- |
+| `intensity` | `number` | `1.0`   | Intensity of the sepia effect (0-1) |
+
+## Example: Vintage Photo Look
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-torus-geometry *args="[1, 0.4, 16, 32]" />
+      <ngt-mesh-standard-material color="white" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-sepia [options]="{ intensity: 0.8 }" />
+      <ngtp-vignette [options]="{ darkness: 0.5 }" />
+      <ngtp-noise [options]="{ opacity: 0.05 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpSepia, NgtpVignette, NgtpNoise, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- `intensity: 1.0` applies full sepia effect
+- `intensity: 0.5` creates a subtle warm tint
+- Combine with `NgtpVignette` for classic old photo look
+- Add `NgtpNoise` for film grain texture
+- Works well with `NgtpBrightnessContrast` for faded vintage appearance

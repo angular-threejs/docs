@@ -1,0 +1,58 @@
+---
+title: NgtpColorAverage
+description: Color averaging effect
+---
+
+The color average effect converts the scene to grayscale by averaging the RGB channels, creating a desaturated look.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpColorAverage } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-color-average />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpColorAverage],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property        | Type            | Default                | Description                      |
+| --------------- | --------------- | ---------------------- | -------------------------------- |
+| `blendFunction` | `BlendFunction` | `BlendFunction.NORMAL` | How the effect blends with scene |
+
+## Example: Grayscale Scene
+
+```angular-ts
+import { BlendFunction } from 'postprocessing';
+
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-sphere-geometry *args="[1, 32, 32]" />
+      <ngt-mesh-standard-material color="hotpink" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-color-average [options]="{ blendFunction: BlendFunction.NORMAL }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpColorAverage, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+  protected BlendFunction = BlendFunction;
+}
+```
+
+## Tips
+
+- Use `BlendFunction.SOFT_LIGHT` or `BlendFunction.OVERLAY` for partial desaturation
+- Combine with `NgtpVignette` for a classic black-and-white film look
+- This effect is simpler than `NgtpHueSaturation` when you just need grayscale

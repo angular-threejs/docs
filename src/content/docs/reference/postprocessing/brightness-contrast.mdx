@@ -1,0 +1,62 @@
+---
+title: NgtpBrightnessContrast
+description: Brightness and contrast adjustment effect
+---
+
+The brightness/contrast effect allows you to adjust the overall brightness and contrast of your scene, useful for color correction and stylization.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpBrightnessContrast } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-brightness-contrast [options]="{
+        brightness: 0.1,
+        contrast: 0.2
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpBrightnessContrast],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property     | Type     | Default | Description                     |
+| ------------ | -------- | ------- | ------------------------------- |
+| `brightness` | `number` | `0`     | Brightness adjustment (-1 to 1) |
+| `contrast`   | `number` | `0`     | Contrast adjustment (-1 to 1)   |
+
+## Example: High Contrast Scene
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material color="coral" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-brightness-contrast [options]="{
+        brightness: 0.05,
+        contrast: 0.3
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpBrightnessContrast],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Values of 0 mean no change
+- Positive brightness values lighten the image, negative values darken it
+- Positive contrast values increase contrast, negative values decrease it
+- Combine with other color effects like `NgtpHueSaturation` for complete color grading

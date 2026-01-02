@@ -1,0 +1,66 @@
+---
+title: NgtpDepth
+description: Depth visualization effect
+---
+
+The depth effect visualizes the scene's depth buffer, useful for debugging or creating stylized depth-based visuals.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpDepth } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer [options]="{ depthBuffer: true }">
+      <ngtp-depth [options]="{ inverted: false }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpDepth],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property   | Type      | Default | Description                    |
+| ---------- | --------- | ------- | ------------------------------ |
+| `inverted` | `boolean` | `false` | Invert the depth visualization |
+
+## Example: Depth Visualization
+
+```angular-ts
+@Component({
+  template: `
+    <!-- Multiple objects at different depths -->
+    <ngt-mesh [position]="[0, 0, 0]">
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material color="red" />
+    </ngt-mesh>
+
+    <ngt-mesh [position]="[2, 0, -3]">
+      <ngt-sphere-geometry />
+      <ngt-mesh-standard-material color="blue" />
+    </ngt-mesh>
+
+    <ngt-mesh [position]="[-2, 0, -6]">
+      <ngt-cone-geometry />
+      <ngt-mesh-standard-material color="green" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer [options]="{ depthBuffer: true }">
+      <ngtp-depth />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpDepth],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Ensure `depthBuffer: true` is set on the effect composer
+- White represents near objects, black represents far objects (unless inverted)
+- Useful for debugging depth-based effects like depth of field
+- Can be combined with other effects for artistic depth-based styling

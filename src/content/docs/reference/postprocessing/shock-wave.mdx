@@ -1,0 +1,112 @@
+---
+title: NgtpShockWave
+description: Shock wave distortion effect
+---
+
+The shock wave effect creates an expanding ring of distortion, simulating the visual impact of an explosion or energy pulse.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpShockWave } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-shock-wave [options]="{
+        speed: 2,
+        maxRadius: 1,
+        waveSize: 0.2,
+        amplitude: 0.05
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpShockWave],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property    | Type     | Default | Description                 |
+| ----------- | -------- | ------- | --------------------------- |
+| `speed`     | `number` | `2.0`   | Expansion speed of the wave |
+| `maxRadius` | `number` | `1.0`   | Maximum radius before reset |
+| `waveSize`  | `number` | `0.2`   | Thickness of the wave ring  |
+| `amplitude` | `number` | `0.05`  | Distortion strength         |
+
+## Example: Explosion Effect
+
+```angular-ts
+import { viewChild, ElementRef } from '@angular/core';
+import { ShockWaveEffect } from 'postprocessing';
+
+@Component({
+  template: `
+    <ngt-mesh (click)="triggerShockwave()" [position]="[0, 0, 0]">
+      <ngt-sphere-geometry *args="[0.5, 32, 32]" />
+      <ngt-mesh-standard-material color="orange" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-shock-wave
+        #shockwave
+        [options]="{
+          speed: 3,
+          maxRadius: 2,
+          waveSize: 0.3,
+          amplitude: 0.1
+        }"
+      />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpShockWave, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+  shockwave = viewChild<ElementRef<ShockWaveEffect>>('shockwave');
+
+  triggerShockwave() {
+    const effect = this.shockwave()?.nativeElement;
+    if (effect) {
+      // Reset the effect to trigger a new wave
+      effect.explode();
+    }
+  }
+}
+```
+
+## Example: Continuous Waves
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material color="steelblue" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <!-- Slow, subtle continuous wave -->
+      <ngtp-shock-wave [options]="{
+        speed: 0.5,
+        maxRadius: 3,
+        waveSize: 0.5,
+        amplitude: 0.02
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpShockWave],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Call `effect.explode()` to trigger a new shock wave
+- The wave automatically resets when it reaches `maxRadius`
+- Higher `amplitude` creates more visible distortion
+- Smaller `waveSize` creates a sharper, more defined ring
+- Combine with bloom for glowing energy wave effects
+- Use with particle systems for complete explosion visuals

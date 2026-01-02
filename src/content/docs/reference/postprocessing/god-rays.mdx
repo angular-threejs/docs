@@ -1,0 +1,84 @@
+---
+title: NgtpGodRays
+description: Volumetric light rays effect
+---
+
+The god rays effect creates volumetric light shafts emanating from a light source, simulating how light scatters through atmosphere or dust particles.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpGodRays } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngt-mesh #sun [position]="[0, 5, -10]">
+      <ngt-sphere-geometry *args="[1, 32, 32]" />
+      <ngt-mesh-basic-material color="yellow" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-god-rays [options]="{ sun: sun }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpGodRays, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property   | Type                           | Default      | Description                                |
+| ---------- | ------------------------------ | ------------ | ------------------------------------------ |
+| `sun`      | `Mesh \| Points \| ElementRef` | **required** | The light source mesh                      |
+| `density`  | `number`                       | `0.96`       | Ray density                                |
+| `decay`    | `number`                       | `0.9`        | Ray decay factor                           |
+| `weight`   | `number`                       | `0.4`        | Ray weight/intensity                       |
+| `exposure` | `number`                       | `0.6`        | Overall exposure                           |
+| `samples`  | `number`                       | `60`         | Number of samples (quality vs performance) |
+| `clampMax` | `number`                       | `1.0`        | Maximum brightness clamp                   |
+| `blur`     | `boolean`                      | `true`       | Apply blur to rays                         |
+
+## Example: Sunset Scene
+
+```angular-ts
+@Component({
+  selector: 'app-scene-graph',
+  template: `
+    <!-- Sun mesh - this is the light source -->
+    <ngt-mesh #sunMesh [position]="[5, 3, -15]">
+      <ngt-sphere-geometry *args="[2, 32, 32]" />
+      <ngt-mesh-basic-material color="#ffaa00" />
+    </ngt-mesh>
+
+    <!-- Scene objects that will cast shadows in the rays -->
+    <ngt-mesh [position]="[0, 0, 0]">
+      <ngt-box-geometry *args="[2, 4, 0.5]" />
+      <ngt-mesh-standard-material color="#333" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-god-rays [options]="{
+        sun: sunMesh,
+        density: 0.97,
+        decay: 0.94,
+        weight: 0.5,
+        exposure: 0.5,
+        samples: 80
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpGodRays, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- The sun mesh should use `MeshBasicMaterial` for best results (it should be bright/emissive)
+- Objects between the camera and sun will create shadows in the light rays
+- Higher `samples` values improve quality but reduce performance
+- Adjust `density` and `decay` together for different ray lengths
+- Works best when the sun is partially visible or at the edge of the frame

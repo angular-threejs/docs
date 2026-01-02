@@ -1,0 +1,74 @@
+---
+title: NgtpTiltShift
+description: Tilt-shift blur effect
+---
+
+The tilt-shift effect simulates the shallow depth of field of tilt-shift photography, creating a "miniature" appearance by blurring areas outside a focus band.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpTiltShift } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-tilt-shift [options]="{
+        blur: 0.5,
+        offset: 0
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpTiltShift],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property | Type     | Default | Description                       |
+| -------- | -------- | ------- | --------------------------------- |
+| `blur`   | `number` | `0.5`   | Blur intensity                    |
+| `offset` | `number` | `0`     | Vertical offset of the focus band |
+
+## Example: Miniature City Effect
+
+```angular-ts
+@Component({
+  template: `
+    <!-- Scene with multiple objects at different positions -->
+    <ngt-mesh [position]="[-2, 0, 0]">
+      <ngt-box-geometry *args="[1, 2, 1]" />
+      <ngt-mesh-standard-material color="red" />
+    </ngt-mesh>
+
+    <ngt-mesh [position]="[0, 0, 0]">
+      <ngt-box-geometry *args="[1, 3, 1]" />
+      <ngt-mesh-standard-material color="blue" />
+    </ngt-mesh>
+
+    <ngt-mesh [position]="[2, 0, 0]">
+      <ngt-box-geometry *args="[1, 1.5, 1]" />
+      <ngt-mesh-standard-material color="green" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-tilt-shift [options]="{
+        blur: 0.6,
+        offset: 0.1
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpTiltShift, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Higher `blur` values create stronger blur in out-of-focus areas
+- Adjust `offset` to move the focus band up or down
+- Works best with scenes viewed from above (bird's eye view)
+- Combine with increased saturation for enhanced miniature effect
+- See also `NgtpTiltShift2` for more control over the focus area

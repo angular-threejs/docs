@@ -1,0 +1,88 @@
+---
+title: NgtpASCII
+description: ASCII art post-processing effect
+---
+
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Ascii, { content, sceneGraphContent } from '@postprocessing/ascii/ascii?includeContent';
+
+<Tabs>
+ <TabItem label="Preview">
+  <DemoWrapper>
+   <Ascii client:only />
+  </DemoWrapper>
+ </TabItem>
+ <TabItem label="canvas.ts">
+  <Code code={content} lang="angular-ts" />
+ </TabItem>
+ <TabItem label="scene-graph.ts">
+  <Code code={sceneGraphContent} lang="angular-ts" />
+ </TabItem>
+</Tabs>
+
+The ASCII effect renders your scene as ASCII characters, creating a retro terminal-style appearance. Character brightness is mapped to different ASCII characters.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpASCII } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-ascii [options]="{
+        fontSize: 54,
+        cellSize: 16,
+        color: '#00ff00'
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpASCII],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property     | Type      | Default     | Description                            |
+| ------------ | --------- | ----------- | -------------------------------------- |
+| `font`       | `string`  | `'arial'`   | Font family for ASCII characters       |
+| `characters` | `string`  | ''          | Characters used for brightness mapping |
+| `fontSize`   | `number`  | `54`        | Font size in pixels                    |
+| `cellSize`   | `number`  | `16`        | Size of each ASCII cell                |
+| `color`      | `string`  | `'#ffffff'` | Color of ASCII characters              |
+| `invert`     | `boolean` | `false`     | Invert brightness mapping              |
+
+## Example: Terminal Style
+
+Create a classic green terminal look:
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-torus-knot-geometry *args="[1, 0.3, 128, 32]" />
+      <ngt-mesh-standard-material color="white" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-ascii [options]="{
+        fontSize: 48,
+        cellSize: 12,
+        color: '#00ff00',
+        characters: ' .:-=+*#%@'
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpASCII, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Smaller `cellSize` values create more detailed ASCII art but may impact performance
+- The `characters` string should be ordered from darkest to brightest
+- Use monospace fonts for consistent character spacing

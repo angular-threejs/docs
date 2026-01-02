@@ -1,0 +1,75 @@
+---
+title: NgtpPixelation
+description: Retro pixelation effect
+---
+
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import DemoWrapper from '@ui/demo-wrapper.astro';
+import Pixelation, { content, sceneGraphContent } from '@postprocessing/pixelation/pixelation?includeContent';
+
+<Tabs>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Pixelation client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
+</Tabs>
+
+The pixelation effect reduces the resolution of the rendered image, creating a retro, 8-bit style appearance.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpPixelation } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-pixelation [options]="{ granularity: 8 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpPixelation],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property      | Type     | Default | Description                          |
+| ------------- | -------- | ------- | ------------------------------------ |
+| `granularity` | `number` | `5`     | Pixel size (higher = more pixelated) |
+
+## Example: Retro Game Style
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-dodecahedron-geometry *args="[1]" />
+      <ngt-mesh-standard-material color="limegreen" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-pixelation [options]="{ granularity: 10 }" />
+      <!-- Add color depth reduction for full retro effect -->
+      <ngtp-color-depth [options]="{ bits: 4 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpPixelation, NgtpColorDepth, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Higher `granularity` values create larger pixels
+- Combine with `NgtpColorDepth` for authentic retro game aesthetics
+- Works well with `NgtpScanline` for CRT monitor simulation
+- Consider reducing scene complexity when using heavy pixelation

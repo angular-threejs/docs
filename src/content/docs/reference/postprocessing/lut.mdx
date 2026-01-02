@@ -1,0 +1,94 @@
+---
+title: NgtpLUT
+description: LUT (Look-Up Table) color grading effect
+---
+
+The LUT effect applies a 3D Look-Up Table for professional color grading, allowing you to apply complex color transformations used in film and photography.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpLUT } from 'angular-three-postprocessing';
+import { textureResource } from 'angular-three-soba/loaders';
+
+@Component({
+  template: `
+    @if (lut(); as lut) {
+      <ngtp-effect-composer>
+        <ngtp-lut [options]="{ lut }" />
+      </ngtp-effect-composer>
+    }
+  `,
+  imports: [NgtpEffectComposer, NgtpLUT],
+})
+export class SceneGraph {
+  lut = textureResource(() => '/path/to/lut.png');
+}
+```
+
+## Options
+
+| Property                   | Type            | Default             | Description                               |
+| -------------------------- | --------------- | ------------------- | ----------------------------------------- |
+| `lut`                      | `Texture`       | **required**        | The LUT texture                           |
+| `blendFunction`            | `BlendFunction` | `BlendFunction.SRC` | How the effect blends                     |
+| `tetrahedralInterpolation` | `boolean`       | `false`             | Use tetrahedral interpolation for quality |
+
+## Loading CUBE Files
+
+For `.cube` LUT files, you can use a custom loader:
+
+```angular-ts
+import { LUTCubeLoader } from 'postprocessing';
+import { loaderResource } from 'angular-three';
+
+@Component({
+  template: `
+    @if (lutResult(); as result) {
+      <ngtp-effect-composer>
+        <ngtp-lut [options]="{ lut: result.texture3D }" />
+      </ngtp-effect-composer>
+    }
+  `,
+  imports: [NgtpEffectComposer, NgtpLUT],
+})
+export class SceneGraph {
+  lutResult = loaderResource(LUTCubeLoader, () => '/path/to/color-grade.cube');
+}
+```
+
+## Example: Cinematic Color Grade
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-sphere-geometry *args="[1, 32, 32]" />
+      <ngt-mesh-standard-material color="white" />
+    </ngt-mesh>
+
+    @if (lut(); as lut) {
+      <ngtp-effect-composer>
+        <ngtp-lut [options]="{
+          lut,
+          tetrahedralInterpolation: true
+        }" />
+      </ngtp-effect-composer>
+    }
+  `,
+  imports: [NgtpEffectComposer, NgtpLUT, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+  lut = textureResource(() => '/luts/cinematic.png');
+}
+```
+
+## Tips
+
+- LUT textures are typically 256x16 or 512x512 PNG images
+- `.cube` files are industry-standard and provide better quality
+- Enable `tetrahedralInterpolation` for smoother color transitions
+- Many free LUTs are available online for various looks (cinematic, vintage, etc.)
+- LUTs can dramatically change the mood of your scene with minimal performance cost
+- Combine with other effects like vignette and bloom for complete color grading

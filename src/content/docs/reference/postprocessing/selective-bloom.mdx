@@ -1,0 +1,105 @@
+---
+title: NgtpSelectiveBloom
+description: Bloom effect for selected objects only
+---
+
+The selective bloom effect applies bloom only to specific objects in your scene, giving you precise control over which elements glow.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpSelectiveBloom } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngt-point-light #light [position]="[0, 5, 0]" />
+
+    <ngt-mesh #glowingMesh>
+      <ngt-sphere-geometry />
+      <ngt-mesh-standard-material color="hotpink" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-selective-bloom
+        [lights]="[light]"
+        [options]="{
+          selection: [glowingMesh],
+          intensity: 2
+        }"
+      />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpSelectiveBloom],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Inputs
+
+| Input    | Type                         | Description              |
+| -------- | ---------------------------- | ------------------------ |
+| `lights` | `Object3D[] \| ElementRef[]` | Light sources (required) |
+
+## Options
+
+| Property             | Type                                     | Default | Description                              |
+| -------------------- | ---------------------------------------- | ------- | ---------------------------------------- |
+| `selection`          | `Object3D \| Object3D[] \| ElementRef[]` | `[]`    | Objects to apply bloom to                |
+| `selectionLayer`     | `number`                                 | `10`    | Layer for selected objects               |
+| `inverted`           | `boolean`                                | `false` | Invert selection (bloom on non-selected) |
+| `ignoreBackground`   | `boolean`                                | `false` | Ignore background in bloom               |
+| `intensity`          | `number`                                 | `1`     | Bloom intensity                          |
+| `luminanceThreshold` | `number`                                 | `0.9`   | Luminance threshold                      |
+| `luminanceSmoothing` | `number`                                 | `0.025` | Luminance smoothing                      |
+
+## Example: Glowing Orbs
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-ambient-light [intensity]="0.5" />
+    <ngt-point-light #light [position]="[10, 10, 10]" />
+
+    <!-- Non-glowing objects -->
+    <ngt-mesh [position]="[-2, 0, 0]">
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material color="gray" />
+    </ngt-mesh>
+
+    <!-- Glowing orb -->
+    <ngt-mesh #orb1 [position]="[0, 0, 0]">
+      <ngt-sphere-geometry *args="[0.5, 32, 32]" />
+      <ngt-mesh-standard-material color="#ff00ff" [emissive]="'#ff00ff'" [emissiveIntensity]="0.5" />
+    </ngt-mesh>
+
+    <!-- Another glowing orb -->
+    <ngt-mesh #orb2 [position]="[2, 0, 0]">
+      <ngt-sphere-geometry *args="[0.5, 32, 32]" />
+      <ngt-mesh-standard-material color="#00ffff" [emissive]="'#00ffff'" [emissiveIntensity]="0.5" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-selective-bloom
+        [lights]="[light]"
+        [options]="{
+          selection: [orb1, orb2],
+          intensity: 1.5,
+          luminanceThreshold: 0.5
+        }"
+      />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpSelectiveBloom, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Always provide `lights` input - it's required for proper rendering
+- Use emissive materials on selected objects for best results
+- The `selectionLayer` should not conflict with other layers in your scene
+- Set `inverted: true` to bloom everything except selected objects
+- Combine with regular bloom for layered glow effects

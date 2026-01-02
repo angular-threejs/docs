@@ -635,24 +635,68 @@ export function ngtSidebar() {
 								slug: 'reference/postprocessing/introduction',
 							},
 							{
+								label: 'NgtpASCII',
+								slug: 'reference/postprocessing/ascii',
+							},
+							{
 								label: 'NgtpBloom',
 								slug: 'reference/postprocessing/bloom',
 							},
 							{
-								label: 'NgtpVignette',
-								slug: 'reference/postprocessing/vignette',
-							},
-							{
-								label: 'NgtpDepthOfField',
-								slug: 'reference/postprocessing/depth-of-field',
+								label: 'NgtpBrightnessContrast',
+								slug: 'reference/postprocessing/brightness-contrast',
 							},
 							{
 								label: 'NgtpChromaticAberration',
 								slug: 'reference/postprocessing/chromatic-aberration',
 							},
 							{
+								label: 'NgtpColorAverage',
+								slug: 'reference/postprocessing/color-average',
+							},
+							{
+								label: 'NgtpColorDepth',
+								slug: 'reference/postprocessing/color-depth',
+							},
+							{
+								label: 'NgtpDepth',
+								slug: 'reference/postprocessing/depth',
+							},
+							{
+								label: 'NgtpDepthOfField',
+								slug: 'reference/postprocessing/depth-of-field',
+							},
+							{
+								label: 'NgtpDotScreen',
+								slug: 'reference/postprocessing/dot-screen',
+							},
+							{
+								label: 'NgtpFXAA',
+								slug: 'reference/postprocessing/fxaa',
+							},
+							{
 								label: 'NgtpGlitch',
 								slug: 'reference/postprocessing/glitch',
+							},
+							{
+								label: 'NgtpGodRays',
+								slug: 'reference/postprocessing/god-rays',
+							},
+							{
+								label: 'NgtpGrid',
+								slug: 'reference/postprocessing/grid',
+							},
+							{
+								label: 'NgtpHueSaturation',
+								slug: 'reference/postprocessing/hue-saturation',
+							},
+							{
+								label: 'NgtpLensFlare',
+								slug: 'reference/postprocessing/lens-flare',
+							},
+							{
+								label: 'NgtpLUT',
+								slug: 'reference/postprocessing/lut',
 							},
 							{
 								label: 'NgtpNoise',
@@ -663,8 +707,57 @@ export function ngtSidebar() {
 								slug: 'reference/postprocessing/outline',
 							},
 							{
+								label: 'NgtpPixelation',
+								slug: 'reference/postprocessing/pixelation',
+							},
+							{
+								label: 'NgtpScanline',
+								slug: 'reference/postprocessing/scanline',
+							},
+							{
+								label: 'NgtpSelectiveBloom',
+								slug: 'reference/postprocessing/selective-bloom',
+							},
+							{
+								label: 'NgtpSepia',
+								slug: 'reference/postprocessing/sepia',
+							},
+							{
+								label: 'NgtpShockWave',
+								slug: 'reference/postprocessing/shock-wave',
+							},
+							{
 								label: 'NgtpSMAA',
 								slug: 'reference/postprocessing/smaa',
+							},
+							{
+								label: 'NgtpTiltShift',
+								slug: 'reference/postprocessing/tilt-shift',
+							},
+							{
+								label: 'NgtpTiltShift2',
+								slug: 'reference/postprocessing/tilt-shift-2',
+							},
+							{
+								label: 'NgtpToneMapping',
+								slug: 'reference/postprocessing/tone-mapping',
+							},
+							{
+								label: 'NgtpVignette',
+								slug: 'reference/postprocessing/vignette',
+							},
+							{
+								label: 'NgtpWater',
+								slug: 'reference/postprocessing/water',
+							},
+						],
+					},
+					{
+						label: 'angular-three-postprocessing/n8ao',
+						items: [
+							{
+								label: 'NgtpN8AO',
+								slug: 'reference/postprocessing/n8ao',
 							},
 						],
 					},

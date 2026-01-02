@@ -1,0 +1,99 @@
+---
+title: NgtpTiltShift2
+description: Advanced tilt-shift effect with line-based focus
+---
+
+TiltShift2 is an alternative tilt-shift implementation that provides more control over the focus area using start and end points in screen space.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpTiltShift2 } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-tilt-shift-2 [options]="{
+        blur: 0.15,
+        taper: 0.5
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpTiltShift2],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property    | Type     | Default      | Description                       |
+| ----------- | -------- | ------------ | --------------------------------- |
+| `blur`      | `number` | `0.15`       | Blur intensity                    |
+| `taper`     | `number` | `0.5`        | Taper factor for blur falloff     |
+| `start`     | `[x, y]` | `[0.5, 0.0]` | Start point in screen space (0-1) |
+| `end`       | `[x, y]` | `[0.5, 1.0]` | End point in screen space (0-1)   |
+| `samples`   | `number` | `10`         | Number of blur samples            |
+| `direction` | `[x, y]` | `[1, 1]`     | Blur direction                    |
+
+## Example: Diagonal Focus Band
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh [position]="[0, 0, 0]">
+      <ngt-torus-knot-geometry *args="[1, 0.3, 128, 32]" />
+      <ngt-mesh-standard-material color="coral" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <!-- Diagonal focus from bottom-left to top-right -->
+      <ngtp-tilt-shift-2 [options]="{
+        blur: 0.2,
+        taper: 0.6,
+        start: [0.2, 0.8],
+        end: [0.8, 0.2],
+        samples: 15
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpTiltShift2, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Example: Horizontal Focus Strip
+
+```angular-ts
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <!-- Horizontal focus band in the middle -->
+      <ngtp-tilt-shift-2 [options]="{
+        blur: 0.25,
+        start: [0, 0.5],
+        end: [1, 0.5],
+        taper: 0.4
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpTiltShift2],
+})
+export class SceneGraph {}
+```
+
+## TiltShift vs TiltShift2
+
+| Feature       | TiltShift            | TiltShift2                   |
+| ------------- | -------------------- | ---------------------------- |
+| Focus control | Vertical offset only | Start/end points (any angle) |
+| Flexibility   | Simple               | More customizable            |
+| Use case      | Standard miniature   | Custom focus areas           |
+
+## Tips
+
+- `start` and `end` define a line in screen space (0-1 coordinates)
+- The focus area is perpendicular to this line
+- Higher `samples` improves quality but reduces performance
+- `taper` controls how quickly the blur fades from the focus line
+- Use for creative focus effects beyond traditional tilt-shift

@@ -1,0 +1,82 @@
+---
+title: NgtpHueSaturation
+description: Hue and saturation adjustment effect
+---
+
+The hue/saturation effect allows you to shift colors and adjust color intensity across the entire scene.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpHueSaturation } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-hue-saturation [options]="{
+        hue: 0,
+        saturation: 0.2
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpHueSaturation],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property     | Type     | Default | Description                         |
+| ------------ | -------- | ------- | ----------------------------------- |
+| `hue`        | `number` | `0`     | Hue rotation in radians (-PI to PI) |
+| `saturation` | `number` | `0`     | Saturation adjustment (-1 to 1)     |
+
+## Example: Color Shift
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-sphere-geometry *args="[1, 32, 32]" />
+      <ngt-mesh-standard-material color="red" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <!-- Shift red to blue (approximately PI radians) -->
+      <ngtp-hue-saturation [options]="{
+        hue: Math.PI * 0.66,
+        saturation: 0.3
+      }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpHueSaturation, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+  protected Math = Math;
+}
+```
+
+## Example: Desaturated Look
+
+```angular-ts
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <!-- Reduce saturation for a muted, cinematic look -->
+      <ngtp-hue-saturation [options]="{ saturation: -0.5 }" />
+      <ngtp-vignette [options]="{ darkness: 0.4 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpHueSaturation, NgtpVignette],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- `hue: 0` means no color shift
+- `saturation: -1` creates a grayscale image
+- `saturation: 1` doubles the color intensity
+- Combine with `NgtpBrightnessContrast` for complete color grading
+- Use small hue values for subtle color temperature adjustments

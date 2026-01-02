@@ -1,0 +1,57 @@
+---
+title: NgtpColorDepth
+description: Color depth reduction effect
+---
+
+The color depth effect reduces the number of colors in the scene, creating a posterized or retro look similar to older graphics hardware.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpColorDepth } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-color-depth [options]="{ bits: 4 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpColorDepth],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property | Type     | Default | Description                            |
+| -------- | -------- | ------- | -------------------------------------- |
+| `bits`   | `number` | `16`    | Color depth in bits per channel (1-16) |
+
+## Example: Retro 8-bit Style
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-icosahedron-geometry *args="[1, 1]" />
+      <ngt-mesh-standard-material color="orange" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <!-- Combine with pixelation for full retro effect -->
+      <ngtp-pixelation [options]="{ granularity: 8 }" />
+      <ngtp-color-depth [options]="{ bits: 4 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpColorDepth, NgtpPixelation, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- Lower bit values create more pronounced color banding
+- `bits: 1` creates a 2-color (1-bit) look per channel
+- `bits: 8` is standard 24-bit color (8 bits per RGB channel)
+- Combine with `NgtpPixelation` for a complete retro game aesthetic

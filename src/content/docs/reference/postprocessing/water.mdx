@@ -1,0 +1,81 @@
+---
+title: NgtpWater
+description: Water/ripple distortion effect
+---
+
+The water effect creates animated underwater-like distortion, simulating the visual effect of looking through water or heat haze.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpWater } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer>
+      <ngtp-water [options]="{ factor: 0.5 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpWater],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property | Type     | Default | Description                          |
+| -------- | -------- | ------- | ------------------------------------ |
+| `factor` | `number` | `0`     | Distortion intensity (0 = no effect) |
+
+## Example: Underwater Scene
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-torus-knot-geometry *args="[1, 0.3, 128, 32]" />
+      <ngt-mesh-standard-material color="coral" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <ngtp-water [options]="{ factor: 0.3 }" />
+      <!-- Add blue tint for underwater feel -->
+      <ngtp-hue-saturation [options]="{ hue: 0.5 }" />
+      <ngtp-vignette [options]="{ darkness: 0.4 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpWater, NgtpHueSaturation, NgtpVignette, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Example: Heat Haze
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh [position]="[0, 0, -5]">
+      <ngt-plane-geometry *args="[10, 10]" />
+      <ngt-mesh-standard-material color="orange" />
+    </ngt-mesh>
+
+    <ngtp-effect-composer>
+      <!-- Subtle distortion for heat haze effect -->
+      <ngtp-water [options]="{ factor: 0.1 }" />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpWater, NgtArgs],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## Tips
+
+- `factor: 0` disables the effect completely
+- Higher values create more pronounced ripple distortion
+- The effect is animated automatically
+- Combine with blue color grading for underwater scenes
+- Use subtle values (0.05-0.15) for heat haze effects
+- Works well with `NgtpChromaticAberration` for enhanced underwater look

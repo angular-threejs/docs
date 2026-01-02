@@ -1,0 +1,65 @@
+---
+title: NgtpFXAA
+description: Fast Approximate Anti-Aliasing effect
+---
+
+FXAA (Fast Approximate Anti-Aliasing) is a screen-space anti-aliasing technique that smooths jagged edges with minimal performance impact.
+
+## Usage
+
+```angular-ts
+import { NgtpEffectComposer, NgtpFXAA } from 'angular-three-postprocessing';
+
+@Component({
+  template: `
+    <ngtp-effect-composer [options]="{ multisampling: 0 }">
+      <ngtp-fxaa />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpFXAA],
+})
+export class SceneGraph {}
+```
+
+## Options
+
+| Property        | Type            | Default             | Description           |
+| --------------- | --------------- | ------------------- | --------------------- |
+| `blendFunction` | `BlendFunction` | `BlendFunction.SRC` | How the effect blends |
+
+## Example: FXAA vs No Anti-Aliasing
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh [rotation]="[0.5, 0.5, 0]">
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material color="steelblue" />
+    </ngt-mesh>
+
+    <!-- Disable multisampling and use FXAA instead -->
+    <ngtp-effect-composer [options]="{ multisampling: 0 }">
+      <ngtp-fxaa />
+    </ngtp-effect-composer>
+  `,
+  imports: [NgtpEffectComposer, NgtpFXAA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+## FXAA vs SMAA
+
+| Feature     | FXAA                  | SMAA                     |
+| ----------- | --------------------- | ------------------------ |
+| Performance | Faster                | Slightly slower          |
+| Quality     | Good                  | Better                   |
+| Blurring    | May blur fine details | Preserves details better |
+| Use case    | Performance-critical  | Quality-focused          |
+
+## Tips
+
+- Set `multisampling: 0` on the effect composer when using FXAA to avoid redundant anti-aliasing
+- FXAA is faster than SMAA but may slightly blur textures and fine details
+- Good choice for mobile or performance-critical applications
+- Consider SMAA if quality is more important than performance
