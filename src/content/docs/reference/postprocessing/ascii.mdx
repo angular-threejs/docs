@@ -8,17 +8,17 @@ import DemoWrapper from '@ui/demo-wrapper.astro';
 import Ascii, { content, sceneGraphContent } from '@postprocessing/ascii/ascii?includeContent';
 
 <Tabs>
- <TabItem label="Preview">
-  <DemoWrapper>
-   <Ascii client:only />
-  </DemoWrapper>
- </TabItem>
- <TabItem label="canvas.ts">
-  <Code code={content} lang="angular-ts" />
- </TabItem>
- <TabItem label="scene-graph.ts">
-  <Code code={sceneGraphContent} lang="angular-ts" />
- </TabItem>
+	<TabItem label="Preview">
+		<DemoWrapper>
+			<Ascii client:only />
+		</DemoWrapper>
+	</TabItem>
+	<TabItem label="canvas.ts">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
+	<TabItem label="scene-graph.ts">
+		<Code code={sceneGraphContent} lang="angular-ts" />
+	</TabItem>
 </Tabs>
 
 The ASCII effect renders your scene as ASCII characters, creating a retro terminal-style appearance. Character brightness is mapped to different ASCII characters.

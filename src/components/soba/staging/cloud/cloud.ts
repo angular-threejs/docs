@@ -6,7 +6,7 @@ import { SceneGraph } from './scene-graph';
 @Component({
 	selector: 'app-cloud',
 	template: `
-		<ngt-canvas [camera]="{ position: [0, 0, 10], fov: 50 }">
+		<ngt-canvas [camera]="{ position: [0, 5, 10], fov: 50 }">
 			<app-soba-wrapper *canvasContent [grid]="false" background="#87ceeb">
 				<app-scene-graph />
 			</app-soba-wrapper>

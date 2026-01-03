@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtpEffectComposer, NgtpShockWave } from 'angular-three-postprocessing';
-import { EffectPass, ShockWaveEffect } from 'postprocessing';
 import * as THREE from 'three';
 
 @Component({
@@ -62,8 +61,7 @@ import * as THREE from 'three';
 })
 export class SceneGraph {
 	private sphereRef = viewChild.required<ElementRef<THREE.Mesh>>('sphere');
-	private shockwaveRef = viewChild(NgtpShockWave);
-	private effectComposer = viewChild.required(NgtpEffectComposer);
+	private shockwaveRef = viewChild.required(NgtpShockWave);
 
 	constructor() {
 		beforeRender(({ clock }) => {
@@ -84,16 +82,8 @@ export class SceneGraph {
 	}
 
 	triggerShockwave() {
-		const composer = this.effectComposer().effectComposer();
-
-		const effectPass = composer.passes.find((pass): pass is EffectPass => pass instanceof EffectPass);
-		if (!effectPass) return;
-
-		const shockWaveEffect = effectPass['effects'].find(
-			(effect): effect is ShockWaveEffect => effect instanceof ShockWaveEffect,
-		);
+		const shockWaveEffect = this.shockwaveRef().effectRef()?.nativeElement;
 		if (!shockWaveEffect) return;
-
 		shockWaveEffect.explode();
 	}
 }
