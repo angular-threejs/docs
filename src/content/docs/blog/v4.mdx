@@ -471,7 +471,7 @@ const v4 = vector4(input); // Signal<Vector4>
 
 ### Theatre.js Integration (NEW)
 
-v4 introduces `angular-three-theatre` for complex, timeline-based animations with a visual editor:
+v4 introduces `angular-three-theatre` for complex, timeline-based animations with a visual editor. You can see it in action in the [Basic Theatre demo](https://angularthree-demo-next.netlify.app/theatre/basic).
 
 ```angular-ts
 import {
@@ -602,14 +602,14 @@ const d = controls.debug();   // boolean
 
 v4 adds several new components to Soba:
 
-| Component             | Package      | Description                              |
-| --------------------- | ------------ | ---------------------------------------- |
-| `PointerLockControls` | controls     | First-person pointer lock                |
-| `TrackballControls`   | controls     | Trackball camera controls                |
-| `BVH`                 | performances | Bounding volume hierarchy for raycasting |
-| `Cloud`               | staging      | Volumetric clouds                        |
-| `Shadow`              | staging      | Shadow plane                             |
-| `Sparkles`            | staging      | Particle sparkle effect                  |
+| Component                                                                | Package      | Description                              |
+| ------------------------------------------------------------------------ | ------------ | ---------------------------------------- |
+| [`PointerLockControls`](/reference/soba/controls/pointer-lock-controls/) | controls     | First-person pointer lock                |
+| [`TrackballControls`](/reference/soba/controls/trackball-controls/)      | controls     | Trackball camera controls                |
+| [`BVH`](/reference/soba/performances/bvh/)                               | performances | Bounding volume hierarchy for raycasting |
+| [`Cloud`](/reference/soba/staging/cloud/)                                | staging      | Volumetric clouds                        |
+| [`Shadow`](/reference/soba/staging/shadow/)                              | staging      | Shadow plane                             |
+| [`Sparkles`](/reference/soba/staging/sparkles/)                          | staging      | Particle sparkle effect                  |
 
 ### Rapier Physics Updates
 
@@ -655,14 +655,14 @@ All `ngtr` prefixes removed from attribute selectors:
 
 ### Plugin Generators
 
-The `@angular-three/plugin` package provides helpful generators:
+The `angular-three-plugin` package provides helpful generators:
 
 #### Initialize Angular Three
 
 ```bash
-nx generate @angular-three/plugin:init
+nx generate angular-three-plugin:init
 # or
-ng generate @angular-three/plugin:init
+ng generate angular-three-plugin:init
 ```
 
 This will:
@@ -676,7 +676,7 @@ This will:
 #### Generate Component from GLTF
 
 ```bash
-nx generate @angular-three/plugin:gltf \
+nx generate angular-three-plugin:gltf \
   --modelPath=assets/robot.glb \
   --output=src/app/robot \
   --draco \
@@ -686,7 +686,7 @@ nx generate @angular-three/plugin:gltf \
 #### Add Auxiliary Packages
 
 ```bash
-nx generate @angular-three/plugin:aux
+nx generate angular-three-plugin:aux
 ```
 
 Interactive prompt to add: soba, rapier, cannon, postprocessing, tweakpane.
