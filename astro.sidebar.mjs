@@ -853,7 +853,7 @@ export function ngtSidebar() {
 			},
 			{
 				label: 'Examples',
-				link: 'https://angularthree-demo-next.netlify.app',
+				link: 'https://demo.angularthree.org',
 				icon: 'rocket',
 			},
 		],
