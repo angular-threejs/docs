@@ -125,6 +125,9 @@ export default defineConfig({
 		starlight({
 			title: 'Angular Three',
 			routeMiddleware: ['./src/route-data.ts'],
+			components: {
+				Banner: './src/components/ui/global-banner.astro',
+			},
 			plugins: [
 				ngtSidebar(),
 				starlightBlog({
