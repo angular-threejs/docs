@@ -1,0 +1,55 @@
+---
+import { getAllPackagesInfo } from '../../data/package-deps';
+
+const allPackages = await getAllPackagesInfo();
+
+// Build a map of peer dep -> which packages need it
+const peerDepMap = new Map<string, { version: string; packages: string[] }>();
+
+for (const pkg of allPackages) {
+	for (const [dep, version] of Object.entries(pkg.peerDependencies)) {
+		// Filter out angular, rxjs, tslib as they're assumed
+		if (dep.startsWith('@angular/') || dep === 'rxjs' || dep === 'tslib') continue;
+
+		if (!peerDepMap.has(dep)) {
+			peerDepMap.set(dep, { version: version as string, packages: [] });
+		}
+		peerDepMap.get(dep)!.packages.push(pkg.name);
+	}
+}
+
+// Sort by dependency name
+const sortedDeps = [...peerDepMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+---
+
+<table>
+	<thead>
+		<tr>
+			<th>Peer Dependency</th>
+			<th>Version</th>
+			<th>Required By</th>
+		</tr>
+	</thead>
+	<tbody>
+		{
+			sortedDeps.map(([name, { version, packages }]) => (
+				<tr>
+					<td>
+						<code>{name}</code>
+					</td>
+					<td>
+						<code>{version}</code>
+					</td>
+					<td>
+						{packages.map((pkg, i) => (
+							<>
+								<code>{pkg}</code>
+								{i < packages.length - 1 ? ', ' : ''}
+							</>
+						))}
+					</td>
+				</tr>
+			))
+		}
+	</tbody>
+</table>

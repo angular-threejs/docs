@@ -1,0 +1,44 @@
+---
+import { getPackageInfo, type PackageName } from '../../data/package-deps';
+
+interface Props {
+	package: PackageName;
+}
+
+const { package: packageName } = Astro.props;
+const info = await getPackageInfo(packageName);
+
+const peerDeps = Object.entries(info.peerDependencies).filter(
+	// Filter out angular and rxjs as they're assumed
+	([name]) => !name.startsWith('@angular/') && name !== 'rxjs' && name !== 'tslib'
+);
+---
+
+{
+	peerDeps.length > 0 ? (
+		<table>
+			<thead>
+				<tr>
+					<th>Peer Dependency</th>
+					<th>Version</th>
+				</tr>
+			</thead>
+			<tbody>
+				{peerDeps.map(([name, version]) => (
+					<tr>
+						<td>
+							<code>{name}</code>
+						</td>
+						<td>
+							<code>{version}</code>
+						</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	) : (
+		<p>
+			<em>No additional peer dependencies required.</em>
+		</p>
+	)
+}
