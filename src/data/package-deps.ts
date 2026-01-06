@@ -1,61 +1,59 @@
-// Fetches peer dependencies from unpkg at build time
+// Fetches compatibility matrix from angular-three-plugin at build time
 
-const PACKAGES = [
-	'angular-three',
-	'angular-three-soba',
-	'angular-three-rapier',
-	'angular-three-cannon',
-	'angular-three-postprocessing',
-	'angular-three-theatre',
-	'angular-three-tweakpane',
-] as const;
+export interface CombinedEntry {
+	angularThree: string;
+	three: string;
+	angular: string;
+	ngxtension: string;
+}
 
-export type PackageName = (typeof PACKAGES)[number];
-
-export interface PackageInfo {
-	name: PackageName;
+export interface PackageEntry {
 	version: string;
 	peerDependencies: Record<string, string>;
 }
 
-const cache = new Map<PackageName, PackageInfo>();
+export interface PackageInfo {
+	displayName: string;
+	entries: PackageEntry[];
+}
 
-async function fetchPackageJson(packageName: PackageName): Promise<PackageInfo> {
-	if (cache.has(packageName)) {
-		return cache.get(packageName)!;
+export interface CompatMatrix {
+	updatedAt: string;
+	combined: CombinedEntry[];
+	packages: Record<string, PackageInfo>;
+}
+
+let cachedMatrix: CompatMatrix | null = null;
+
+export async function getCompatMatrix(): Promise<CompatMatrix> {
+	if (cachedMatrix) {
+		return cachedMatrix;
 	}
 
 	try {
-		const response = await fetch(`https://unpkg.com/${packageName}/package.json`);
+		const response = await fetch('https://unpkg.com/angular-three-plugin@latest/compat-matrix.json');
 		if (!response.ok) {
-			throw new Error(`Failed to fetch ${packageName}: ${response.statusText}`);
+			throw new Error(`Failed to fetch compat matrix: ${response.statusText}`);
 		}
 
-		const json = await response.json();
-		const info: PackageInfo = {
-			name: packageName,
-			version: json.version,
-			peerDependencies: json.peerDependencies || {},
-		};
-
-		cache.set(packageName, info);
-		return info;
+		cachedMatrix = await response.json();
+		return cachedMatrix!;
 	} catch (error) {
-		console.error(`Error fetching ${packageName}:`, error);
+		console.error('Error fetching compat matrix:', error);
 		return {
-			name: packageName,
-			version: 'unknown',
-			peerDependencies: {},
+			updatedAt: new Date().toISOString(),
+			combined: [],
+			packages: {},
 		};
 	}
 }
 
-export async function getPackageInfo(packageName: PackageName): Promise<PackageInfo> {
-	return fetchPackageJson(packageName);
+export async function getPackagePeerDeps(packageName: string): Promise<PackageEntry[]> {
+	const matrix = await getCompatMatrix();
+	return matrix.packages[packageName]?.entries || [];
 }
 
-export async function getAllPackagesInfo(): Promise<PackageInfo[]> {
-	return Promise.all(PACKAGES.map(fetchPackageJson));
+export async function getCombinedMatrix(): Promise<CombinedEntry[]> {
+	const matrix = await getCompatMatrix();
+	return matrix.combined;
 }
-
-export { PACKAGES };

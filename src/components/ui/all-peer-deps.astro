@@ -1,55 +1,81 @@
 ---
-import { getAllPackagesInfo } from '../../data/package-deps';
+import { getCombinedMatrix, getCompatMatrix, type CombinedEntry } from '../../data/package-deps';
 
-const allPackages = await getAllPackagesInfo();
-
-// Build a map of peer dep -> which packages need it
-const peerDepMap = new Map<string, { version: string; packages: string[] }>();
-
-for (const pkg of allPackages) {
-	for (const [dep, version] of Object.entries(pkg.peerDependencies)) {
-		// Filter out angular, rxjs, tslib as they're assumed
-		if (dep.startsWith('@angular/') || dep === 'rxjs' || dep === 'tslib') continue;
-
-		if (!peerDepMap.has(dep)) {
-			peerDepMap.set(dep, { version: version as string, packages: [] });
-		}
-		peerDepMap.get(dep)!.packages.push(pkg.name);
-	}
-}
-
-// Sort by dependency name
-const sortedDeps = [...peerDepMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+const matrix = await getCompatMatrix();
+const combined = matrix.combined;
+const packages = matrix.packages;
 ---
+
+<h3>Core Compatibility</h3>
+<p>The following table shows which versions of Angular Three work with which versions of Three.js, Angular, and ngxtension.</p>
 
 <table>
 	<thead>
 		<tr>
-			<th>Peer Dependency</th>
-			<th>Version</th>
-			<th>Required By</th>
+			<th>Angular Three</th>
+			<th>Three.js</th>
+			<th>Angular</th>
+			<th>ngxtension</th>
 		</tr>
 	</thead>
 	<tbody>
 		{
-			sortedDeps.map(([name, { version, packages }]) => (
+			combined.map((entry: CombinedEntry) => (
 				<tr>
 					<td>
-						<code>{name}</code>
+						<code>{entry.angularThree}</code>
 					</td>
 					<td>
-						<code>{version}</code>
+						<code>{entry.three}</code>
 					</td>
 					<td>
-						{packages.map((pkg, i) => (
-							<>
-								<code>{pkg}</code>
-								{i < packages.length - 1 ? ', ' : ''}
-							</>
-						))}
+						<code>{entry.angular}</code>
+					</td>
+					<td>
+						<code>{entry.ngxtension}</code>
 					</td>
 				</tr>
 			))
 		}
 	</tbody>
 </table>
+
+<h3>Package Peer Dependencies</h3>
+<p>Each auxiliary package has its own peer dependencies. Install only what you need based on which packages you're using.</p>
+
+{
+	Object.entries(packages).map(([pkgName, pkgInfo]) => (
+		<div>
+			<h4>{pkgInfo.displayName} (<code>{pkgName}</code>)</h4>
+			{pkgInfo.entries.map((entry) => (
+				<div>
+					<p><strong>Version:</strong> <code>{entry.version}</code></p>
+					{Object.keys(entry.peerDependencies).length > 0 ? (
+						<table>
+							<thead>
+								<tr>
+									<th>Peer Dependency</th>
+									<th>Version</th>
+								</tr>
+							</thead>
+							<tbody>
+								{Object.entries(entry.peerDependencies).map(([dep, version]) => (
+									<tr>
+										<td><code>{dep}</code></td>
+										<td><code>{version}</code></td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					) : (
+						<p><em>No additional peer dependencies.</em></p>
+					)}
+				</div>
+			))}
+		</div>
+	))
+}
+
+<p class="text-sm text-gray-500">
+	<em>Last updated: {new Date(matrix.updatedAt).toLocaleDateString()}</em>
+</p>
