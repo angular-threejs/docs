@@ -123,9 +123,9 @@ ngt-canvas {
 	margin-top: 0;
 }
 
-/* Remove content centering gap - use full width */
+/* Remove content centering gap - use full width (except hero pages) */
 @media (min-width: 72rem) {
-	.sl-container {
+	:root:not([data-has-hero]) .sl-container {
 		max-width: none;
 		margin-inline-start: 0;
 	}
