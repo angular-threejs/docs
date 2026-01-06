@@ -1,81 +1,55 @@
 ---
-import { getCombinedMatrix, getCompatMatrix, type CombinedEntry } from '../../data/package-deps';
+import { getCompatMatrix, type CombinedEntry } from '../../data/package-deps';
 
 const matrix = await getCompatMatrix();
 const combined = matrix.combined;
-const packages = matrix.packages;
 ---
 
-<h3>Core Compatibility</h3>
-<p>The following table shows which versions of Angular Three work with which versions of Three.js, Angular, and ngxtension.</p>
-
-<table>
+<table class="compat-table">
 	<thead>
 		<tr>
-			<th>Angular Three</th>
-			<th>Three.js</th>
-			<th>Angular</th>
-			<th>ngxtension</th>
+			<th><a href="https://github.com/angular-threejs/angular-three" target="_blank" rel="noopener">Angular Three</a></th>
+			<th><a href="https://threejs.org" target="_blank" rel="noopener">Three.js</a></th>
+			<th><a href="https://angular.dev" target="_blank" rel="noopener">Angular</a></th>
+			<th><a href="https://ngxtension.dev" target="_blank" rel="noopener">ngxtension</a></th>
 		</tr>
 	</thead>
 	<tbody>
 		{
 			combined.map((entry: CombinedEntry) => (
 				<tr>
-					<td>
-						<code>{entry.angularThree}</code>
-					</td>
-					<td>
-						<code>{entry.three}</code>
-					</td>
-					<td>
-						<code>{entry.angular}</code>
-					</td>
-					<td>
-						<code>{entry.ngxtension}</code>
-					</td>
+					<td><code>{entry.angularThree}</code></td>
+					<td><code>{entry.three}</code></td>
+					<td><code>{entry.angular}</code></td>
+					<td><code>{entry.ngxtension}</code></td>
 				</tr>
 			))
 		}
 	</tbody>
 </table>
 
-<h3>Package Peer Dependencies</h3>
-<p>Each auxiliary package has its own peer dependencies. Install only what you need based on which packages you're using.</p>
-
-{
-	Object.entries(packages).map(([pkgName, pkgInfo]) => (
-		<div>
-			<h4>{pkgInfo.displayName} (<code>{pkgName}</code>)</h4>
-			{pkgInfo.entries.map((entry) => (
-				<div>
-					<p><strong>Version:</strong> <code>{entry.version}</code></p>
-					{Object.keys(entry.peerDependencies).length > 0 ? (
-						<table>
-							<thead>
-								<tr>
-									<th>Peer Dependency</th>
-									<th>Version</th>
-								</tr>
-							</thead>
-							<tbody>
-								{Object.entries(entry.peerDependencies).map(([dep, version]) => (
-									<tr>
-										<td><code>{dep}</code></td>
-										<td><code>{version}</code></td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					) : (
-						<p><em>No additional peer dependencies.</em></p>
-					)}
-				</div>
-			))}
-		</div>
-	))
-}
-
-<p class="text-sm text-gray-500">
-	<em>Last updated: {new Date(matrix.updatedAt).toLocaleDateString()}</em>
-</p>
+<style>
+	.compat-table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+	.compat-table th,
+	.compat-table td {
+		border: 1px solid var(--sl-color-gray-5);
+		padding: 0.5rem 0.75rem;
+	}
+	.compat-table th {
+		background: var(--sl-color-gray-6);
+		text-align: left;
+	}
+	.compat-table th a {
+		color: var(--sl-color-text-accent);
+		text-decoration: none;
+	}
+	.compat-table th a:hover {
+		text-decoration: underline;
+	}
+	.compat-table tr:nth-child(even) {
+		background: var(--sl-color-gray-7);
+	}
+</style>

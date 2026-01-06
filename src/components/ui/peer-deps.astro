@@ -11,12 +11,12 @@ const entries: PackageEntry[] = await getPackagePeerDeps(packageName);
 
 {
 	entries.length > 0 ? (
-		entries.map((entry: PackageEntry) => (
-			<div>
-				<h4>
+		entries.map((entry: PackageEntry, index: number) => (
+			<details open={index === 0}>
+				<summary>
 					Version: <code>{entry.version}</code>
-				</h4>
-				<table>
+				</summary>
+				<table class="peer-deps-table">
 					<thead>
 						<tr>
 							<th>Peer Dependency</th>
@@ -26,17 +26,13 @@ const entries: PackageEntry[] = await getPackagePeerDeps(packageName);
 					<tbody>
 						{Object.entries(entry.peerDependencies).map(([name, version]) => (
 							<tr>
-								<td>
-									<code>{name}</code>
-								</td>
-								<td>
-									<code>{version}</code>
-								</td>
+								<td><code>{name}</code></td>
+								<td><code>{version}</code></td>
 							</tr>
 						))}
 					</tbody>
 				</table>
-			</div>
+			</details>
 		))
 	) : (
 		<p>
@@ -44,3 +40,48 @@ const entries: PackageEntry[] = await getPackagePeerDeps(packageName);
 		</p>
 	)
 }
+
+<style>
+	details {
+		margin-bottom: 1rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.25rem;
+	}
+	details summary {
+		padding: 0.75rem 1rem;
+		cursor: pointer;
+		background: var(--sl-color-gray-6);
+		font-weight: 500;
+	}
+	details summary:hover {
+		background: var(--sl-color-gray-5);
+	}
+	details[open] summary {
+		border-bottom: 1px solid var(--sl-color-gray-5);
+	}
+	.peer-deps-table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 0;
+	}
+	.peer-deps-table th,
+	.peer-deps-table td {
+		border: 1px solid var(--sl-color-gray-5);
+		padding: 0.5rem 0.75rem;
+	}
+	.peer-deps-table th {
+		background: var(--sl-color-gray-6);
+		text-align: left;
+	}
+	.peer-deps-table tr:nth-child(even) {
+		background: var(--sl-color-gray-7);
+	}
+	/* Remove top border since details has border */
+	.peer-deps-table {
+		border-top: none;
+	}
+	.peer-deps-table tr:first-child th,
+	.peer-deps-table tr:first-child td {
+		border-top: none;
+	}
+</style>
