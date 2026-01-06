@@ -122,3 +122,11 @@ div.tp-dfwv {
 ngt-canvas {
 	margin-top: 0;
 }
+
+/* Remove content centering gap - use full width */
+@media (min-width: 72rem) {
+	.sl-container {
+		max-width: none;
+		margin-inline-start: 0;
+	}
+}
