@@ -12,26 +12,28 @@ const entries: PackageEntry[] = await getPackagePeerDeps(packageName);
 {
 	entries.length > 0 ? (
 		entries.map((entry: PackageEntry, index: number) => (
-			<details open={index === 0}>
+			<details class="peer-deps-details" open={index === 0}>
 				<summary>
 					Version: <code>{entry.version}</code>
 				</summary>
-				<table class="peer-deps-table">
-					<thead>
-						<tr>
-							<th>Peer Dependency</th>
-							<th>Version</th>
-						</tr>
-					</thead>
-					<tbody>
-						{Object.entries(entry.peerDependencies).map(([name, version]) => (
+				<div class="peer-deps-content">
+					<table class="peer-deps-table">
+						<thead>
 							<tr>
-								<td><code>{name}</code></td>
-								<td><code>{version}</code></td>
+								<th>Peer Dependency</th>
+								<th>Version</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{Object.entries(entry.peerDependencies).map(([name, version]) => (
+								<tr>
+									<td><code>{name}</code></td>
+									<td><code>{version}</code></td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 			</details>
 		))
 	) : (
@@ -42,22 +44,38 @@ const entries: PackageEntry[] = await getPackagePeerDeps(packageName);
 }
 
 <style>
-	details {
+	.peer-deps-details {
 		margin-bottom: 1rem;
 		border: 1px solid var(--sl-color-gray-5);
 		border-radius: 0.25rem;
 	}
-	details summary {
+	.peer-deps-details summary {
 		padding: 0.75rem 1rem;
 		cursor: pointer;
 		background: var(--sl-color-gray-6);
 		font-weight: 500;
+		list-style: none;
 	}
-	details summary:hover {
+	.peer-deps-details summary::-webkit-details-marker {
+		display: none;
+	}
+	.peer-deps-details summary::before {
+		content: '›';
+		display: inline-block;
+		margin-right: 0.5rem;
+		transition: transform 0.2s;
+	}
+	.peer-deps-details[open] summary::before {
+		transform: rotate(90deg);
+	}
+	.peer-deps-details summary:hover {
 		background: var(--sl-color-gray-5);
 	}
-	details[open] summary {
+	.peer-deps-details[open] summary {
 		border-bottom: 1px solid var(--sl-color-gray-5);
+	}
+	.peer-deps-content {
+		padding: 1rem;
 	}
 	.peer-deps-table {
 		width: 100%;
@@ -75,13 +93,5 @@ const entries: PackageEntry[] = await getPackagePeerDeps(packageName);
 	}
 	.peer-deps-table tr:nth-child(even) {
 		background: var(--sl-color-gray-7);
-	}
-	/* Remove top border since details has border */
-	.peer-deps-table {
-		border-top: none;
-	}
-	.peer-deps-table tr:first-child th,
-	.peer-deps-table tr:first-child td {
-		border-top: none;
 	}
 </style>
