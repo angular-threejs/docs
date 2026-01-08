@@ -492,6 +492,14 @@ export function ngtSidebar() {
 								label: 'NgtsPreload',
 								slug: 'reference/soba/misc/preload',
 							},
+							{
+								label: 'NgtsSoftShadows',
+								slug: 'reference/soba/misc/soft-shadows',
+							},
+							{
+								label: 'NgtsBakeShadows',
+								slug: 'reference/soba/misc/bake-shadows',
+							},
 						],
 					},
 					{

@@ -1,0 +1,11 @@
+---
+title: NgtsBakeShadows
+description: angular-three-soba/misc NgtsBakeShadows directive
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import BakeShadows, { content, sceneGraphContent } from '@soba/misc/bake-shadows/bake-shadows?includeContent';
+
+<ReferenceWrapper path="soba/misc/bake-shadows" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<BakeShadows client:only />
+</ReferenceWrapper>

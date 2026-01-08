@@ -1,0 +1,11 @@
+---
+title: NgtsSoftShadows
+description: angular-three-soba/misc NgtsSoftShadows directive
+---
+
+import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
+import SoftShadows, { content, sceneGraphContent } from '@soba/misc/soft-shadows/soft-shadows?includeContent';
+
+<ReferenceWrapper path="soba/misc/soft-shadows" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
+	<SoftShadows client:only />
+</ReferenceWrapper>
