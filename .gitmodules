@@ -1,0 +1,4 @@
+[submodule "angular-three"]
+	path = angular-three
+	url = https://github.com/angular-threejs/angular-three.git
+	branch = main

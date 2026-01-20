@@ -99,6 +99,7 @@ export default defineConfig({
 				'angular-three-postprocessing',
 				'angular-three-postprocessing/**',
 				'angular-three-tweakpane',
+				'angular-three-theatre',
 				'@pmndrs/vanilla',
 				'@pmndrs/cannon-worker-api',
 				'three-custom-shader-material',
