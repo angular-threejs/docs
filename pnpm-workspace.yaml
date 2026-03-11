@@ -1,0 +1,2 @@
+patchedDependencies:
+  starlight-blog@0.26.0: patches/starlight-blog@0.26.0.patch

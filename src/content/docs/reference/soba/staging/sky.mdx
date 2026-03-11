@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Sky, { content, sceneGraphContent } from '@soba/staging/sky/sky?includeContent';
 
 <ReferenceWrapper path="soba/staging/sky" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Sky client:only />
+	<Sky client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

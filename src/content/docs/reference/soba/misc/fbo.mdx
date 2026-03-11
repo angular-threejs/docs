@@ -7,7 +7,7 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Fbo, { content, sceneGraphContent } from '@soba/misc/fbo/fbo?includeContent';
 
 <ReferenceWrapper path="soba/misc/fbo" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Fbo client:only />
+	<Fbo client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>
 
 Creates a `WebGLRenderTarget` (Frame Buffer Object) for off-screen rendering. The FBO is automatically sized to the canvas dimensions if width/height are not specified, and is disposed on component destroy.

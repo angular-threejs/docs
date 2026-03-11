@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import SoftShadows, { content, sceneGraphContent } from '@soba/misc/soft-shadows/soft-shadows?includeContent';
 
 <ReferenceWrapper path="soba/misc/soft-shadows" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<SoftShadows client:only />
+	<SoftShadows client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

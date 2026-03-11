@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Animations, { content, sceneGraphContent } from '@soba/misc/animations/animations?includeContent';
 
 <ReferenceWrapper path="soba/misc/animations" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Animations client:only />
+	<Animations client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

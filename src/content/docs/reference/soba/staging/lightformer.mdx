@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Lightformer, { content, sceneGraphContent } from '@soba/staging/lightformer/lightformer?includeContent';
 
 <ReferenceWrapper path="soba/staging/lightformer" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Lightformer client:only />
+	<Lightformer client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

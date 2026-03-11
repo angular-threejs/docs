@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Line, { content, sceneGraphContent } from '@soba/abstractions/line/line?includeContent';
 
 <ReferenceWrapper path="soba/abstractions/line" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Line client:only />
+	<Line client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

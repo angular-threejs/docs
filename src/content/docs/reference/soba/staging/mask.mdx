@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Mask, { content, sceneGraphContent } from '@soba/staging/mask/mask?includeContent';
 
 <ReferenceWrapper path="soba/staging/mask" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Mask client:only />
+	<Mask client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

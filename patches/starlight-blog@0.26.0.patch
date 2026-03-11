@@ -1,0 +1,17 @@
+diff --git a/libs/container.ts b/libs/container.ts
+index 0f2e32e2a33a45f9ec37e77fb4f6e3328784a1c9..3fc724c547254600e12c0623a13810f516a85053 100644
+--- a/libs/container.ts
++++ b/libs/container.ts
+@@ -1,3 +1,4 @@
++import angularRenderer from '@analogjs/astro-angular/server.js'
+ import mdxRenderer from '@astrojs/mdx/server.js'
+ import { experimental_AstroContainer as AstroContainer } from 'astro/container'
+ import { render } from 'astro:content'
+@@ -6,6 +7,7 @@ import type { StarlightBlogEntry } from './content'
+ 
+ const container = await AstroContainer.create()
+ container.addServerRenderer({ name: 'mdx', renderer: mdxRenderer })
++container.addServerRenderer({ name: '@analogjs/astro-angular', renderer: angularRenderer })
+ 
+ export async function renderBlogEntryToString(entry: StarlightBlogEntry, t: App.Locals['t']) {
+   const { Content } = await render(entry)

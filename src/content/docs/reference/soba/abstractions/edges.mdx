@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Edges, { content, sceneGraphContent } from '@soba/abstractions/edges/edges?includeContent';
 
 <ReferenceWrapper path="soba/abstractions/edges" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Edges client:only />
+	<Edges client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

@@ -7,7 +7,7 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Html, { content, sceneGraphContent } from '@soba/misc/html/html?includeContent';
 
 <ReferenceWrapper path="soba/misc/html" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Html client:only />
+	<Html client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>
 
 A component for rendering HTML content positioned in 3D space. Creates a THREE.Group anchor point in the scene and projects HTML onto the canvas using CSS positioning or CSS 3D transforms.

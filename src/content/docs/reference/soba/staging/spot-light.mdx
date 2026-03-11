@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import SpotLight, { content, sceneGraphContent } from '@soba/staging/spot-light/spot-light?includeContent';
 
 <ReferenceWrapper path="soba/staging/spot-light" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<SpotLight client:only />
+	<SpotLight client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

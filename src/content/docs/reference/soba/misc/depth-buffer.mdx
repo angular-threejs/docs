@@ -7,7 +7,7 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import DepthBuffer, { content, sceneGraphContent } from '@soba/misc/depth-buffer/depth-buffer?includeContent';
 
 <ReferenceWrapper path="soba/misc/depth-buffer" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<DepthBuffer client:only />
+	<DepthBuffer client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>
 
 Creates a depth buffer texture that captures scene depth information. Renders the scene to an off-screen FBO with a depth texture attachment, which can be used for effects like soft particles, SSAO, or custom shaders.

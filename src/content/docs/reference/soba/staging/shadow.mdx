@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Shadow, { content, sceneGraphContent } from '@soba/staging/shadow/shadow?includeContent';
 
 <ReferenceWrapper path="soba/staging/shadow" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Shadow client:only />
+	<Shadow client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Backdrop, { content, sceneGraphContent } from '@soba/staging/backdrop/backdrop?includeContent';
 
 <ReferenceWrapper path="soba/staging/backdrop" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Backdrop client:only />
+	<Backdrop client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

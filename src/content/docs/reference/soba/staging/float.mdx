@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Float, { content, sceneGraphContent } from '@soba/staging/float/float?includeContent';
 
 <ReferenceWrapper path="soba/staging/float" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Float client:only />
+	<Float client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import RenderTexture, { content, sceneGraphContent } from '@soba/staging/render-texture/render-texture?includeContent';
 
 <ReferenceWrapper path="soba/staging/render-texture" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<RenderTexture client:only />
+	<RenderTexture client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Environment, { content, sceneGraphContent } from '@soba/staging/environment/environment?includeContent';
 
 <ReferenceWrapper path="soba/staging/environment" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Environment client:only />
+	<Environment client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

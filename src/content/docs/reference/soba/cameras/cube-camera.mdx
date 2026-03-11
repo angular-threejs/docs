@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import CubeCamera, { content, sceneGraphContent } from '@soba/cameras/cube-camera/cube-camera?includeContent';
 
 <ReferenceWrapper path="soba/cameras/cube-camera" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<CubeCamera client:only />
+	<CubeCamera client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

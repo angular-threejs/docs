@@ -7,7 +7,7 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Sampler, { content, sceneGraphContent } from '@soba/misc/sampler/sampler?includeContent';
 
 <ReferenceWrapper path="soba/misc/sampler" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Sampler client:only />
+	<Sampler client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>
 
 Utilities for distributing instances across a mesh surface using THREE.js `MeshSurfaceSampler`.

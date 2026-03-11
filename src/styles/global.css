@@ -1,13 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer base, starlight, theme, components, utilities;
+@import '@astrojs/starlight-tailwind';
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
 
-/*
-Add additional Tailwind styles to this file, for example with @layer:
-https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer
-*/
+@theme {
+	--color-accent-200: #e3b6ed;
+	--color-accent-600: #8b00a3;
+	--color-accent-900: #4e0e5b;
+	--color-accent-950: #36113e;
+	--color-gray-100: #f8f4fe;
+	--color-gray-200: #f2e9fd;
+	--color-gray-300: #c7bdd5;
+	--color-gray-400: #9581ae;
+	--color-gray-500: #614e78;
+	--color-gray-700: #412e55;
+	--color-gray-800: #2f1c42;
+	--color-gray-900: #1c1425;
+	--font-sans: 'Inter', sans-serif;
+	--font-mono: 'DM Mono', monospace;
+}
 
 :root {
 	--sl-hero-color: hsla(290, 100%, 32%, 0.25); /* using accent-600 with lower opacity */
@@ -16,11 +29,6 @@ https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer
 :root[data-theme='light'] {
 	--sl-hero-color: hsla(288, 56%, 82%, 0.6); /* using accent-200 with lower opacity */
 }
-
-/*
-Add additional Tailwind styles to this file, for example with @layer:
-https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer
-*/
 
 /* code */
 .expressive-code pre {

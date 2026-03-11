@@ -7,5 +7,5 @@ import ReferenceWrapper from '@ui/reference/reference-wrapper.astro';
 import Grid, { content, sceneGraphContent } from '@soba/abstractions/grid/grid?includeContent';
 
 <ReferenceWrapper path="soba/abstractions/grid" demoContent={content} demoSceneGraphContent={sceneGraphContent}>
-	<Grid client:only />
+	<Grid client:only="@analogjs/astro-angular" />
 </ReferenceWrapper>

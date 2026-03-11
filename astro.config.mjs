@@ -1,6 +1,6 @@
 import analogjsangular from '@analogjs/astro-angular';
 import starlight from '@astrojs/starlight';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import glob from 'fast-glob';
 import { readFileSync } from 'node:fs';
@@ -88,7 +88,7 @@ export default defineConfig({
 		esbuild: {
 			jsxDev: true,
 		},
-		plugins: [includeContentPlugin()],
+		plugins: [tailwindcss(), includeContentPlugin()],
 		ssr: {
 			noExternal: [
 				'angular-three-soba/**',
@@ -154,8 +154,7 @@ export default defineConfig({
 			// 	github: 'https://github.com/angular-threejs/angular-three',
 			// },
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/angular-threejs/angular-three' }],
-			customCss: ['./src/tailwind.css'],
+			customCss: ['./src/styles/global.css'],
 		}),
-		tailwind({ applyBaseStyles: false }),
 	],
 });
