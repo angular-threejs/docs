@@ -7,7 +7,7 @@ import { SceneGraph } from './scene-graph';
 	selector: 'app-accumulative-shadows',
 	template: `
 		<ngt-canvas shadows [camera]="{ position: [4, 4, 4], fov: 50 }">
-			<app-soba-wrapper *canvasContent [grid]="false" [lights]="false">
+			<app-soba-wrapper *canvasContent [grid]="false" [lights]="false" background="#f0f0f0">
 				<app-scene-graph />
 			</app-soba-wrapper>
 		</ngt-canvas>

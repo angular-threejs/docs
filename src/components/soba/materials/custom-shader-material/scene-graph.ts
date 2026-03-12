@@ -10,13 +10,7 @@ import { MeshStandardMaterial } from 'three';
 			<ngt-sphere-geometry *args="[1, 64, 64]" />
 			<ngts-custom-shader-material
 				[baseMaterial]="MeshStandardMaterial"
-				[options]="{
-					vertexShader: vertexShader,
-					fragmentShader: fragmentShader,
-					uniforms: uniforms,
-					metalness: 0.5,
-					roughness: 0.3,
-				}"
+				[options]="{ vertexShader, fragmentShader, uniforms, metalness: 0.5, roughness: 0.3 }"
 			/>
 		</ngt-mesh>
 	`,
@@ -40,28 +34,25 @@ export class SceneGraph {
 		uniform float uAmplitude;
 		uniform float uFrequency;
 
-		varying vec3 vNormal;
+		varying vec3 vCsmPosition;
 
 		void main() {
-			vNormal = normal;
+			vCsmPosition = position;
 
-			// Wave displacement
 			float displacement = sin(position.x * uFrequency + uTime) *
 			                     sin(position.y * uFrequency + uTime) *
 			                     sin(position.z * uFrequency + uTime) * uAmplitude;
 
-			vec3 newPosition = position + normal * displacement;
-			csm_Position = newPosition;
+			csm_Position = position + normal * displacement;
 		}
 	`;
 
 	fragmentShader = /* glsl */ `
 		uniform float uTime;
-		varying vec3 vNormal;
+		varying vec3 vCsmPosition;
 
 		void main() {
-			// Color based on normal and time
-			vec3 color = 0.5 + 0.5 * cos(uTime + vNormal.xyx + vec3(0, 2, 4));
+			vec3 color = 0.5 + 0.5 * cos(uTime + vCsmPosition.xyx + vec3(0, 2, 4));
 			csm_DiffuseColor = vec4(color, 1.0);
 		}
 	`;

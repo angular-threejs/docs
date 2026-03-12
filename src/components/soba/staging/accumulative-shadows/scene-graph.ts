@@ -26,18 +26,19 @@ import { NgtsAccumulativeShadows, NgtsEnvironment, NgtsRandomizedLights } from '
 			[options]="{
 				temporal: true,
 				frames: 100,
-				color: '#316d39',
+				color: 'orange',
 				colorBlend: 2,
-				alphaTest: 0.65,
-				opacity: 2,
-				scale: 14,
-				position: [0, 0.001, 0],
+				toneMapped: true,
+				alphaTest: 0.7,
+				opacity: 1,
+				scale: 12,
+				position: [0, -0.01, 0],
 			}"
 		>
 			<ngts-randomized-lights
 				[options]="{
 					amount: 8,
-					radius: 4,
+					radius: 10,
 					ambient: 0.5,
 					intensity: Math.PI,
 					position: [5, 5, -10],
