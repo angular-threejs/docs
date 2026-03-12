@@ -1,0 +1,3 @@
+[build]
+  command = "corepack enable && NODE_OPTIONS='--max-old-space-size=4096' pnpm build"
+  publish = "dist"
