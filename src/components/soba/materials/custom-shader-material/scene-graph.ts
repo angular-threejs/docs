@@ -40,10 +40,10 @@ export class SceneGraph {
 		uniform float uAmplitude;
 		uniform float uFrequency;
 
-		varying vec3 vNormal;
+		varying vec3 vWobbleNormal;
 
 		void main() {
-			vNormal = normal;
+			vWobbleNormal = normalize(normalMatrix * normal);
 
 			// Wave displacement
 			float displacement = sin(position.x * uFrequency + uTime) *
@@ -57,11 +57,11 @@ export class SceneGraph {
 
 	fragmentShader = /* glsl */ `
 		uniform float uTime;
-		varying vec3 vNormal;
+		varying vec3 vWobbleNormal;
 
 		void main() {
 			// Color based on normal and time
-			vec3 color = 0.5 + 0.5 * cos(uTime + vNormal.xyx + vec3(0, 2, 4));
+			vec3 color = 0.5 + 0.5 * cos(uTime + vWobbleNormal.xyx + vec3(0, 2, 4));
 			csm_DiffuseColor = vec4(color, 1.0);
 		}
 	`;
