@@ -40,6 +40,8 @@ import { Mesh } from 'three';
 	imports: [NgtArgs, NgtsMeshRefractionMaterial, NgtsCubeCamera, NgtsCameraContent, NgtsEnvironment],
 })
 export class SceneGraph {
+	protected readonly Infinity = Infinity;
+
 	private crystalRef = viewChild<ElementRef<Mesh>>('crystal');
 
 	constructor() {
