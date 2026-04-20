@@ -10,7 +10,7 @@ import { Mesh } from 'three';
 	template: `
 		<ngts-environment [options]="{ preset: 'city', background: true, backgroundBlurriness: 0.1 }" />
 
-		<ngts-cube-camera [options]="{ frames: 6, resolution: 256 }">
+		<ngts-cube-camera [options]="{ frames: Infinity, resolution: 256 }">
 			<ng-template cameraContent let-texture>
 				<ngt-mesh #crystal [scale]="1.2">
 					<ngt-icosahedron-geometry *args="[1, 0]" />
