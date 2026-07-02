@@ -341,6 +341,10 @@ export function ngtSidebar() {
 								slug: 'reference/soba/controls/camera-controls',
 							},
 							{
+								label: 'NgtsKeyboardControls',
+								slug: 'reference/soba/controls/keyboard-controls',
+							},
+							{
 								label: 'NgtsOrbitControls',
 								slug: 'reference/soba/controls/orbit-controls',
 							},
