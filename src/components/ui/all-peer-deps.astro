@@ -10,22 +10,82 @@ const combined = matrix.combined;
 		<tr>
 			<th>
 				<a href="https://github.com/angular-threejs/angular-three" target="_blank" rel="noopener">
-					Angular Three <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+					Angular Three <svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="12"
+						height="12"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline
+							points="15 3 21 3 21 9"
+						>
+						</polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+					</svg>
 				</a>
 			</th>
 			<th>
 				<a href="https://threejs.org" target="_blank" rel="noopener">
-					Three.js <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+					Three.js <svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="12"
+						height="12"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline
+							points="15 3 21 3 21 9"
+						>
+						</polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+					</svg>
 				</a>
 			</th>
 			<th>
 				<a href="https://angular.dev" target="_blank" rel="noopener">
-					Angular <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+					Angular <svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="12"
+						height="12"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline
+							points="15 3 21 3 21 9"
+						>
+						</polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+					</svg>
 				</a>
 			</th>
 			<th>
 				<a href="https://ngxtension.dev" target="_blank" rel="noopener">
-					ngxtension <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+					ngxtension <svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="12"
+						height="12"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline
+							points="15 3 21 3 21 9"
+						>
+						</polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+					</svg>
 				</a>
 			</th>
 		</tr>
@@ -34,10 +94,18 @@ const combined = matrix.combined;
 		{
 			combined.map((entry: CombinedEntry) => (
 				<tr>
-					<td><code>{entry.angularThree}</code></td>
-					<td><code>{entry.three}</code></td>
-					<td><code>{entry.angular}</code></td>
-					<td><code>{entry.ngxtension}</code></td>
+					<td>
+						<code>{entry.angularThree}</code>
+					</td>
+					<td>
+						<code>{entry.three}</code>
+					</td>
+					<td>
+						<code>{entry.angular}</code>
+					</td>
+					<td>
+						<code>{entry.ngxtension}</code>
+					</td>
 				</tr>
 			))
 		}

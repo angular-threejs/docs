@@ -123,11 +123,11 @@ export class Player {
 
 ### Properties and Methods
 
-| Property/Method | Description                                                              |
-| --------------- | ------------------------------------------------------------------------ |
-| `state`         | Readonly signal containing the full pressed state of all actions.        |
-| `select(name)`  | Memoized per-action `Signal<boolean>`.                                   |
-| `snapshot`      | Getter returning the current state for non-reactive per-frame polling.   |
+| Property/Method | Description                                                            |
+| --------------- | ---------------------------------------------------------------------- |
+| `state`         | Readonly signal containing the full pressed state of all actions.      |
+| `select(name)`  | Memoized per-action `Signal<boolean>`.                                 |
+| `snapshot`      | Getter returning the current state for non-reactive per-frame polling. |
 
 ### Standalone Functions
 

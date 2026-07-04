@@ -27,8 +27,12 @@ const entries: PackageEntry[] = await getPackagePeerDeps(packageName);
 						<tbody>
 							{Object.entries(entry.peerDependencies).map(([name, version]) => (
 								<tr>
-									<td><code>{name}</code></td>
-									<td><code>{version}</code></td>
+									<td>
+										<code>{name}</code>
+									</td>
+									<td>
+										<code>{version}</code>
+									</td>
 								</tr>
 							))}
 						</tbody>
