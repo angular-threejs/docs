@@ -1,0 +1,83 @@
+---
+title: Introduction
+description: Rapier-backed dynamic capsule controller for Angular Three
+---
+
+`angular-three-ecctrl` is an Angular Three port of the default [pmndrs/ecctrl](https://github.com/pmndrs/ecctrl) core entry: a Rapier-backed dynamic capsule controller for characters.
+
+## Peer Dependencies
+
+import PeerDeps from '@ui/peer-deps.astro';
+
+<PeerDeps package="angular-three-ecctrl" />
+
+## Installation
+
+```bash
+npm install angular-three-ecctrl angular-three-rapier @dimforge/rapier3d-compat
+# yarn add angular-three-ecctrl angular-three-rapier @dimforge/rapier3d-compat
+# pnpm add angular-three-ecctrl angular-three-rapier @dimforge/rapier3d-compat
+```
+
+> Make sure you already have `angular-three` installed.
+
+## Basic Setup
+
+`NgteEcctrl` must be nested under `NgtrPhysics` so it can use the Rapier physics world. Project your character's visual content into the controller:
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { extend } from 'angular-three';
+import { NgteEcctrl, NgteEcctrlAnimationStateController } from 'angular-three-ecctrl';
+import { NgtrPhysics } from 'angular-three-rapier';
+import * as THREE from 'three';
+
+extend(THREE);
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<ngte-ecctrl
+					[movement]="movement()"
+					animationState
+					(animationStateChange)="onAnimationStateChange($event)"
+				>
+					<ngt-mesh>
+						<!-- Project the character's visual mesh or model here. -->
+					</ngt-mesh>
+				</ngte-ecctrl>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgteEcctrl, NgteEcctrlAnimationStateController],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+	movement = signal({});
+
+	onAnimationStateChange(_state: unknown) {}
+}
+```
+
+## Movement
+
+Supply movement from your application's keyboard, gamepad, or custom input adapter through the public `movement` input. Its public fields are `forward`, `backward`, `leftward`, `rightward`, `joystick: { x, y }`, `run`, and `jump`.
+
+Imperative input sources can call `setMovement({ forward: true })`; the controller merges this partial update. Neither API requires a particular input subsystem.
+
+## Position-Dependent Gravity
+
+Use `NgteEcctrlGravity` when gravity should vary by the controller's position. Provide the field through `options.gravityField`; `customGravity` is the shorthand for the same configuration. The gravity field determines the gravity vector for the controller's current position.
+
+## Transform and Events
+
+`NgteEcctrl` forwards Angular Rapier transform inputs and event outputs to its underlying rigid body. Bind those inputs and outputs directly on `<ngte-ecctrl>` when configuring the controller's transform or responding to Rapier events.
+
+## Animation State
+
+Animation integration is optional. `NgteEcctrlAnimationStateController` attaches through `animationState` and emits `animationStateChange`, as shown above.
+
+## Core Entry Scope
+
+This page covers only the upstream default core entry: the controller, source-agnostic movement, gravity fields, Rapier transform/event forwarding, and optional animation state. Optional vehicle, touch, camera, and Leva modules exposed through the all-entry are outside this reference and are not implied by the core API.

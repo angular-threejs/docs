@@ -816,6 +816,22 @@ export function ngtSidebar() {
 				],
 			},
 			{
+				label: 'Ecctrl',
+				link: '/reference/ecctrl/introduction',
+				icon: 'rocket',
+				items: [
+					{
+						label: 'angular-three-ecctrl',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/ecctrl/introduction',
+							},
+						],
+					},
+				],
+			},
+			{
 				label: 'Theatre',
 				link: '/reference/theatre/introduction',
 				icon: 'pencil',
