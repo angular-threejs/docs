@@ -1,0 +1,37 @@
+---
+title: Curves
+description: Curve data and lookup-table helpers for Ecctrl
+---
+
+`angular-three-ecctrl/curves` exports the public curve point, curve data, and LUT types together with `bakeCurveLut` and `evaluateCurveLut`.
+
+## Public API
+
+| Export                 | Description                                                                                                             |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `NgteEcctrlCurvePoint` | A point with `x`, `y`, and optional incoming/outgoing tangent angles and weights: `r_in`, `r_out`, `w_in`, and `w_out`. |
+| `NgteEcctrlCurveData`  | Curve data with `points` and optional LUT `samples`.                                                                    |
+| `NgteEcctrlCurveLut`   | Baked lookup table with `min`, `max`, and `values: Float32Array`.                                                       |
+| `bakeCurveLut`         | Sorts points by `x` and bakes a lookup table.                                                                           |
+| `evaluateCurveLut`     | Evaluates a baked table, clamping input to its domain.                                                                  |
+
+`r_in` and `r_out` are tangent angles in radians. `w_in` and `w_out` control tangent blending: `0` is linear and `1` uses the angle-derived tangent.
+
+```ts
+import { bakeCurveLut, evaluateCurveLut, type NgteEcctrlCurveData } from 'angular-three-ecctrl/curves';
+
+const curve: NgteEcctrlCurveData = {
+	points: [
+		{ x: 0, y: 0, r_out: 0, w_out: 1 },
+		{ x: 1, y: 1, r_in: Math.PI, w_in: 0.75 },
+	],
+	samples: 64,
+};
+
+const lut = bakeCurveLut(curve);
+const valueAtHalf = evaluateCurveLut(lut, 0.5);
+```
+
+Curves require at least two points. Bake a LUT when editable curve data changes, then evaluate that LUT during simulation. The data is structurally compatible with [`angular-three-tweakpane/curve`](/reference/tweakpane/curve), without either package depending on the other.
+
+See the [curve editor](https://demo.angularthree.org/ecctrl/curve-editor) example.

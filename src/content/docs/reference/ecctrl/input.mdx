@@ -1,0 +1,64 @@
+---
+title: Input
+description: Keyboard, virtual, and custom movement sources for Ecctrl
+---
+
+`angular-three-ecctrl/input` provides virtual controls and a declarative movement binding. Each source feeds the same source-agnostic `NgteEcctrlMovementInput` used by the core controller.
+
+## API
+
+| Export                      | Selector / public surface                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `NgteEcctrlJoystick`        | `ngte-ecctrl-joystick`; `value` and `active` models; `disabled`, `deadzone`, `size`, and `ariaLabel` inputs. |
+| `NgteEcctrlJoystickValue`   | `{ x, y }` joystick value type.                                                                              |
+| `NgteEcctrlVirtualButton`   | `ngte-ecctrl-virtual-button`; `pressed` model; `disabled` and `ariaLabel` inputs.                            |
+| `NgteEcctrlMovementBinding` | `ngte-ecctrl[movementInput]` directive with required `[movementInput]`.                                      |
+
+## Bind Virtual Input
+
+Import the controls from the input entry point and pass a complete `NgteEcctrlMovementInput` to the required `movementInput` binding:
+
+```ts
+import { Component, computed, signal } from '@angular/core';
+import { NgteEcctrl, type NgteEcctrlMovementInput } from 'angular-three-ecctrl';
+import { NgteEcctrlJoystick, NgteEcctrlMovementBinding, NgteEcctrlVirtualButton } from 'angular-three-ecctrl/input';
+import { NgtrPhysics } from 'angular-three-rapier';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<ngte-ecctrl [movementInput]="movement()"></ngte-ecctrl>
+			</ng-template>
+		</ngtr-physics>
+
+		<ngte-ecctrl-joystick
+			[(value)]="joystick"
+			[(active)]="joystickActive"
+			[deadzone]="0.15"
+			[size]="120"
+			ariaLabel="Movement joystick"
+		/>
+		<ngte-ecctrl-virtual-button [(pressed)]="jump" ariaLabel="Jump">Jump</ngte-ecctrl-virtual-button>
+	`,
+	imports: [NgtrPhysics, NgteEcctrl, NgteEcctrlJoystick, NgteEcctrlMovementBinding, NgteEcctrlVirtualButton],
+})
+export class TouchInputScene {
+	readonly joystick = signal({ x: 0, y: 0 });
+	readonly joystickActive = signal(false);
+	readonly jump = signal(false);
+	readonly movement = computed<NgteEcctrlMovementInput>(() => ({
+		forward: false,
+		backward: false,
+		leftward: false,
+		rightward: false,
+		run: false,
+		jump: this.jump(),
+		joystick: this.joystick(),
+	}));
+}
+```
+
+The movement shape has boolean `forward`, `backward`, `leftward`, `rightward`, `run`, and `jump` fields plus `joystick: { x, y }`. Keyboard, gamepad, and custom sources can bind the same shape or call the controller's `setMovement` method for a partial imperative update.
+
+See the [mobile input](https://demo.angularthree.org/ecctrl/mobile-input) example.

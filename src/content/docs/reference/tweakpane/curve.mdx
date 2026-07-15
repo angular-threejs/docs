@@ -1,0 +1,76 @@
+---
+title: Curve Editor
+description: Tweakpane curve editor compatible with Ecctrl curve data
+---
+
+`angular-three-tweakpane/curve` provides a Tweakpane curve editor without depending on Ecctrl. Its data is structurally compatible with Ecctrl curve data, so the same authored curve can be passed to an Ecctrl curve consumer after normalization.
+
+## Public API
+
+| Export                                       | Purpose                                                          |
+| -------------------------------------------- | ---------------------------------------------------------------- |
+| `TweakpaneCurve`                             | The curve-editor directive. Its selector is `tweakpane-curve`.   |
+| `TweakpaneCurveApi`                          | Imperative Tweakpane curve API.                                  |
+| `TWEAKPANE_CURVE_PLUGIN`                     | The public Tweakpane plugin export.                              |
+| `normalizeCurveData`                         | Normalizes user-authored or persisted curve data for the editor. |
+| `TweakpaneCurveData` / `TweakpaneCurvePoint` | The editor's public curve-data and point shapes.                 |
+| `TweakpaneCurveParams`                       | Domain and range bounds: `minX`, `maxX`, `minY`, and `maxY`.     |
+| `TweakpaneCurveApiEvents`                    | Public event map for the curve API.                              |
+
+The required `value` model is the curve data. `label` labels the Tweakpane control, and `params` supplies optional `minX`, `maxX`, `minY`, and `maxY` bounds. Place the editor in a Tweakpane pane or folder.
+
+```ts
+import { Component, signal } from '@angular/core';
+import { TweakpanePane } from 'angular-three-tweakpane';
+import {
+	TweakpaneCurve,
+	normalizeCurveData,
+	type TweakpaneCurveData,
+	type TweakpaneCurveParams,
+} from 'angular-three-tweakpane/curve';
+
+@Component({
+	template: `
+		<tweakpane-pane title="Grip curve">
+			<tweakpane-curve
+				label="Longitudinal grip"
+				[params]="params"
+				[value]="curve()"
+				(valueChange)="curve.set($event)"
+			/>
+		</tweakpane-pane>
+	`,
+	imports: [TweakpaneCurve, TweakpanePane],
+})
+export class CurveEditor {
+	readonly params: TweakpaneCurveParams = { minX: 0, maxX: 1, minY: 0, maxY: 1 };
+
+	readonly curve = signal<TweakpaneCurveData>(
+		normalizeCurveData({
+			points: [
+				{ x: 0, y: 0, r_out: Math.PI / 4, w_out: 0.55 },
+				{ x: 1, y: 1, r_in: -Math.PI / 6, w_in: 0.4 },
+			],
+		}),
+	);
+}
+```
+
+## Editing points and tangents
+
+Points are draggable. Each point can also have incoming and outgoing tangent handles:
+
+| Field            | Meaning                                           |
+| ---------------- | ------------------------------------------------- |
+| `r_in` / `r_out` | Incoming and outgoing tangent angles, in radians. |
+| `w_in` / `w_out` | Incoming and outgoing tangent weights.            |
+
+Drag a tangent handle to author its angle and weight. Double-click the graph to add a point; use Delete, Backspace, or the context menu to remove one.
+
+## Imperative API
+
+`TweakpaneCurveApi.value` is a getter/setter for the current curve value. Subscribe with `on('change', listener)` and unsubscribe with `off('change', listener)`. A change listener receives `{ value, last }`, where `last` indicates the final event in an interaction.
+
+The selector and CSS class names use the `tweakpane-*` prefix.
+
+See the [curve editor example](https://demo.angularthree.org/ecctrl/curve-editor).
