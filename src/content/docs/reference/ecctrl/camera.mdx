@@ -1,0 +1,55 @@
+---
+title: Camera Follow
+description: Follow an Ecctrl controller with CameraControls
+---
+
+The camera integration lives at `angular-three-ecctrl/camera`. It exports `NgteEcctrlCameraFollow` and `NgteEcctrlCameraFollowOptions`. `NgteEcctrlCameraFollow` attaches to `ngts-camera-controls`; add it and `NgtsCameraControls` to the component imports, then provide one complete follow object through the required `[ecctrlCameraFollow]` input.
+
+`angular-three-soba` is an optional peer dependency used for `NgtsCameraControls`.
+
+## Follow options
+
+| Property  | Type                             | Description                                              |
+| --------- | -------------------------------- | -------------------------------------------------------- |
+| `ecctrl`  | `NgteEcctrl \| NgteEcctrlHandle` | Required controller or controller handle to follow.      |
+| `enabled` | `boolean`                        | Enables following when `true`.                           |
+| `offset`  | `[number, number, number]`       | Position offset interpreted by `upMode`.                 |
+| `upMode`  | `'world' \| 'character'`         | Chooses world-space or controller-space offset behavior. |
+
+```ts
+import { Component } from '@angular/core';
+import { NgteEcctrl } from 'angular-three-ecctrl';
+import { NgteEcctrlCameraFollow } from 'angular-three-ecctrl/camera';
+import { NgtrPhysics } from 'angular-three-rapier';
+import { NgtsCameraControls } from 'angular-three-soba/controls';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<ngte-ecctrl #player="ecctrl">
+					<!-- Character content -->
+				</ngte-ecctrl>
+			</ng-template>
+		</ngtr-physics>
+
+		<ngts-camera-controls
+			[options]="{ makeDefault: true }"
+			[ecctrlCameraFollow]="{
+				ecctrl: player,
+				enabled: true,
+				offset: [0, 0.7, 0],
+				upMode: 'world',
+			}"
+		/>
+	`,
+	imports: [NgtrPhysics, NgteEcctrl, NgteEcctrlCameraFollow, NgtsCameraControls],
+})
+export class FollowCameraScene {}
+```
+
+`ecctrl` is required. The optional `enabled`, `offset`, and `upMode` properties belong to the same object; do not split them into separate camera bindings.
+
+With `upMode: 'world'`, `offset` is a world-space x/y/z vector and CameraControls uses world up. With `upMode: 'character'`, its x, y, and z values are applied along the Ecctrl body's local X, Y, and Z axes, and the camera up direction follows the controller's custom-gravity up axis (`state.up`). Following translates the existing CameraControls position and target together, preserving the user's orbit and dolly relationship.
+
+See the [basic controller](https://demo.angularthree.org/ecctrl/basic) example for a follow-camera scene.

@@ -816,6 +816,85 @@ export function ngtSidebar() {
 				],
 			},
 			{
+				label: 'Ecctrl',
+				link: '/reference/ecctrl/introduction',
+				icon: 'rocket',
+				items: [
+					{
+						label: 'angular-three-ecctrl',
+						items: [
+							{
+								label: 'Introduction',
+								slug: 'reference/ecctrl/introduction',
+							},
+						],
+					},
+					{
+						label: 'angular-three-ecctrl/animation',
+						items: [
+							{
+								label: 'Animation State',
+								slug: 'reference/ecctrl/animation',
+							},
+						],
+					},
+					{
+						label: 'angular-three-ecctrl/camera',
+						items: [
+							{
+								label: 'Camera Follow',
+								slug: 'reference/ecctrl/camera',
+							},
+						],
+					},
+					{
+						label: 'angular-three-ecctrl/curves',
+						items: [
+							{
+								label: 'Curves',
+								slug: 'reference/ecctrl/curves',
+							},
+						],
+					},
+					{
+						label: 'angular-three-ecctrl/gravity',
+						items: [
+							{
+								label: 'Gravity Fields',
+								slug: 'reference/ecctrl/gravity',
+							},
+						],
+					},
+					{
+						label: 'angular-three-ecctrl/input',
+						items: [
+							{
+								label: 'Input',
+								slug: 'reference/ecctrl/input',
+							},
+						],
+					},
+					{
+						label: 'angular-three-ecctrl/time',
+						items: [
+							{
+								label: 'Time Control',
+								slug: 'reference/ecctrl/time',
+							},
+						],
+					},
+					{
+						label: 'angular-three-ecctrl/vehicle',
+						items: [
+							{
+								label: 'Vehicles',
+								slug: 'reference/ecctrl/vehicle',
+							},
+						],
+					},
+				],
+			},
+			{
 				label: 'Theatre',
 				link: '/reference/theatre/introduction',
 				icon: 'pencil',
@@ -858,6 +937,15 @@ export function ngtSidebar() {
 							{
 								label: 'Components',
 								slug: 'reference/tweakpane/components',
+							},
+						],
+					},
+					{
+						label: 'angular-three-tweakpane/curve',
+						items: [
+							{
+								label: 'Curve Editor',
+								slug: 'reference/tweakpane/curve',
 							},
 						],
 					},

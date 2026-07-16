@@ -1,0 +1,55 @@
+---
+title: Animation State
+description: Optional animation-state integration for angular-three-ecctrl
+---
+
+Import animation support from the explicit secondary entry point:
+
+```ts
+import {
+	NgteEcctrlAnimationState,
+	type NgteEcctrlAnimationStateContext,
+	type NgteEcctrlAnimationStateResolver,
+	type NgteEcctrlAnimationStateValue,
+	resolveEcctrlAnimationState,
+} from 'angular-three-ecctrl/animation';
+```
+
+## API
+
+| Export                             | Purpose                                           |
+| ---------------------------------- | ------------------------------------------------- |
+| `NgteEcctrlAnimationState`         | Optional `ngte-ecctrl[animationState]` directive. |
+| `NgteEcctrlAnimationStateValue`    | The resolved animation-state value.               |
+| `NgteEcctrlAnimationStateContext`  | Context provided to an animation-state resolver.  |
+| `NgteEcctrlAnimationStateResolver` | Type for a custom resolver function.              |
+| `resolveEcctrlAnimationState`      | Default resolver utility.                         |
+
+`NgteEcctrlAnimationStateValue` resolves to one of `IDLE`, `WALK`, `RUN`, `JUMP_START`, `JUMP_IDLE`, `JUMP_FALL`, or `JUMP_LAND`.
+
+## Attach the Directive
+
+`NgteEcctrlAnimationState` has selector `ngte-ecctrl[animationState]`. Its `animationState` input enables the directive and is also its `exportAs` value; there is no alternate directive alias. Pass a custom `NgteEcctrlAnimationStateResolver` through the `resolver` input when the default resolution does not match the animation graph.
+
+```html
+<ngte-ecctrl
+	#player="ecctrl"
+	#animation="animationState"
+	[animationState]="true"
+	[resolver]="resolver"
+	(animationStateChange)="onAnimationStateChange($event)"
+>
+	<!-- Project the character model here. -->
+</ngte-ecctrl>
+```
+
+| Directive surface | API                                              |
+| ----------------- | ------------------------------------------------ |
+| Selector / export | `ngte-ecctrl[animationState]` / `animationState` |
+| Inputs            | `animationState` (enabled boolean), `resolver`   |
+| Output            | `animationStateChange`                           |
+| Readonly state    | `state` signal, read with `animation.state()`    |
+
+`animationStateChange` emits the resolved `NgteEcctrlAnimationStateValue`. `JUMP_LAND` is emitted when the controller becomes newly grounded while it is not moving.
+
+See the [basic controller](https://demo.angularthree.org/ecctrl/basic) example for a character setup.

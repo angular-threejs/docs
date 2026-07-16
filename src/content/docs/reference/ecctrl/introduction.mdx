@@ -1,0 +1,140 @@
+---
+title: Introduction
+description: Rapier-backed dynamic capsule controller for Angular Three
+---
+
+`angular-three-ecctrl` is an Angular Three port of the default [pmndrs/ecctrl](https://github.com/pmndrs/ecctrl) core entry: a Rapier-backed dynamic capsule controller for characters.
+
+## Peer Dependencies
+
+import PeerDeps from '@ui/peer-deps.astro';
+
+<PeerDeps package="angular-three-ecctrl" />
+
+## Installation
+
+```bash
+npm install angular-three-ecctrl angular-three-rapier @dimforge/rapier3d-compat
+# yarn add angular-three-ecctrl angular-three-rapier @dimforge/rapier3d-compat
+# pnpm add angular-three-ecctrl angular-three-rapier @dimforge/rapier3d-compat
+```
+
+> Make sure you already have `angular-three` installed.
+
+`angular-three-soba` is an optional peer only for the [`/camera`](/reference/ecctrl/camera) integration.
+
+## Basic Setup
+
+`NgteEcctrl` is the `ngte-ecctrl` component and is exported as `ecctrl`. It creates a dynamic rigid body and capsule collider, and must be nested under `NgtrPhysics`. Project the character's visual content into the controller:
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { extend } from 'angular-three';
+import { NgteEcctrl, type NgteEcctrlMovementInput } from 'angular-three-ecctrl';
+import { NgteEcctrlAnimationState, type NgteEcctrlAnimationStateValue } from 'angular-three-ecctrl/animation';
+import { NgtrPhysics } from 'angular-three-rapier';
+import * as THREE from 'three';
+
+extend(THREE);
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<ngte-ecctrl
+					#player="ecctrl"
+					[movement]="movement()"
+					[animationState]="true"
+					(animationStateChange)="onAnimationStateChange($event)"
+				>
+					<ngt-mesh>
+						<!-- Project the character's visual mesh or model here. -->
+					</ngt-mesh>
+				</ngte-ecctrl>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgteEcctrl, NgteEcctrlAnimationState],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {
+	readonly movement = signal<NgteEcctrlMovementInput>({
+		forward: false,
+		backward: false,
+		leftward: false,
+		rightward: false,
+		run: false,
+		jump: false,
+		joystick: { x: 0, y: 0 },
+	});
+
+	onAnimationStateChange(_state: NgteEcctrlAnimationStateValue) {}
+}
+```
+
+`animationState` is optional and comes from the explicit `/animation` entry point. See [Animation state](/reference/ecctrl/animation) for its API.
+
+## Component API
+
+| Surface            | Public API                                                                                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Selector / export  | `ngte-ecctrl` / `ecctrl`                                                                                                                                           |
+| Models and inputs  | `options`, `position`, `rotation`, `quaternion`, `scale`, `userData`, `rigidBodyOptions`, `colliderOptions`, `movement`                                            |
+| Rigid-body outputs | `wake`, `sleep`, `collisionEnter`, `collisionExit`, `intersectionEnter`, `intersectionExit`, `contactForce`                                                        |
+| Public references  | `body` is the controller rigid body, `collider` is its capsule collider, `state` is the live controller state, and `handle` is the programmatic controller handle. |
+| Public methods     | `setMovement`, `setLockForward`, `setForwardDir`                                                                                                                   |
+
+Movement is source-agnostic. `NgteEcctrlMovementInput` has boolean `forward`, `backward`, `leftward`, `rightward`, `run`, and `jump` fields plus `joystick: { x, y }`. Bind the `movement` model from a keyboard, gamepad, virtual controls, or a custom adapter. Imperative sources can call `player.setMovement({ forward: true })`; the controller merges a partial update.
+
+`NgteEcctrlGroundDetection` is `'shapeCast' | 'rayCast'`. `NgteEcctrlUserData` supports `ecctrl.excludeRay`, `ecctrl.excludeCharacterRay`, and `ecctrl.excludeVehicleRay` for filtering Ecctrl ray queries.
+
+`NgteEcctrl` forwards the listed transform inputs and rigid-body event outputs to its Rapier body. Use `state` to observe the controller and `handle` when an integration needs programmatic access; the component methods above update its movement and forward-direction behavior.
+
+## Options and Types
+
+`NgteEcctrlOptions` configures the core controller. Its fields are grouped below so option names remain discoverable without duplicating their defaults.
+
+| Area                       | Fields                                                                                                                                        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| General and capsule        | `enable`, `debug`, `capsuleHalfHeight`, `capsuleRadius`                                                                                       |
+| Orientation                | `lockForward`, `useCustomForward`, `useCharacterUpAxis`                                                                                       |
+| Gravity                    | `enableCustomGravity`, `customGravity`, `gravityField`, `gravityDirLerpSpeed`                                                                 |
+| Movement                   | `maxWalkVel`, `maxRunVel`, `accDeltaTime`, `decDeltaTime`, `rejectVelFactor`, `moveImpulsePointOffset`                                        |
+| Jump and air               | `jumpVel`, `jumpDuration`, `slopeJumpFactor`, `airDragFactor`, `slideGripFactor`, `fallingGravityScale`, `fallingMaxVel`, `enableToggleRun`   |
+| Ground and floating        | `groundDetection`, `slopeMaxAngle`, `floatHeight`, `rayOriginOffest`, `rayHitForgiveness`, `rayLength`, `rayRadius`, `springK`, `dampingC`    |
+| Auto balance and platforms | `autoBalance`, `autoBalanceSpringK`, `autoBalanceDampingC`, `autoBalanceSpringOnY`, `autoBalanceDampingOnY`, `followPlatform`                 |
+| Counter forces             | `massRatioFallOffCurveData`, `applyCounterMass`, `applyCounterJumpImp`, `counterJumpImpFactor`, `applyCounterMoveImp`, `counterMoveImpFactor` |
+
+> `rayOriginOffest` is the intentionally retained upstream option spelling.
+
+The root entry also exports `NgteEcctrlRigidBodyOptions`, `NgteEcctrlColliderOptions`, `NgteEcctrlState`, and `NgteEcctrlHandle`, alongside `DEFAULT_ECCTRL_OPTIONS` and `DEFAULT_ECCTRL_POSITION`. Use the options and companion input types to configure the controller, `NgteEcctrlState` to type observed state, and `NgteEcctrlHandle` to type programmatic controller references.
+
+The controller's configured custom gravity replaces its native response to Rapier world gravity. See [Gravity fields](/reference/ecctrl/gravity) for the distinct additive behavior of fields applied to arbitrary rigid bodies.
+
+## Canonical Entry Points
+
+The root entry contains the controller and its core types. Import each optional integration explicitly:
+
+| Entry point                      | Reference                                         |
+| -------------------------------- | ------------------------------------------------- |
+| `angular-three-ecctrl`           | [Core controller](/reference/ecctrl/introduction) |
+| `angular-three-ecctrl/animation` | [Animation state](/reference/ecctrl/animation)    |
+| `angular-three-ecctrl/camera`    | [Camera follow](/reference/ecctrl/camera)         |
+| `angular-three-ecctrl/curves`    | [Curves](/reference/ecctrl/curves)                |
+| `angular-three-ecctrl/gravity`   | [Gravity fields](/reference/ecctrl/gravity)       |
+| `angular-three-ecctrl/input`     | [Input](/reference/ecctrl/input)                  |
+| `angular-three-ecctrl/time`      | [Time control](/reference/ecctrl/time)            |
+| `angular-three-ecctrl/vehicle`   | [Vehicles](/reference/ecctrl/vehicle)             |
+
+There is intentionally no `/all`, `/leva`, or `/utils` entry point, and no backwards-compatibility shims. Optional secondary entry points are not root re-exports.
+
+## Examples
+
+- [Basic controller](https://demo.angularthree.org/ecctrl/basic)
+- [Moving platform](https://demo.angularthree.org/ecctrl/moving-platform)
+- [Gravity field](https://demo.angularthree.org/ecctrl/gravity-field)
+- [Mobile input](https://demo.angularthree.org/ecctrl/mobile-input)
+- [Time control](https://demo.angularthree.org/ecctrl/time-control)
+- [Curve editor](https://demo.angularthree.org/ecctrl/curve-editor)
+- [Vehicle: car](https://demo.angularthree.org/ecctrl/vehicle-car)
+- [Vehicle: drone](https://demo.angularthree.org/ecctrl/vehicle-drone)

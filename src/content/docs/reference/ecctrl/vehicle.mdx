@@ -1,0 +1,149 @@
+---
+title: Vehicles
+description: Car and drone vehicle controllers for Ecctrl
+---
+
+`angular-three-ecctrl/vehicle` is the optional vehicle entrypoint for Rapier-backed cars and drones. It exports the vehicle, wheel, and propeller directives together with their public configuration, input, runtime-state, handle, and options types.
+
+## Public API
+
+| Export                                                                                | Purpose                                                                                                               |
+| ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `NgteEcctrlVehicle`                                                                   | The vehicle rigid-body controller. Its selector is `ngte-ecctrl-vehicle` and its `exportAs` value is `ecctrlVehicle`. |
+| `NgteShapeCastWheel`                                                                  | A wheel ground-query directive. Its selector is `ngte-shape-cast-wheel` and its `exportAs` value is `shapeCastWheel`. |
+| `NgteThrustPropeller`                                                                 | A thrust-propeller directive. Its selector is `ngte-thrust-propeller` and its `exportAs` value is `thrustPropeller`.  |
+| `NgteVehicleJoystick`                                                                 | A vehicle-input source for supplying movement values.                                                                 |
+| `NgteVehicleInput` / `NgteReadonlyVehicleInput`                                       | Writable and readonly vehicle movement shapes.                                                                        |
+| `NgteCarConfig` / `NgteDroneConfig`                                                   | Car and drone configuration shapes used by vehicle options.                                                           |
+| `NgteEcctrlVehicleOptions` / `NgteEcctrlVehicleRigidBodyOptions`                      | Vehicle and Rapier rigid-body configuration shapes.                                                                   |
+| `NgteEcctrlVehicleHandle`                                                             | Imperative vehicle control surface.                                                                                   |
+| `NgteEcctrlVehicleRuntimeState`                                                       | Current public vehicle runtime state.                                                                                 |
+| `NgteWheelControlConfig` / `NgteWheelControlDemand` / `NgteWheelInfo`                 | Public wheel-control configuration, demand, and runtime info shapes.                                                  |
+| `NgtePropellerInfo`                                                                   | Public propeller runtime-info shape.                                                                                  |
+| `NgteWheelGroundDetection` / `NgteShapeCastWheelOptions`                              | Wheel ground-detection and configuration shapes.                                                                      |
+| `NgteThrustPropellerOptions`                                                          | Thrust-propeller configuration shape.                                                                                 |
+| `DEFAULT_ECCTRL_CAR_CONFIG` / `DEFAULT_ECCTRL_DRONE_CONFIG`                           | The public default car and drone configurations.                                                                      |
+| `DEFAULT_ECCTRL_SHAPE_CAST_WHEEL_OPTIONS` / `DEFAULT_ECCTRL_THRUST_PROPELLER_OPTIONS` | Public default wheel and propeller options.                                                                           |
+
+## Directive surfaces
+
+| Directive             | Inputs and models                                                                                                  | Events and readonly surface                                                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `NgteEcctrlVehicle`   | `options`, `position`, `rotation`, `quaternion`, `scale`, `userData`, `rigidBodyOptions`, and the `movement` model | `wake`, `sleep`, `collisionEnter`, `collisionExit`, `intersectionEnter`, `intersectionExit`, `contactForce`; `rigidBody`/`body`, `state`, and `handle` |
+| `NgteShapeCastWheel`  | `id`, `options`, `position`, `rotation`, `quaternion`, and `scale`                                                 | Readonly `info: NgteWheelInfo`                                                                                                                         |
+| `NgteThrustPropeller` | `id`, `options`, `position`, `rotation`, `quaternion`, and `scale`                                                 | Readonly `info: NgtePropellerInfo`                                                                                                                     |
+
+An `ecctrlVehicle` reference exposes the public `rigidBody`/`body`, `state`, and `handle` values, as well as `setMovement`, `setTarget`, and `setGear`. Use its movement model or `setMovement` for input sources, with the boolean fields listed below.
+
+Project Rapier colliders inside `ngte-ecctrl-vehicle`; they become the colliders for that vehicle body.
+
+## Configuration and defaults
+
+| Public configuration                                                     | Use                                                                                  |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `NgteEcctrlVehicleOptions` / `NgteEcctrlVehicleRigidBodyOptions`         | Configure vehicle behavior and its Rapier rigid body.                                |
+| `NgteCarConfig` / `DEFAULT_ECCTRL_CAR_CONFIG`                            | Configure car behavior or begin from the public car defaults.                        |
+| `NgteDroneConfig` / `DEFAULT_ECCTRL_DRONE_CONFIG`                        | Configure drone behavior or begin from the public drone defaults.                    |
+| `NgteShapeCastWheelOptions` / `DEFAULT_ECCTRL_SHAPE_CAST_WHEEL_OPTIONS`  | Configure wheel ground queries and wheel behavior or begin from the public defaults. |
+| `NgteThrustPropellerOptions` / `DEFAULT_ECCTRL_THRUST_PROPELLER_OPTIONS` | Configure a thrust propeller or begin from the public defaults.                      |
+
+## Movement input
+
+`NgteVehicleInput` uses boolean directional controls, plus its `joystickL` and `joystickR` values:
+
+| Car                                                       | Drone                                                                                                         | Shared                   |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `forward`, `backward`, `steerLeft`, `steerRight`, `brake` | `throttleUp`, `throttleDown`, `yawLeft`, `yawRight`, `pitchForward`, `pitchBackward`, `rollLeft`, `rollRight` | `joystickL`, `joystickR` |
+
+`NgteVehicleJoystick` and imperative calls to `setMovement` can drive the same model. Send partial updates when an input source changes, for example `vehicle.setMovement({ brake: true })`.
+
+## Car
+
+Use `NgteCarConfig` through vehicle `options` to configure a car. The public car configuration covers curve-based engine, steering, and tire behavior, weighted drive torque, and optional automatic or manual transmission. Project one `NgteShapeCastWheel` per wheel and provide each wheel's identifier and transform through its inputs when needed.
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { NgtrCuboidCollider, NgtrPhysics } from 'angular-three-rapier';
+import { NgteEcctrlVehicle, NgteShapeCastWheel, type NgteVehicleInput } from 'angular-three-ecctrl/vehicle';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<ngte-ecctrl-vehicle #vehicle="ecctrlVehicle" [movement]="movement()">
+					<ngtr-cuboid-collider />
+					<ngte-shape-cast-wheel #frontLeft="shapeCastWheel" />
+					<ngte-shape-cast-wheel #frontRight="shapeCastWheel" />
+					<ngte-shape-cast-wheel />
+					<ngte-shape-cast-wheel />
+				</ngte-ecctrl-vehicle>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgteEcctrlVehicle, NgteShapeCastWheel, NgtrCuboidCollider],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class CarScene {
+	readonly movement = signal<NgteVehicleInput>({
+		forward: true,
+		backward: false,
+		steerLeft: false,
+		steerRight: false,
+		brake: false,
+	});
+}
+```
+
+### Wheels
+
+`NgteShapeCastWheel` accepts `id`, `options`, `position`, `rotation`, `quaternion`, and `scale`, and exposes readonly `info` as `NgteWheelInfo`. Its `NgteShapeCastWheelOptions` include `NgteWheelGroundDetection`, so a wheel can use either `shapeCast` or `rayCast` ground detection. `DEFAULT_ECCTRL_SHAPE_CAST_WHEEL_OPTIONS` is the public default-options constant.
+
+The option name `wheelModelReversRotation` is intentionally spelled this way in the public API; retain that spelling when supplying wheel options.
+
+See the [car example](https://demo.angularthree.org/ecctrl/vehicle-car).
+
+## Drone
+
+Use `NgteDroneConfig` through vehicle `options` to configure a drone. The public drone configuration supports `VELOCITY` and `POSITION` control modes. Project `NgteThrustPropeller` directives for propulsion; each propeller's options and readonly `NgtePropellerInfo` describe its public runtime behavior.
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { NgtrCuboidCollider, NgtrPhysics } from 'angular-three-rapier';
+import { NgteEcctrlVehicle, NgteThrustPropeller, type NgteVehicleInput } from 'angular-three-ecctrl/vehicle';
+
+@Component({
+	template: `
+		<ngtr-physics>
+			<ng-template>
+				<ngte-ecctrl-vehicle [movement]="movement()">
+					<ngtr-cuboid-collider />
+					<ngte-thrust-propeller #frontLeft="thrustPropeller" />
+					<ngte-thrust-propeller #frontRight="thrustPropeller" />
+					<ngte-thrust-propeller />
+					<ngte-thrust-propeller />
+				</ngte-ecctrl-vehicle>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgteEcctrlVehicle, NgteThrustPropeller, NgtrCuboidCollider],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class DroneScene {
+	readonly movement = signal<NgteVehicleInput>({
+		throttleUp: true,
+		throttleDown: false,
+		yawLeft: false,
+		yawRight: true,
+		pitchForward: false,
+		pitchBackward: false,
+		rollLeft: false,
+		rollRight: false,
+	});
+}
+```
+
+### Propellers
+
+`NgteThrustPropeller` accepts `id`, `options`, `position`, `rotation`, `quaternion`, and `scale`, and exposes readonly `info` as `NgtePropellerInfo`. Use `NgteThrustPropellerOptions` to configure it; `DEFAULT_ECCTRL_THRUST_PROPELLER_OPTIONS` is the public default-options constant.
+
+See the [drone example](https://demo.angularthree.org/ecctrl/vehicle-drone).

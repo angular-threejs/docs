@@ -1,0 +1,52 @@
+---
+title: Time Control
+description: Drive a paused Rapier world with Ecctrl time control
+---
+
+`NgteTimeControl` from `angular-three-ecctrl/time` drives the public `NgtrPhysics.step(delta)` API. It is selected by `ngte-time-control` and exported as `timeControl`.
+
+Its parent `NgtrPhysics` **must** be paused; otherwise the regular physics loop and time controller would both advance the world. The control warns when that requirement is not met. Configure the parent through its `options` input. `timeStep: 'vary'` is required for smooth scaled playback.
+
+```ts
+import { Component, signal } from '@angular/core';
+import { NgteTimeControl } from 'angular-three-ecctrl/time';
+import { NgtrPhysics } from 'angular-three-rapier';
+
+@Component({
+	template: `
+		<ngtr-physics [options]="{ paused: true, timeStep: 'vary' }">
+			<ng-template>
+				<ngte-time-control
+					#time="timeControl"
+					[enabled]="enabled()"
+					[paused]="playbackPaused()"
+					[priority]="0"
+					[maxDelta]="0.1"
+					[timeScale]="0.75"
+					(stepped)="onStepped()"
+				/>
+			</ng-template>
+		</ngtr-physics>
+	`,
+	imports: [NgtrPhysics, NgteTimeControl],
+})
+export class TimeControlScene {
+	enabled = signal(true);
+	playbackPaused = signal(false);
+
+	onStepped() {}
+}
+```
+
+## Public API
+
+| Member  | Description                                                                                                                         |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Inputs  | `enabled`, `paused` (local playback), `timeScale`, `maxDelta`, and `priority`.                                                      |
+| Output  | `stepped`, emitted when simulation time advances.                                                                                   |
+| Signal  | `elapsed`, accumulated simulation time.                                                                                             |
+| Methods | `stepOnce(delta = 1 / 60)` advances one step while normal playback is stopped; `resetElapsed()` clears accumulated simulation time. |
+
+The parent world remains paused while the control manually advances it. `enabled`, local `paused`, and `priority` control scheduling. `elapsed` and `stepped` report simulation time advanced. For each render update, the controller first clamps the **unscaled** render delta to `maxDelta`, then multiplies it by `timeScale` before manually stepping physics.
+
+See the [time control](https://demo.angularthree.org/ecctrl/time-control) example.

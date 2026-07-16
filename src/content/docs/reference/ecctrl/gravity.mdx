@@ -1,0 +1,36 @@
+---
+title: Gravity Fields
+description: Position-dependent gravity for Ecctrl controllers
+---
+
+`angular-three-ecctrl/gravity` provides position-dependent gravity fields for Ecctrl controllers and arbitrary Rapier bodies.
+
+## Public API
+
+| Export                         | Description                                                                                                      |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `NgteEcctrlGravityVector`      | Gravity-vector type used by gravity fields.                                                                      |
+| `NgteEcctrlGravityField`       | Position-dependent gravity-field type.                                                                           |
+| `NgteEcctrlGravityBodyOptions` | Options for applying a field to an arbitrary rigid body.                                                         |
+| `NgteEcctrlGravity`            | Service with the `gravityField` signal and `setGravityField`, `resolveGravity`, and `applyGravityField` methods. |
+| `NgteEcctrlGravityBody`        | Directive selected by `ngt-object3D[rigidBody][ecctrlGravity]`. Its input is `[ecctrlGravity]`.                  |
+
+Configure a controller field through `NgteEcctrlGravity` or the controller's `options.gravityField`; `options.customGravity` is the constant-vector shorthand.
+
+On `NgteEcctrl`, configured custom gravity replaces that controller's native response to Rapier world gravity:
+
+```html
+<ngte-ecctrl [options]="{ customGravity: [0, -9.81, 0] }" />
+```
+
+By contrast, `NgteEcctrlGravityBody` applies `[ecctrlGravity]` to an arbitrary Rapier body as a per-step impulse. It does **not** disable that body's native Rapier gravity. Set the parent `NgtrPhysics` world gravity to zero only when field gravity should replace native gravity for those arbitrary bodies:
+
+```html
+<ngtr-physics [options]="{ gravity: [0, 0, 0] }">
+	<ng-template>
+		<ngt-object3D rigidBody [ecctrlGravity]="bodyGravity" />
+	</ng-template>
+</ngtr-physics>
+```
+
+See the [gravity field](https://demo.angularthree.org/ecctrl/gravity-field) example.
